@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>NodeJS应用部署初探 | 牛肉培根冒菜侠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NodeJS应用部署初探">
+<meta property="og:url" content="https://jiangink.github.io/2016/01/13/DeployNodeApp/index.html">
+<meta property="og:site_name" content="牛肉培根冒菜侠">
+<meta property="og:description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
+<meta property="og:updated_time" content="2017-03-26T09:49:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NodeJS应用部署初探">
+<meta name="twitter:description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
+  
+    <link rel="alternate" href="/atom.xml" title="牛肉培根冒菜侠" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/typing.css">
+</head>
+
+  
+    
+      <body>
+    
+  
+      <div id="container" class="container">
+        <article id="post-DeployNodeApp" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+  <nav id="main-nav" class="main-nav">
+    
+      <a class="main-nav-link" href="/">Home</a>
+    
+      <a class="main-nav-link" href="/archives">Archives</a>
+    
+      <a class="main-nav-link" href="/about">About</a>
+    
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      NodeJS应用部署初探
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。</p>
+<a id="more"></a>
+<hr>
+<h3 id="首先，使用-MongoLab-："><a href="#首先，使用-MongoLab-：" class="headerlink" title="首先，使用 MongoLab ："></a>首先，使用 MongoLab ：</h3><p>MongoLab 与 MongoHQ 是当今比较流行的 MongoDB 云数据库提供商。MongoLab 的免费套餐提供了 500MB 的存储空间，MongoLab 的使用比较简单明了，这里简要概述一二。</p>
+<h5 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h5><p><a href="https://mongolab.com/signup/" title="signup" target="_blank" rel="external">mongolab.com/signup</a></p>
+<h5 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h5><p>注册成功后，此时进入到自己的控制面板页，点击 <code>Create new</code> 创建一个数据库。在 <code>Plan</code> 选项选择 <code>Single-node</code> 的 <code>Sandbox</code> 免费套餐。在 <code>Darebase name</code> 除填写数据库的名字，点击 <code>Create new MongoDB deployment</code> 完成创建。</p>
+<p>创建成功后跳转到了控制面板页，点击刚才创建的数据库进入该数据库配置页面。我们需要先为数据库创建一个拥有读写权限的用户，点击 <code>Click here</code> 添加一个用户。</p>
+<p>打开 mongodb.js ，将：</p>
+<pre><code>mongoose.connect(&apos;mongodb://localhost/drifter&apos;, {server: {poolSize: 10}});
+</code></pre><p>修改为：</p>
+<pre><code>mongoose.connect(&apos;your_mongolab_url&apos;, {server: {poolSize: 10}});
+</code></pre><p>注意：将 <code>&lt;dbuser&gt;</code> 和 <code>&lt;dbpassword&gt;</code> 分别替换为刚才为数据库创建的用户名和密码。</p>
+<h3 id="然后，使用-Redis4You-："><a href="#然后，使用-Redis4You-：" class="headerlink" title="然后，使用 Redis4You ："></a>然后，使用 Redis4You ：</h3><p>redis4you 是一家 Redis 云服务提供商，提供多个档次的 Redis 实例供选择，所有类型的服务包括免费的 5M 试用版，都提供诸如多 DB，持久化等功能。这里我们仅供测试使用。</p>
+<h5 id="注册-1"><a href="#注册-1" class="headerlink" title="注册"></a>注册</h5><p><a href="http://redis4you.com/login_new.php" title="redis4you.com" target="_blank" rel="external">redis4you.com/login_new</a></p>
+<h5 id="创建数据库-1"><a href="#创建数据库-1" class="headerlink" title="创建数据库"></a>创建数据库</h5><p>验证邮箱完成注册。登录 Redis4You，点击右上角的 <code>My Redis Instanses</code> 进入 <code>Redis</code> 管理页面，点击 <code>Provision new instance</code> 创建一个新的数据库。点击 5MB 的免费套餐右边的 <code>Select this instance</code> 完成创建。</p>
+<p>此时跳转到 Redis 管理页面，点击 <code>Information</code> 查看数据库详情。我们只会用到 Host、Port 和 Auth 这三项，其中 Auth 为随机生成的访问数据库的凭证。</p>
+<p>注意：一定要点击左上角的 <code>start</code> 启动数据库。</p>
+<p>打开 redis.js ，将：</p>
+<pre><code>var client = redis.createClient();
+</code></pre><p>修改为：</p>
+<pre><code>var client = redis.createClient(Port, Host, {auth_pass: Auth});
+</code></pre><p>注意：将 Host、Port 和 Auth 分别替换为给定的值。</p>
+<h3 id="最后，部署到-HeroKu-："><a href="#最后，部署到-HeroKu-：" class="headerlink" title="最后，部署到 HeroKu ："></a>最后，部署到 HeroKu ：</h3><p>Heroku 是一个主流的 PaaS 提供商，在开发人员中广受欢迎。这个服务围绕着基于 Git 的工作流设计，假如你熟悉 Git ，那部署就十分简单。这个服务原本是为托管 Ruby 应用程序而设计的，但 Heroku 之后加入了对 Node.js 、Clojure 、Scala 、Python 和 Java 等语言的支持。Heroku 的基础服务是免费的。</p>
+<h5 id="注册-2"><a href="#注册-2" class="headerlink" title="注册"></a>注册</h5><p><a href="https://www.heroku.com/" title="heroku.com" target="_blank" rel="external">heroku.com</a></p>
+<h5 id="创建一个应用"><a href="#创建一个应用" class="headerlink" title="创建一个应用"></a>创建一个应用</h5><p>右上角 “＋” 中点击 <code>Create a new app</code> ，填写独一无二的应用名称后，点击 <code>creat app</code> 即创建成功，然后点击 <code>Open app</code> 即可打开应用 URL 链接 。</p>
+<h5 id="安装-Heroku-Toolbelt"><a href="#安装-Heroku-Toolbelt" class="headerlink" title="安装 Heroku Toolbelt"></a>安装 Heroku Toolbelt</h5><p>Heroku 官方提供了 Heroku Toolbelt 工具更方便地部署和管理应用。它包含三个部分：</p>
+<ul>
+<li>Heroku client ：创建和管理 Heroku 应用的命令行工具</li>
+<li>Foreman ：一个在本地运行你的 app 的不错的选择</li>
+<li>Git ：分布式版本控制工具，用来把应用推送到 Heroku</li>
+</ul>
+<p>Heroku Toolbelt 下载地址：<a href="https://toolbelt.heroku.com/" title="toolbelt.heroku.com" target="_blank" rel="external">toolbelt.heroku.com</a> 。</p>
+<p>注意：假如你的电脑上已经安装了 Git ，那么在安装的时候选择 <code>Custom Installation</code> 并去掉安装 Git 的选项，否则选择 <code>Full Installation</code> 。</p>
+<p>安装成功后，打开终端 shell ，输入 <code>heroku login</code> ，然后输入在 Heroku 注册的帐号和密码进行登录。Git 会检测是否有 SSH 密钥，如果有，则使用此密钥并上传，如果没有，则创建一个密钥并上传。</p>
+<p>Tips：SSH 密钥通常用于授予用户访问服务器的权限。可将它们用于某些配置中，以便无需密码即可访问服务器。许多 PaaS 提供商都使用了此功能。</p>
+<h5 id="Procfile"><a href="#Procfile" class="headerlink" title="Procfile"></a>Procfile</h5><p>在工程的根目录下新建一个 Procfile 文件，添加如下内容：</p>
+<pre><code>web: ./bin/www
+</code></pre><p>Procfile 文件告诉了服务器该使用什么命令启动一个 web 服务，这里我们通过 <code>./bin/www</code> 执行 Node 脚本。为什么这里声明了一个 web 类型呢？官方解释为：</p>
+<blockquote>
+<p>The name “web” is important here. It declares that this process type will be attached to the HTTP routing stack of Heroku, and receive web traffic when deployed.</p>
+</blockquote>
+<h5 id="上传应用"><a href="#上传应用" class="headerlink" title="上传应用"></a>上传应用</h5><p>首先 clone 一份 git 仓库源码到你的本地机器中；</p>
+<pre><code>$ heroku git:clone -a web_app_name
+$ cd web_app_name
+</code></pre><p>使用 git 将源码变动的部分更新以及部署到 heroku 当中.</p>
+<pre><code>$ git add .
+$ git commit -am &quot;make it better&quot;
+$ git push heroku master
+</code></pre><p>在 push 到 heroku 服务器之前，我们还需要做一个工作。由于我国某些政策的原因，我们需到 ~/.ssh/ 目录下，新建一个 config 文件，内容如下：</p>
+<pre><code>Host git.heroku.com
+User yourName
+Hostname 107.21.95.3
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa
+port 22
+</code></pre><p>然后回到 Git Bash ，输入：</p>
+<pre><code>$ git push heroku master
+</code></pre><p>稍等片刻即上传成功。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a href="https://github.com/nswbmw" title="nswbmw" target="_blank" rel="external">nswbmw github</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/2016/01/13/DeployNodeApp/" class="article-date">
+  <time datetime="2016-01-13T13:13:51.000Z" itemprop="datePublished">2016-01-13</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Category:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+
+          </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Heroku/">Heroku</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoLab/">MongoLab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis4You/">Redis4You</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2016/01/19/WebSocket-Note/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          WebSocket学习笔记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/05/Redis-Note/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Redis学习笔记</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>至繁归于至简</p>
+
+
+      </div>
+    </footer>
+
+      
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  </body>
+</html>

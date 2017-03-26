@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>SSL编程小札 | 牛肉培根冒菜侠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="SSL简介：
+安全套接层(Secure Socket Layer，SSL)是一种在两台机器之间提供安全通道的协议。它具有保护传输数据以及识别通信机器的功能。安全通道是透明的，意思就是说它对传输的数据不加变更。客户端与服务器之间的数据是经过加密的，一端写入的数据完全是另一端读取的内容。透明性使得几乎所有基于TCP的协议稍加改动就可以在SSL上运行，非常方便。
+SSL最初的版本是由网景(Netscap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSL编程小札">
+<meta property="og:url" content="https://jiangink.github.io/2015/03/09/CodingWithSSL/index.html">
+<meta property="og:site_name" content="牛肉培根冒菜侠">
+<meta property="og:description" content="SSL简介：
+安全套接层(Secure Socket Layer，SSL)是一种在两台机器之间提供安全通道的协议。它具有保护传输数据以及识别通信机器的功能。安全通道是透明的，意思就是说它对传输的数据不加变更。客户端与服务器之间的数据是经过加密的，一端写入的数据完全是另一端读取的内容。透明性使得几乎所有基于TCP的协议稍加改动就可以在SSL上运行，非常方便。
+SSL最初的版本是由网景(Netscap">
+<meta property="og:updated_time" content="2017-03-26T09:49:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSL编程小札">
+<meta name="twitter:description" content="SSL简介：
+安全套接层(Secure Socket Layer，SSL)是一种在两台机器之间提供安全通道的协议。它具有保护传输数据以及识别通信机器的功能。安全通道是透明的，意思就是说它对传输的数据不加变更。客户端与服务器之间的数据是经过加密的，一端写入的数据完全是另一端读取的内容。透明性使得几乎所有基于TCP的协议稍加改动就可以在SSL上运行，非常方便。
+SSL最初的版本是由网景(Netscap">
+  
+    <link rel="alternate" href="/atom.xml" title="牛肉培根冒菜侠" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/typing.css">
+</head>
+
+  
+    
+      <body>
+    
+  
+      <div id="container" class="container">
+        <article id="post-CodingWithSSL" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+  <nav id="main-nav" class="main-nav">
+    
+      <a class="main-nav-link" href="/">Home</a>
+    
+      <a class="main-nav-link" href="/archives">Archives</a>
+    
+      <a class="main-nav-link" href="/about">About</a>
+    
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SSL编程小札
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <h3 id="SSL简介："><a href="#SSL简介：" class="headerlink" title="SSL简介："></a>SSL简介：</h3><hr>
+<p>安全套接层(Secure Socket Layer，SSL)是一种在两台机器之间提供安全通道的协议。它具有保护传输数据以及识别通信机器的功能。安全通道是透明的，意思就是说它对传输的数据不加变更。客户端与服务器之间的数据是经过加密的，一端写入的数据完全是另一端读取的内容。透明性使得几乎所有基于TCP的协议稍加改动就可以在SSL上运行，非常方便。</p>
+<p>SSL最初的版本是由网景(Netscape)设计的，但1996年由于市场份额下滑等因素，网景决定将SSL移交给因特网工程任务组（IETF）进行标准化制定，随后便产生了TLS，也被称作SSL3.1版本；</p>
+<p>SSL/TLS的特性确保了通信双方可以进行端点认证(ndpoint authentication)互验对方身份，并保证了数据的消息完整性(message integrity)以及私密性(confidentiality)。<br><a id="more"></a></p>
+<h3 id="SSL编程套路："><a href="#SSL编程套路：" class="headerlink" title="SSL编程套路："></a>SSL编程套路：</h3><hr>
+<p>SSL通信模型采用的是标准C/S结构，因此基于OpenSSL的程序就被分成两个部分：Client和Server。且程序遵循着以下几个重要步骤：</p>
+<h5 id="1-OpenSSL初始化"><a href="#1-OpenSSL初始化" class="headerlink" title="(1) OpenSSL初始化"></a>(1) OpenSSL初始化</h5><p>在使用OpenSSL之前，必须进行相应的初始化工作。完成初始化功能的函数原型如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_library_int</span><span class="params">(<span class="keyword">void</span>)</span></span>;              <span class="comment">// 初始化SSL算法库函数，调用SSL函数之前必须调用此函数</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">OpenSSL_add_all_algorithms</span><span class="params">(<span class="keyword">void</span>)</span></span>;  <span class="comment">//加载SSL所有算法</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">SSL_load_error_strings</span><span class="params">(<span class="keyword">void</span>)</span></span>;      <span class="comment">//错误信息的初始化</span></div></pre></td></tr></table></figure></p>
+<p>在建立SSL连接之前，要为Client和Server分别指定本次连接采用的协议及其版本，目前能够使用的协议版本包括SSLv2、SSLv3、SSLv2/v3和TLSv1.0。SSL连接若要正常建立，则要求Client和Server必须使用相互兼容的协议。</p>
+<h5 id="2-创建CTX"><a href="#2-创建CTX" class="headerlink" title="(2) 创建CTX"></a>(2) 创建CTX</h5><p>在OpenSSL中，CTX是指SSL会话环境。建立连接时使用不同的协议（ <a href="http://www.openssl.org/docs/ssl/SSL_CTX_new.html" target="_blank" rel="external"><em>详见</em></a> ），其CTX也不一样。创建CTX的过程中会依次用到以下OpenSSL函数：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//客户端、服务端都需要调用的</span></div><div class="line">SSL_CTX_new()                               <span class="comment">//申请SSL会话环境</span></div><div class="line"><span class="comment">//若有验证对方证书的需求，则需调用</span></div><div class="line">SSL_CTX_set_verify()                        <span class="comment">//指定证书验证方式</span></div><div class="line">SSL_CTX_load_verify_location()              <span class="comment">//为SSL会话环境加载本应用所信任的CA证书列表</span></div><div class="line"><span class="comment">//若有加载证书的需求，则需调用</span></div><div class="line">SSL_CTX_use_certificate_file()              <span class="comment">//为SSL会话加载本应用的证书</span></div><div class="line">SSL_CTX_use_certificate_chain_file()        <span class="comment">//为SSL会话加载本应用的证书所属的证书链</span></div><div class="line">SSL_CTX_set_default_passwd_cb_userdata()    <span class="comment">//设置私钥的密码(如果有的话);注：需要在加载私钥之前设置</span></div><div class="line">SSL_CTX_use_PrivateKey_file()               <span class="comment">//为SSL会话加载本应用的私钥</span></div><div class="line">SSL_CTX_check_private_key()                 <span class="comment">//验证所加载的私钥和证书是否相匹配</span></div></pre></td></tr></table></figure></p>
+<p>对于SSL证书的双向认证，这里需要补充的是，可能需要client以及server配置如下的接口函数：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* 设置验证证书链的最大长度 */</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">SSL_CTX_set_verify_depth</span><span class="params">(SSL_CTX *ctx,<span class="keyword">int</span> depth)</span></span>;</div><div class="line"><span class="comment">/* SSL_CTX_set_verify的回调函数，需要自己去写实现 */</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">verify_callback</span><span class="params">(<span class="keyword">int</span> preverify_ok, X509_STORE_CTX *x509_ctx)</span></span>;</div><div class="line"><span class="comment">/* 设置认证的模式及是否开启认证回调 */</span></div><div class="line">SSL_CTX_set_verify(SSL_CTX* ctx,<span class="keyword">int</span> mode,<span class="keyword">int</span> (*verify_callback)(<span class="keyword">int</span>,X509_STORE_CTX*));</div><div class="line"><span class="comment">/* 加载CA证书文件 */</span></div><div class="line">SSL_CTX_load_verify_locations(SSL_CTX* ctx,<span class="keyword">const</span> <span class="keyword">char</span>* CAfile,<span class="keyword">const</span> <span class="keyword">char</span>* CApath);</div></pre></td></tr></table></figure></p>
+<p>另外还需要注意认证的模式（ <a href="https://www.openssl.org/docs/ssl/SSL_CTX_set_verify.html" target="_blank" rel="external"><em>详见</em></a> ），常用的模式如下：</p>
+<blockquote>
+<ol>
+<li>SSL_VERIFY_NONE:<br> 不会进行证书验证</li>
+<li>SSL_VERIFY_PEER:<br> 要求对方提供证书进行验证的模式，该模式在服务端类似于一种自愿验证的模式，当遇到客户端不提供证书时，是否继续通信可自行决定；但该模式运用于客户端，若服务端无证书则会导致SSL握手失败。</li>
+<li>SSL_VERIFY_FAIL_IF_NO_PEER_CERT:<br> 服务端使用的一种的模式，此模式下，相当于强制验证客户端的证书，若客户端无证书则SSL握手失败。</li>
+</ol>
+</blockquote>
+<h5 id="3-建立SSL套接字"><a href="#3-建立SSL套接字" class="headerlink" title="(3) 建立SSL套接字"></a>(3) 建立SSL套接字</h5><p>在此之前要先创建普通的流套接字，完成TCP三次握手，建立普通的TCP连接。然后创建SSL套接字，并将其与流套接字绑定。这一过程中会使用以下几个函数：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function">SSL *<span class="title">SSl_new</span><span class="params">(SSL_CTX *ctx)</span></span>;         <span class="comment">//申请一个SSL套接字</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_set_fd</span><span class="params">(SSL *ssl,<span class="keyword">int</span> fd)</span></span>;    <span class="comment">//绑定读写套接字</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_set_rfd</span><span class="params">(SSL *ssl,<span class="keyword">int</span> fd)</span></span>;   <span class="comment">//绑定只读套接字</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_set_wfd</span><span class="params">(SSL *ssl,<span class="keyword">int</span> fd)</span></span>;   <span class="comment">//绑定只写套接字</span></div></pre></td></tr></table></figure></p>
+<h5 id="4-完成SSL握手"><a href="#4-完成SSL握手" class="headerlink" title="(4) 完成SSL握手"></a>(4) 完成SSL握手</h5><p>在这一步，我们需要在普通TCP连接的基础上，建立SSL连接。与普通流套接字建立连接的过程类似：<br>Client使用函数SSL_connect()发起握手（ <em>类似于流套接字中用的connect()</em> ），而Server使用函数SSL_accept()对握手进行响应（ <em>类似于流套接字中用的accept()</em> ），从而完成握手过程。两函数原型如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_connect</span><span class="params">(SSL *ssl)</span></span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_accept</span><span class="params">(SSL *ssl)</span></span>;</div></pre></td></tr></table></figure></p>
+<h5 id="5-鉴别证书信息"><a href="#5-鉴别证书信息" class="headerlink" title="(5) 鉴别证书信息"></a>(5) 鉴别证书信息</h5><p>握手过程完成以后，Client以及Server通常能够获取到对方的证书信息，并对信息进行鉴别。具体实现中会用到以下函数:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function">X509 *<span class="title">SSL_get_peer_certificate</span><span class="params">(SSL *ssl)</span></span>;   <span class="comment">//从SSL套接字中获取对方的证书信息</span></div><div class="line"><span class="function">X509_NAME *<span class="title">X509_get_subject_name</span><span class="params">(X509 *a)</span></span>;  <span class="comment">//获取证书所有者名字</span></div><div class="line"><span class="function">X509_NAME *<span class="title">X509_get_issuer_name</span><span class="params">(X509  *a)</span></span>;  <span class="comment">//获取证书颁发者名字</span></div></pre></td></tr></table></figure></p>
+<h5 id="6-进行数据传输"><a href="#6-进行数据传输" class="headerlink" title="(6) 进行数据传输"></a>(6) 进行数据传输</h5><p>经过前面的一系列过程后，就可以进行安全的数据传输了。<br>在数据传输阶段，需要使用SSL_read( )和SSL_write( )来代替普通流套接字所使用的read( )和write( )函数，以此完成对SSL套接字的读写操作,两个新函数的原型分别如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_read</span><span class="params">(SSL *ssl,<span class="keyword">void</span> *buf,<span class="keyword">int</span> num)</span></span>;           <span class="comment">//从SSL套接字读取数据</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_write</span><span class="params">(SSL *ssl,<span class="keyword">const</span> <span class="keyword">void</span> *buf,<span class="keyword">int</span> num)</span></span>;    <span class="comment">//向SSL套接字写入数据</span></div></pre></td></tr></table></figure></p>
+<h5 id="7-会话结束"><a href="#7-会话结束" class="headerlink" title="(7) 会话结束"></a>(7) 会话结束</h5><p>当Client和Server之间的通信过程完成后，就使用以下函数来释放前面过程中申请的SSL资源：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_shutdown</span><span class="params">(SSL *ssl)</span></span>;         <span class="comment">//关闭SSL套接字</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">SSl_free</span><span class="params">(SSL *ssl)</span></span>;            <span class="comment">//释放SSL套接字</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">SSL_CTX_free</span><span class="params">(SSL_CTX *ctx)</span></span>;    <span class="comment">//释放SSL会话环境</span></div></pre></td></tr></table></figure></p>
+<h3 id="具体源码示范："><a href="#具体源码示范：" class="headerlink" title="具体源码示范："></a>具体源码示范：</h3><ul>
+<li><a href="https://github.com/JiangInk/SSLSocketDemo" target="_blank" rel="external"><em>SSLSocketDemo</em></a></li>
+</ul>
+<hr>
+<p><em>本文参考如下资料整理：</em></p>
+<p><em>1. 《SSL与TLS》</em></p>
+<p><em>2. 《<a href="http://blog.bccn.net/Ping_Fani07/13407" target="_blank" rel="external">使用OpenSSL API 建立SSL安全通信的一般流程</a>》</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/2015/03/09/CodingWithSSL/" class="article-date">
+  <time datetime="2015-03-09T14:42:04.000Z" itemprop="datePublished">2015-03-09</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Category:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+
+          </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SSL/">SSL</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2015/03/18/ResolveDomain/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          有关域名解析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/02/04/ForgetThing/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">遺忘的事</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>至繁归于至简</p>
+
+
+      </div>
+    </footer>
+
+      
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  </body>
+</html>

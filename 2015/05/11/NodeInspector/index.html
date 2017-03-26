@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Node调试工具的使用 | 牛肉培根冒菜侠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node调试工具的使用">
+<meta property="og:url" content="https://jiangink.github.io/2015/05/11/NodeInspector/index.html">
+<meta property="og:site_name" content="牛肉培根冒菜侠">
+<meta property="og:description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
+<meta property="og:updated_time" content="2017-03-26T09:49:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node调试工具的使用">
+<meta name="twitter:description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
+  
+    <link rel="alternate" href="/atom.xml" title="牛肉培根冒菜侠" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/typing.css">
+</head>
+
+  
+    
+      <body>
+    
+  
+      <div id="container" class="container">
+        <article id="post-NodeInspector" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+  <nav id="main-nav" class="main-nav">
+    
+      <a class="main-nav-link" href="/">Home</a>
+    
+      <a class="main-nav-link" href="/archives">Archives</a>
+    
+      <a class="main-nav-link" href="/about">About</a>
+    
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Node调试工具的使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>今天发现一个在浏览器上调试node代码的工具，分享一下.<br>这个工具名叫：<a href="https://github.com/node-inspector/node-inspector" target="_blank" rel="external">Node Inspector</a><br>感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；<br><a id="more"></a></p>
+<h4 id="1、安装步骤"><a href="#1、安装步骤" class="headerlink" title="1、安装步骤"></a>1、安装步骤</h4><p>安装命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install –g node-inspector</div></pre></td></tr></table></figure></p>
+<h4 id="2、运行步骤"><a href="#2、运行步骤" class="headerlink" title="2、运行步骤"></a>2、运行步骤</h4><p>1）首先，需要启动node.js应用<br>命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug-brk=[app port] [app name]</div></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug=[app port] [app name]</div></pre></td></tr></table></figure></p>
+<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug-brk=3001 bin/www</div></pre></td></tr></table></figure></p>
+<p>[debug与debug-brk两种配参见<a href="https://github.com/node-inspector/node-inspector#troubleshooting" target="_blank" rel="external">说明</a>]</p>
+<p>2）然后，启动node-inspector调试工具：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-inspector --web-port [web port] --debug-port [app port]</div></pre></td></tr></table></figure></p>
+<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-inspector --web-port 8081 --debug-port 3001</div></pre></td></tr></table></figure></p>
+<p>[注：8081为web访问端口；3001为应用调试端口]</p>
+<p>3)最后，访问chrome浏览器：<br>具体访问的网址，其实在启动调试工具后会有输出提示，大致如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1:8081/debug?ws=127.0.0.1:8081&amp;port=3001</div></pre></td></tr></table></figure></p>
+<hr>
+<p>具体也可参考如下：</p>
+<ol>
+<li><a href="http://jingyan.baidu.com/article/dca1fa6fbd580ff1a44052de.html" target="_blank" rel="external">百度经验</a></li>
+<li><a href="http://www.noanylove.com/2011/12/node-the-inspector-debugging-node-js/" target="_blank" rel="external">用node-inspector调试Node.js</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/2015/05/11/NodeInspector/" class="article-date">
+  <time datetime="2015-05-11T14:22:57.000Z" itemprop="datePublished">2015-05-11</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Category:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+
+          </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Debug/">Debug</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/">Node</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/2015/12/22/ChangeNodeVersion/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          关于Node版本切换
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/04/08/MEAN-Note/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">MEAN学习笔记</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>至繁归于至简</p>
+
+
+      </div>
+    </footer>
+
+      
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  </body>
+</html>
