@@ -1,0 +1,757 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Node 任务定时器的使用标签： node schedule cron
+
+1. 什么是任务定时器：
+能够让用户在指定时间段周期性地运行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；
+
+2. 定时器的参数说明：最常见的任务定时器当属命令行工具 Cron ；Cron 在类 Unix 系统中有很多的实现，如：cronie、bcron、dcron、fcron 等；虽然实现有多种，但是基于 c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="牛肉培根冒菜侠">
+<meta property="og:url" content="https://jiangink.github.io/2017/03/31/NodeSchedule/index.html">
+<meta property="og:site_name" content="牛肉培根冒菜侠">
+<meta property="og:description" content="Node 任务定时器的使用标签： node schedule cron
+
+1. 什么是任务定时器：
+能够让用户在指定时间段周期性地运行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；
+
+2. 定时器的参数说明：最常见的任务定时器当属命令行工具 Cron ；Cron 在类 Unix 系统中有很多的实现，如：cronie、bcron、dcron、fcron 等；虽然实现有多种，但是基于 c">
+<meta property="og:updated_time" content="2017-03-31T14:46:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="牛肉培根冒菜侠">
+<meta name="twitter:description" content="Node 任务定时器的使用标签： node schedule cron
+
+1. 什么是任务定时器：
+能够让用户在指定时间段周期性地运行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；
+
+2. 定时器的参数说明：最常见的任务定时器当属命令行工具 Cron ；Cron 在类 Unix 系统中有很多的实现，如：cronie、bcron、dcron、fcron 等；虽然实现有多种，但是基于 c">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jiangink.github.io/2017/03/31/NodeSchedule/"/>
+
+
+
+
+
+  <title>  | 牛肉培根冒菜侠 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">牛肉培根冒菜侠</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不会写程序的文青不是好主厨</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2017/03/31/NodeSchedule/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7u2pj1.com1.z0.glb.clouddn.com/About/Head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牛肉培根冒菜侠">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-31T22:46:09+08:00">
+                2017-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Node-任务定时器的使用"><a href="#Node-任务定时器的使用" class="headerlink" title="Node 任务定时器的使用"></a>Node 任务定时器的使用</h1><p>标签： node schedule cron</p>
+<hr>
+<h2 id="1-什么是任务定时器："><a href="#1-什么是任务定时器：" class="headerlink" title="1. 什么是任务定时器："></a>1. 什么是任务定时器：</h2><blockquote>
+<p>能够让用户在指定时间段周期性地运行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；</p>
+</blockquote>
+<h2 id="2-定时器的参数说明："><a href="#2-定时器的参数说明：" class="headerlink" title="2. 定时器的参数说明："></a>2. 定时器的参数说明：</h2><p>最常见的任务定时器当属命令行工具 <code>Cron</code> ；<br><code>Cron</code> 在类 Unix 系统中有很多的实现，如：cronie、bcron、dcron、fcron 等；<br>虽然实现有多种，但是基于 <code>cron</code> 风格的时序参数结构却是相似的；</p>
+<p>这里展示了一个 cron 的时序参数格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">*    *    *    *    *    *</div><div class="line">┬    ┬    ┬    ┬    ┬    ┬</div><div class="line">│    │    │    │    │    |</div><div class="line">│    │    │    │    │    └ day of week (0 - 7) (0 or 7 is Sun)</div><div class="line">│    │    │    │    └───── month (1 - 12)</div><div class="line">│    │    │    └────────── day of month (1 - 31)</div><div class="line">│    │    └─────────────── hour (0 - 23)</div><div class="line">│    └──────────────────── minute (0 - 59)</div><div class="line">└───────────────────────── second (0 - 59, OPTIONAL)</div></pre></td></tr></table></figure>
+<p>观察这组参数说明的过程中，发现了一个有趣的问题:</p>
+<p><code>Q</code>: 在 <code>day of week</code> 参数上，0 或 7 其实都可以代表星期日(Sunday)，WHY?<br><code>A</code>: 原因在于 <code>cron</code> 的众多实现版本里，对于这个参数，部分实现的设置为：0 - 6 =&gt; Sunday - Saturday，而另一部分实现的设置为：1 - 7 =&gt; Monday - Sunday，为了兼容，确保两种设置都正确，所以如上；</p>
+<h2 id="3-具体参数设置的试例："><a href="#3-具体参数设置的试例：" class="headerlink" title="3. 具体参数设置的试例："></a>3. 具体参数设置的试例：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">* * * * *           # 例1: 每1分钟执行一次</div><div class="line"></div><div class="line">3,15 * * * *        # 例2: 每小时的第3和第15分钟执行</div><div class="line"></div><div class="line">3,15 8-11 * * *     # 例3: 在每天上午8点到11点的第3和第15分钟执行</div><div class="line"></div><div class="line">3,15 8-11 */2 * *   # 例4：每隔两天的上午8点到11点的第3和第15分钟执行</div><div class="line"></div><div class="line">3,15 8-11 * * 1     # 例5：每周一的上午8点到11点的第3和第15分钟执行</div><div class="line"></div><div class="line">30 21 * * *         # 例6：每晚的21时30分执行</div><div class="line"></div><div class="line">45 4 1,10,22 * *    # 例7：每月的1、10、22日的4时45分执行</div><div class="line"> </div><div class="line">10 1 * * 6,0        # 例8：每周六、周日的1时10分执行</div><div class="line"></div><div class="line">0,30 18-23 * * *    # 例9：每天 18:00 至 23:00 之间每隔30分钟执行</div><div class="line"></div><div class="line">0 23 * * 6          # 例10：每星期六晚 23:00 执行</div><div class="line"></div><div class="line">* */1 * * *         # 例11：每隔1小时执行</div><div class="line"></div><div class="line">* 23-7/1 * * *      # 例12：晚上23时到次日7时之间每隔1小时执行</div></pre></td></tr></table></figure>
+<h2 id="4-任务定时器在-Node-中的使用"><a href="#4-任务定时器在-Node-中的使用" class="headerlink" title="4. 任务定时器在 Node 中的使用"></a>4. 任务定时器在 Node 中的使用</h2><p>在 Node.JS 中，可以使用 node-schedule 这个 npm 包来进行任务定时器的操作：<br><a href="https://github.com/node-schedule/node-schedule" target="_blank" rel="external"><code>Node Schedule</code> </a><a href="https://github.com/node-schedule/node-schedule" target="_blank" rel="external">https://github.com/node-schedule/node-schedule</a></p>
+<p>安装方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install node-schdule</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>参考：<br><a href="http://nodeclass.com/articles/78767" target="_blank" rel="external">http://nodeclass.com/articles/78767</a><br><a href="http://www.cnblogs.com/zhongweiv/p/node_schedule.html" target="_blank" rel="external">http://www.cnblogs.com/zhongweiv/p/node_schedule.html</a></p>
+</blockquote>
+<hr>
+<p>Examples with the cron format:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schedule = <span class="built_in">require</span>(<span class="string">'node-schedule'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(<span class="string">'42 * * * *'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'The answer to life, the universe, and everything!'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Execute a cron job when the minute is 42 (e.g. 19:42, 20:42, etc.).</p>
+<p>And:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(<span class="string">'0 17 ? * 0,4-6'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Today is recognized by Rebecca Black!'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Execute a cron job every 5 Minutes = <em>/5 </em> <em> </em> *</p>
+<h4 id="Unsupported-Cron-Features"><a href="#Unsupported-Cron-Features" class="headerlink" title="Unsupported Cron Features"></a>Unsupported Cron Features</h4><p>Currently, <code>W</code> (nearest weekday), <code>L</code> (last day of month/week), and <code>#</code> (nth weekday<br>of the month) are not supported. Most other features supported by popular cron<br>implementations should work just fine.</p>
+<p><a href="https://github.com/harrisiirak/cron-parser" target="_blank" rel="external">cron-parser</a> is used to parse crontab instructions.</p>
+<h3 id="Date-based-Scheduling"><a href="#Date-based-Scheduling" class="headerlink" title="Date-based Scheduling"></a>Date-based Scheduling</h3><p>Say you very specifically want a function to execute at 5:30am on December 21, 2012.<br>Remember - in JavaScript - 0 - January, 11 - December.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schedule = <span class="built_in">require</span>(<span class="string">'node-schedule'</span>);</div><div class="line"><span class="keyword">var</span> date = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">21</span>, <span class="number">5</span>, <span class="number">30</span>, <span class="number">0</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(date, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'The world is going to end today.'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>You can invalidate the job with the <code>cancel()</code> method:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">j.cancel();</div></pre></td></tr></table></figure>
+<p>To use current data in the future you can use binding:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schedule = <span class="built_in">require</span>(<span class="string">'node-schedule'</span>);</div><div class="line"><span class="keyword">var</span> date = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">21</span>, <span class="number">5</span>, <span class="number">30</span>, <span class="number">0</span>);</div><div class="line"><span class="keyword">var</span> x = <span class="string">'Tada!'</span>;</div><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(date, <span class="function"><span class="keyword">function</span>(<span class="params">y</span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(y);</div><div class="line">&#125;.bind(<span class="literal">null</span>,x));</div><div class="line">x = <span class="string">'Changing Data'</span>;</div></pre></td></tr></table></figure>
+<p>This will log ‘Tada!’ when the scheduled Job runs, rather than ‘Changing Data’,<br>which x changes to immediately after scheduling.</p>
+<h3 id="Recurrence-Rule-Scheduling"><a href="#Recurrence-Rule-Scheduling" class="headerlink" title="Recurrence Rule Scheduling"></a>Recurrence Rule Scheduling</h3><p>You can build recurrence rules to specify when a job should recur. For instance,<br>consider this rule, which executes the function every hour at 42 minutes after the hour:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> schedule = <span class="built_in">require</span>(<span class="string">'node-schedule'</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> rule = <span class="keyword">new</span> schedule.RecurrenceRule();</div><div class="line">rule.minute = <span class="number">42</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(rule, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'The answer to life, the universe, and everything!'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>You can also use arrays to specify a list of acceptable values, and the <code>Range</code><br>object to specify a range of start and end values, with an optional step parameter.<br>For instance, this will print a message on Thursday, Friday, Saturday, and Sunday at 5pm:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> rule = <span class="keyword">new</span> schedule.RecurrenceRule();</div><div class="line">rule.dayOfWeek = [<span class="number">0</span>, <span class="keyword">new</span> schedule.Range(<span class="number">4</span>, <span class="number">6</span>)];</div><div class="line">rule.hour = <span class="number">17</span>;</div><div class="line">rule.minute = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(rule, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Today is recognized by Rebecca Black!'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="RecurrenceRule-properties"><a href="#RecurrenceRule-properties" class="headerlink" title="RecurrenceRule properties"></a>RecurrenceRule properties</h4><ul>
+<li><code>second</code></li>
+<li><code>minute</code></li>
+<li><code>hour</code></li>
+<li><code>date</code></li>
+<li><code>month</code></li>
+<li><code>year</code></li>
+<li><code>dayOfWeek</code></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: It’s worth noting that the default value of a component of a recurrence rule is<br><code>null</code> (except for second, which is 0 for familiarity with cron). <em>If we did not<br>explicitly set <code>minute</code> to 0 above, the message would have instead been logged at<br>5:00pm, 5:01pm, 5:02pm, …, 5:59pm.</em> Probably not what you want.</p>
+</blockquote>
+<h4 id="Object-Literal-Syntax"><a href="#Object-Literal-Syntax" class="headerlink" title="Object Literal Syntax"></a>Object Literal Syntax</h4><p>To make things a little easier, an object literal syntax is also supported, like<br>in this example which will log a message every Sunday at 2:30pm:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(&#123;<span class="attr">hour</span>: <span class="number">14</span>, <span class="attr">minute</span>: <span class="number">30</span>, <span class="attr">dayOfWeek</span>: <span class="number">0</span>&#125;, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Time for tea!'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="Set-StartTime-and-EndTime"><a href="#Set-StartTime-and-EndTime" class="headerlink" title="Set StartTime and EndTime"></a>Set StartTime and EndTime</h4><p>It will run after 5 seconds and stop after 10 seconds in this example.<br>The ruledat supports the above.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> startTime = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="built_in">Date</span>.now() + <span class="number">5000</span>);</div><div class="line"><span class="keyword">let</span> endTime = <span class="keyword">new</span> <span class="built_in">Date</span>(startTime.getTime() + <span class="number">5000</span>);</div><div class="line"><span class="keyword">var</span> j = schedule.scheduleJob(&#123; <span class="attr">start</span>: startTime, <span class="attr">end</span>: endTime, <span class="attr">rule</span>: <span class="string">'*/1 * * * * *'</span> &#125;, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Time for tea!'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="Contributing"><a href="#Contributing" class="headerlink" title="Contributing"></a>Contributing</h2><p>This module was originally developed by <a href="https://github.com/mattpat" target="_blank" rel="external">Matt Patenaude</a>, and is now maintained by<br><a href="https://github.com/tejasmanohar" target="_blank" rel="external">Tejas Manohar</a> and <a href="https://github.com/node-schedule/node-schedule/graphs/contributors" target="_blank" rel="external">other wonderful contributors</a>.</p>
+<p>We’d love to get your contributions. Individuals making significant and valuable<br>contributions are given commit-access to the project to contribute as they see fit.</p>
+<p>Before jumping in, check out our <a href="https://github.com/node-schedule/node-schedule/blob/master/CONTRIBUTING.md" target="_blank" rel="external">Contributing</a> page guide!</p>
+<h2 id="Copyright-and-license"><a href="#Copyright-and-license" class="headerlink" title="Copyright and license"></a>Copyright and license</h2><p>Copyright 2015 Matt Patenaude.</p>
+<p>Licensed under the <strong><a href="https://github.com/node-schedule/node-schedule/blob/master/LICENSE" target="_blank" rel="external">MIT License</a></strong>.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/31/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7u2pj1.com1.z0.glb.clouddn.com/About/Head.jpg"
+               alt="Ink Jiang" />
+          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">jiangink inkling node</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Node-任务定时器的使用"><span class="nav-number">1.</span> <span class="nav-text">Node 任务定时器的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是任务定时器："><span class="nav-number">1.1.</span> <span class="nav-text">1. 什么是任务定时器：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-定时器的参数说明："><span class="nav-number">1.2.</span> <span class="nav-text">2. 定时器的参数说明：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-具体参数设置的试例："><span class="nav-number">1.3.</span> <span class="nav-text">3. 具体参数设置的试例：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-任务定时器在-Node-中的使用"><span class="nav-number">1.4.</span> <span class="nav-text">4. 任务定时器在 Node 中的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Unsupported-Cron-Features"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">Unsupported Cron Features</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Date-based-Scheduling"><span class="nav-number">1.4.1.</span> <span class="nav-text">Date-based Scheduling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Recurrence-Rule-Scheduling"><span class="nav-number">1.4.2.</span> <span class="nav-text">Recurrence Rule Scheduling</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RecurrenceRule-properties"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">RecurrenceRule properties</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object-Literal-Syntax"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">Object Literal Syntax</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Set-StartTime-and-EndTime"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">Set StartTime and EndTime</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Contributing"><span class="nav-number">1.5.</span> <span class="nav-text">Contributing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Copyright-and-license"><span class="nav-number">1.6.</span> <span class="nav-text">Copyright and license</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
