@@ -1,15 +1,20 @@
-# Node 任务定时器的使用
-
-标签： node schedule cron
-
+title: "Node 任务定时器的使用"
+date: 2017-04-02 14:12:24
+categories: "技术" 
+tags: [node,schedule,cron] 
 ---
 
 ## 1. 什么是任务定时器：
 
-> 能够让用户在指定时间段周期性地运行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；
+> 能够在指定时间定期地执行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；
+
+最常见的任务定时器当属 `Cron` ，该词源于希腊语 chronos，原意是时间；
+在类 Unix 系统中，可以通过 `crontab` 命令设置定时任务执行的时间周期，然后 `cron` 的守护进程会在后台实时的检测是否有需要执行的任务，通常这些需要执行的任务被称为 `cron jobs`;
+
+<!--more-->
 
 ## 2. 定时器的参数说明：
-最常见的任务定时器当属命令行工具 `Cron` ；
+
 `Cron` 在类 Unix 系统中有很多的实现，如：cronie、bcron、dcron、fcron 等；
 虽然实现有多种，但是基于 `cron` 风格的时序参数结构却是相似的；
 
@@ -26,6 +31,9 @@
 │    └──────────────────── minute (0 - 59)
 └───────────────────────── second (0 - 59, OPTIONAL)
 ```
+
+`*` 表示通配符，匹配任意，当秒为 '*' 时，代表任意秒数都会触发执行；
+
 观察这组参数说明的过程中，发现了一个有趣的问题:
 
 `Q`: 在 `day of week` 参数上，0 或 7 其实都可以代表星期日(Sunday)，WHY?
@@ -62,107 +70,69 @@
 
 ## 4. 任务定时器在 Node 中的使用
 
-在 Node.JS 中，可以使用 node-schedule 这个 npm 包来进行任务定时器的操作：
-[`Node Schedule` ][1]https://github.com/node-schedule/node-schedule
+在 Node.JS 中，可以使用 [`Node-Schedule`](https://github.com/node-schedule/node-schedule) 这个 npm 包来进行任务定时器的操作：
 
-安装方式：
+
+
+> 描述： A cron-like and not-cron-like job scheduler for Node.
+
+### 4.1 安装方式：
 ```
 npm install node-schdule
 ```
 
-> 参考：
-http://nodeclass.com/articles/78767
-http://www.cnblogs.com/zhongweiv/p/node_schedule.html
+### 4.2 如何使用：
 
----
-
-
-Examples with the cron format:
-
+#### 4.2.1 任务定时器的创建：
 ```js
 var schedule = require('node-schedule');
 
 var j = schedule.scheduleJob('42 * * * *', function(){
+    // 每小时的第42分钟被执行
   console.log('The answer to life, the universe, and everything!');
 });
 ```
+`scheduleJob()` 方法的回调函数用于实现具体定时任务执行的内容;
 
-Execute a cron job when the minute is 42 (e.g. 19:42, 20:42, etc.).
-
-And:
-
+#### 4.2.2 任务定时器的注销：
 ```js
-var j = schedule.scheduleJob('0 17 ? * 0,4-6', function(){
-  console.log('Today is recognized by Rebecca Black!');
-});
+j.cancel();
 ```
 
-Execute a cron job every 5 Minutes = */5 * * * *
-
-#### Unsupported Cron Features
-
-Currently, `W` (nearest weekday), `L` (last day of month/week), and `#` (nth weekday
-of the month) are not supported. Most other features supported by popular cron
-implementations should work just fine.
-
-[cron-parser] is used to parse crontab instructions.
-
-### Date-based Scheduling
-
-Say you very specifically want a function to execute at 5:30am on December 21, 2012.
-Remember - in JavaScript - 0 - January, 11 - December.
-
+#### 4.2.3 基于JS Date类型的时间参数设置：
 ```js
 var schedule = require('node-schedule');
+// 2012年12月21日5时30分执行
 var date = new Date(2012, 11, 21, 5, 30, 0);
 
 var j = schedule.scheduleJob(date, function(){
   console.log('The world is going to end today.');
 });
 ```
+注意： 在使用 Date 设置参数是，月份的设定范围是 0~11 ，其中0代表一月，11代表十二月；
 
-You can invalidate the job with the `cancel()` method:
-
-```js
-j.cancel();
-```
-
-To use current data in the future you can use binding:
-
-```js
-var schedule = require('node-schedule');
-var date = new Date(2012, 11, 21, 5, 30, 0);
-var x = 'Tada!';
-var j = schedule.scheduleJob(date, function(y){
-  console.log(y);
-}.bind(null,x));
-x = 'Changing Data';
-```
-This will log 'Tada!' when the scheduled Job runs, rather than 'Changing Data',
-which x changes to immediately after scheduling.
-
-### Recurrence Rule Scheduling
-
-You can build recurrence rules to specify when a job should recur. For instance,
-consider this rule, which executes the function every hour at 42 minutes after the hour:
-
+#### 4.2.4 递归循环任务的设置：
 ```js
 var schedule = require('node-schedule');
 
 var rule = new schedule.RecurrenceRule();
+// 每小时的第 42 分钟执行
 rule.minute = 42;
+// rule.dayOfWeek = 5;
+// rule.month = 6;
+// rule.dayOfMonth = 15;
+// rule.hour = 1;
+// rule.second = 0
 
 var j = schedule.scheduleJob(rule, function(){
   console.log('The answer to life, the universe, and everything!');
 });
 ```
 
-You can also use arrays to specify a list of acceptable values, and the `Range`
-object to specify a range of start and end values, with an optional step parameter.
-For instance, this will print a message on Thursday, Friday, Saturday, and Sunday at 5pm:
-
+#### 4.2.5 指定时间范围的设置：
 ```js
 var rule = new schedule.RecurrenceRule();
+// 每个月的星期四、五、六、日的17点整执行
 rule.dayOfWeek = [0, new schedule.Range(4, 6)];
 rule.hour = 17;
 rule.minute = 0;
@@ -171,73 +141,33 @@ var j = schedule.scheduleJob(rule, function(){
   console.log('Today is recognized by Rebecca Black!');
 });
 ```
+`RecurrenceRule` 实例的每个cron属性可接受以数组的形式添加多个时间数值，`Range()`方法可指定一个范围的开始值及结束值;
 
-#### RecurrenceRule properties
-
-- `second`
-- `minute`
-- `hour`
-- `date`
-- `month`
-- `year`
-- `dayOfWeek`
-
-> **Note**: It's worth noting that the default value of a component of a recurrence rule is
-> `null` (except for second, which is 0 for familiarity with cron). *If we did not
-> explicitly set `minute` to 0 above, the message would have instead been logged at
-> 5:00pm, 5:01pm, 5:02pm, ..., 5:59pm.* Probably not what you want.
-
-#### Object Literal Syntax
-
-To make things a little easier, an object literal syntax is also supported, like
-in this example which will log a message every Sunday at 2:30pm:
-
+#### 4.2.6 通过对象字面量的方式设置：
 ```js
+// 每周日的14时30分执行
 var j = schedule.scheduleJob({hour: 14, minute: 30, dayOfWeek: 0}, function(){
   console.log('Time for tea!');
 });
 ```
 
-#### Set StartTime and EndTime
-
-It will run after 5 seconds and stop after 10 seconds in this example.
-The ruledat supports the above.
-
+#### 4.2.7 任务定时器的开始及结束时间设置：
 ```js
+// 5秒后任务开始执行且10秒后任务结束，任务在此过程中每秒执行一次
 let startTime = new Date(Date.now() + 5000);
 let endTime = new Date(startTime.getTime() + 5000);
-var j = schedule.scheduleJob({ start: startTime, end: endTime, rule: '*/1 * * * * *' }, function(){
+var j = schedule.scheduleJob({ 
+    start: startTime, 
+    end: endTime, 
+    rule: '*/1 * * * * *' 
+}, function(){
   console.log('Time for tea!');
 });
 ```
 
 
-## Contributing
-
-This module was originally developed by [Matt Patenaude], and is now maintained by
-[Tejas Manohar] and [other wonderful contributors].
-
-We'd love to get your contributions. Individuals making significant and valuable
-contributions are given commit-access to the project to contribute as they see fit.
-
-Before jumping in, check out our [Contributing] page guide!
-
-## Copyright and license
-
-Copyright 2015 Matt Patenaude.
-
-Licensed under the **[MIT License] [license]**.
-
-
-[cron]: http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5
-[Contributing]: https://github.com/node-schedule/node-schedule/blob/master/CONTRIBUTING.md
-[Matt Patenaude]: https://github.com/mattpat
-[Tejas Manohar]: http://tejas.io
-[license]: https://github.com/node-schedule/node-schedule/blob/master/LICENSE
-[Tejas Manohar]: https://github.com/tejasmanohar
-[other wonderful contributors]: https://github.com/node-schedule/node-schedule/graphs/contributors
-[cron-parser]: https://github.com/harrisiirak/cron-parser
-
-
-  [1]: https://github.com/node-schedule/node-schedule
-
+---
+> 参考：
+http://www.cnblogs.com/zhongweiv/p/node_schedule.html
+http://www.codexiu.cn/javascript/blog/16175/
+https://zh.wikipedia.org/wiki/Cron
