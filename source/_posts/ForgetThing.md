@@ -2,6 +2,7 @@ title: "遺忘的事"
 date: 2015-02-04 21:56:17
 categories: 心情
 tags: [个人日志]
+type: "tags"
 ---
 ![](http://7u2pj1.com1.z0.glb.clouddn.com/ForgetThing/HuaYang.jpg)
 

@@ -1,7 +1,10 @@
 title: "SSL编程小札"
 date: 2015-03-09 22:42:04
 categories: "技术"  
-tags: [C,SSL] 
+tags: 
+  - c
+  - ssl 
+type: "tags"
 ---
 
 ### SSL简介：

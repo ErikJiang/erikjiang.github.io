@@ -2,6 +2,7 @@ title: "不要活在假相之中"
 date: 2015-04-06 15:14:17
 categories: 心情 
 tags: [个人日志] 
+type: "tags"
 ---
 
 *The Walking Dead 「season 5」*

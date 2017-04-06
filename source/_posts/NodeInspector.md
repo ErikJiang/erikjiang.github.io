@@ -1,7 +1,10 @@
 title: "Node调试工具的使用"
 date: 2015-05-11 22:22:57
 categories: "技术" 
-tags: [Node,Debug] 
+tags: 
+  - node
+  - debug
+type: "tags" 
 ---
 
 今天发现一个在浏览器上调试node代码的工具，分享一下.
@@ -9,13 +12,13 @@ tags: [Node,Debug]
 感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；
 <!--more-->
 
-#### 1、安装步骤
+#### 安装步骤
 安装命令：
 ``` bash
 npm install –g node-inspector
 ```
 
-#### 2、运行步骤
+#### 运行步骤
 1）首先，需要启动node.js应用
 命令如下：
 ``` bash

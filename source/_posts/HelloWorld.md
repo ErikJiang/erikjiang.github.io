@@ -2,6 +2,7 @@ title: Hello, World!
 date: 2015-01-23 23:14:55
 categories: 心情
 tags: [个人日志]
+type: "tags"
 ---
 *歡迎來到我的博客，這是我的第一篇[Hexo](http://hexo.io/)日誌，請多多指教！*
 

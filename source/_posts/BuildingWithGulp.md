@@ -1,7 +1,9 @@
 title: "使用 Gulp 构建工程"
 date: 2016-01-29 17:00:27
 categories: "技术"
-tags: [gulp]
+tags:
+  - gulp
+type: "tags"
 ---
 
 gulp 是什么？

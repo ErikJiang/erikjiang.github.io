@@ -1,7 +1,11 @@
 title: "NodeJS应用部署初探"
 date: 2016-01-13 21:13:51
 categories: "技术"
-tags: [MongoLab,Redis4You,Heroku]
+tags: 
+  - mongoLab
+  - redis4You
+  - heroku
+type: "tags"
 ---
 
 尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。

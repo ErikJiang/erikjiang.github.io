@@ -3,7 +3,7 @@ title: 關於
 
 ![ink jiang](http://7u2pj1.com1.z0.glb.clouddn.com/About/Head.jpg)
 
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=260 height=86 src="http://music.163.com/outchain/player?type=2&id=32977568&auto=1&height=66"></iframe>
+{% iframe http://music.163.com/outchain/player?type=2&id=32977568&auto=1&height=66 [180] [85] %}
 
 ----
 
@@ -11,12 +11,12 @@ title: 關於
 
 - **網絡暱稱**：Ink Jiang .
 - **年齡區間**：二十來歲 .
-- **目前職業**：後端程序猿 .
+- **目前職業**：服務端程序猿 .
 - **專攻領域**：Node.JS、 Express、 MySQL、 Redis、 LinuxC
 
 ---- 
 
-### 發展經歷：
+### 工作經歷：
 
 > **2015.02～至今**
 > 成都某醫藥行業互聯網公司

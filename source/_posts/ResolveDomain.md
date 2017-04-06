@@ -1,7 +1,10 @@
 title: "有关域名解析"
 date: 2015-03-18 21:08:06
 categories: "技术" 
-tags: [C,DNS] 
+tags:
+  - c
+  - DNS 
+type: "tags"
 ---
 
 

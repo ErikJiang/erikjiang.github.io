@@ -1,7 +1,9 @@
 title: "Redis学习笔记"
 date: 2016-01-05 14:12:24
 categories: "技术" 
-tags: [redis] 
+tags:
+  - redis 
+type: "tags"
 ---
 
 Redis是一个开源、支持网络、基于内存、键值对存储数据库，使用ANSI C编写。Redis是时下最流行的键值对存储数据库。

@@ -1,7 +1,9 @@
 title: "MEAN学习笔记"
 date: 2015-04-08 17:22:59
 categories: "技术" 
-tags: [MEAN]
+tags: 
+  - MEAN
+type: "tags"
 ---
 
 (M)ongoDB——NoSQL的文档数据库，使用JSON风格来存储数据，甚至也是使用JS来进行sql查询；

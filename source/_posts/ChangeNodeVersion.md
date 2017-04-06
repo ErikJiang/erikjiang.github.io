@@ -1,7 +1,9 @@
 title: "关于Node版本切换"
 date: 2015-12-22 12:06:55
 categories: "技术"
-tags: [NVM] 
+tags:
+  - nvm 
+type: "tags"
 ---
 
 今天在安装yeoman时，警告提示node版本过低，那么好吧，咱们就来更新node版本。

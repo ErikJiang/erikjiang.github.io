@@ -38,10 +38,10 @@ seo: false
 # When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -> archives)
 menu:
   home: /
-  #categories: /categories
+  # categories: /categories
   about: /about
   archives: /archives
-  tags: /tags
+  # tags: /tags
   # sitemap: /sitemap.xml
   #commonweal: /404.html
 
@@ -154,7 +154,7 @@ social_icons:
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.jpg
 # in site  directory(source/uploads): /uploads/avatar.jpg
-avatar: http://7u2pj1.com1.z0.glb.clouddn.com/About/Head.jpg
+avatar: http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead.jpg
 
 
 # Table Of Contents in the Sidebar
@@ -183,9 +183,9 @@ sidebar:
   #  - hide    expand only when click on the sidebar toggle icon.
   #  - remove  Totally remove sidebar including sidebar toggle.
   display: post
-  #display: always
-  #display: hide
-  #display: remove
+  # display: always
+  # display: hide
+  # display: remove
 
   # Sidebar offset from top menubar in pixels.
   offset: 12

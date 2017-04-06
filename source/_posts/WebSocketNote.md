@@ -1,7 +1,10 @@
 title: "WebSocket学习笔记"
 date: 2016-01-19 13:54:31
 categories: "技术" 
-tags: [websocket,socket.io]
+tags: 
+  - websocket
+  - socket.io
+type: "tags"
 ---
 
 HTTP 协议是一种无状态协议，服务器端本身不具备识别客户端的能力，必须借助外部机制，比如 session 和 cookie 才能与特定客户端保持对话。那么如果我们遇到一种需求，它要求保证服务器端与客户端持续的数据交换，比如网络聊天，那再使用 HTTP 协议就会有不便，这时我们就需要用到 Websocket API了。

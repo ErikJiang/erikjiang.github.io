@@ -2,6 +2,7 @@ title: "離開，為了更好的前行"
 date: 2015-01-27 23:01:51
 categories: 心情 
 tags: [个人日志] 
+type: "tags"
 ---
 
 ![](http://7u2pj1.com1.z0.glb.clouddn.com/MoveForward/BeijingCity.jpg)

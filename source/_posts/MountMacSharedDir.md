@@ -1,7 +1,10 @@
 title: "Mac共享目录挂载"
 date: 2015-04-05 15:16:59
 categories: "技术"   
-tags: [Mac,mount] 
+tags: 
+  - Mac
+  - mount 
+type: "tags"
 ---
 
 最近，这个共享目录挂载的问题一直困扰着我，妈蛋！

@@ -1,7 +1,11 @@
 title: "Node 任务定时器的使用"
 date: 2017-04-02 14:12:24
 categories: "技术" 
-tags: [node,schedule,cron] 
+tags: 
+  - node
+  - schedule
+  - cron 
+type: "tags"
 ---
 
 ## 什么是任务定时器：
