@@ -103,7 +103,7 @@
 2015年6月至今：Redis 的开发由Redis Labs赞助。
 2013年5月至2015年6月期间：其开发由Pivotal赞助。
 2013年5月之前：其开发由VMware赞助。">
-<meta property="og:updated_time" content="2017-03-31T15:05:14.000Z">
+<meta property="og:updated_time" content="2017-04-06T12:24:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis学习笔记">
 <meta name="twitter:description" content="Redis是一个开源、支持网络、基于内存、键值对存储数据库，使用ANSI C编写。Redis是时下最流行的键值对存储数据库。
@@ -377,14 +377,14 @@
 </blockquote>
 <a id="more"></a>
 <hr>
-<h3 id="一、如何安装-Redis-："><a href="#一、如何安装-Redis-：" class="headerlink" title="一、如何安装 Redis ："></a>一、如何安装 Redis ：</h3><p>在 Linux、Unix、Mac 中源码编译的安装方式：</p>
+<h3 id="如何安装-Redis-："><a href="#如何安装-Redis-：" class="headerlink" title="如何安装 Redis ："></a>如何安装 Redis ：</h3><p>在 Linux、Unix、Mac 中源码编译的安装方式：</p>
 <pre><code>$ wget http://download.redis.io/releases/redis-3.0.6.tar.gz
 $ tar xzf redis-3.0.6.tar.gz
 $ cd redis-3.0.6
 $ make
 </code></pre><p>在 Mac 中可使用 Homebrew 管理工具进行安装：</p>
 <pre><code>$ brew install redis
-</code></pre><h3 id="二、如何运行-Redis-："><a href="#二、如何运行-Redis-：" class="headerlink" title="二、如何运行 Redis ："></a>二、如何运行 Redis ：</h3><p>首先需要运行 redis 服务端：</p>
+</code></pre><h3 id="如何运行-Redis-："><a href="#如何运行-Redis-：" class="headerlink" title="如何运行 Redis ："></a>如何运行 Redis ：</h3><p>首先需要运行 redis 服务端：</p>
 <pre><code>$ redis-server
 </code></pre><p>然后切换到另一终端命令行，运行客户端可执行程序：</p>
 <pre><code>$ redis-cli
@@ -394,7 +394,7 @@ $ make
 <p>同时，还可以使用 redis 提供的 <code>ping</code> 命令来测试客户端与 redis 服务是否连接正常：</p>
 <pre><code>redis 127.0.0.1:6379&gt; PING
 PONG 
-</code></pre><h3 id="三、关于-Redis-的数据类型："><a href="#三、关于-Redis-的数据类型：" class="headerlink" title="三、关于 Redis 的数据类型："></a>三、关于 Redis 的数据类型：</h3><p>redis 存在五种数据类型，包括 string（字符串类型），hash（哈希类型），list（链表类型），set（无序集合类型）及 zset（有序集合类型）；</p>
+</code></pre><h3 id="关于-Redis-的数据类型："><a href="#关于-Redis-的数据类型：" class="headerlink" title="关于 Redis 的数据类型："></a>关于 Redis 的数据类型：</h3><p>redis 存在五种数据类型，包括 string（字符串类型），hash（哈希类型），list（链表类型），set（无序集合类型）及 zset（有序集合类型）；</p>
 <ol>
 <li>字符串类型 [string] 是 Redis 中最基本的数据类型，也是其他 4 种数据类型的基础，它能存储任何形式的字符串，包括二进制数据。</li>
 <li>哈希类型 [hash] 是一个 string 类型的字段和字段值的映射表。哈希类型适合存储对象。相较于将对象的每个字段存成单个 string 类型，将一个对象存储在 hash 类型中会占用更少的内存，并且可以更方便的存取整个对象。</li>
@@ -402,7 +402,7 @@ PONG
 <li>集合类型 [set] 和数学中的集合概念相似，比如集合中的元素是唯一的、无序的，集合与集合之间可以进行交并差等操作。</li>
 <li>有序集合类型 [zset] 与集合类型一样，只不过多了个 “有序” ，有序集合中每一个元素都关联了一个分数，虽然集合中每个元素都是不同的，但是它们的分数却可以相同。</li>
 </ol>
-<h3 id="四、关于-Redis-的基本使用："><a href="#四、关于-Redis-的基本使用：" class="headerlink" title="四、关于 Redis 的基本使用："></a>四、关于 Redis 的基本使用：</h3><h4 id="string［字符串类型］："><a href="#string［字符串类型］：" class="headerlink" title="string［字符串类型］："></a>string［字符串类型］：</h4><p>字符串类型的操作中，SET、GET 以及 INCR 是三个常用的命令。</p>
+<h3 id="关于-Redis-的基本使用："><a href="#关于-Redis-的基本使用：" class="headerlink" title="关于 Redis 的基本使用："></a>关于 Redis 的基本使用：</h3><h4 id="string［字符串类型］："><a href="#string［字符串类型］：" class="headerlink" title="string［字符串类型］："></a>string［字符串类型］：</h4><p>字符串类型的操作中，SET、GET 以及 INCR 是三个常用的命令。</p>
 <p>用法：</p>
 <ul>
 <li>SET key value : 设置 key 的值为 value，成功时返回 OK。</li>
@@ -632,7 +632,7 @@ PONG
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、如何安装-Redis-："><span class="nav-number">1.</span> <span class="nav-text">一、如何安装 Redis ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、如何运行-Redis-："><span class="nav-number">2.</span> <span class="nav-text">二、如何运行 Redis ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、关于-Redis-的数据类型："><span class="nav-number">3.</span> <span class="nav-text">三、关于 Redis 的数据类型：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、关于-Redis-的基本使用："><span class="nav-number">4.</span> <span class="nav-text">四、关于 Redis 的基本使用：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#string［字符串类型］："><span class="nav-number">4.1.</span> <span class="nav-text">string［字符串类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash［哈希类型］："><span class="nav-number">4.2.</span> <span class="nav-text">hash［哈希类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list［链表类型］："><span class="nav-number">4.3.</span> <span class="nav-text">list［链表类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set［集合类型］："><span class="nav-number">4.4.</span> <span class="nav-text">set［集合类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zset［有序集合类型］："><span class="nav-number">4.5.</span> <span class="nav-text">zset［有序集合类型］：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何安装-Redis-："><span class="nav-number">1.</span> <span class="nav-text">如何安装 Redis ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何运行-Redis-："><span class="nav-number">2.</span> <span class="nav-text">如何运行 Redis ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于-Redis-的数据类型："><span class="nav-number">3.</span> <span class="nav-text">关于 Redis 的数据类型：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于-Redis-的基本使用："><span class="nav-number">4.</span> <span class="nav-text">关于 Redis 的基本使用：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#string［字符串类型］："><span class="nav-number">4.1.</span> <span class="nav-text">string［字符串类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash［哈希类型］："><span class="nav-number">4.2.</span> <span class="nav-text">hash［哈希类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list［链表类型］："><span class="nav-number">4.3.</span> <span class="nav-text">list［链表类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set［集合类型］："><span class="nav-number">4.4.</span> <span class="nav-text">set［集合类型］：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zset［有序集合类型］："><span class="nav-number">4.5.</span> <span class="nav-text">zset［有序集合类型］：</span></a></li></ol></li></ol></div>
             
 
           </div>

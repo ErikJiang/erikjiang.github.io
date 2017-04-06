@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://jiangink.github.io/2015/03/18/ResolveDomain/index.html">
 <meta property="og:site_name" content="牛肉培根冒菜侠">
 <meta property="og:description" content="这里纪录一下服务端环境，单个域名在对应的多条IP信息情况下，配置与解析处理。">
-<meta property="og:updated_time" content="2017-03-31T15:05:14.000Z">
+<meta property="og:updated_time" content="2017-04-06T12:48:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="有关域名解析">
 <meta name="twitter:description" content="这里纪录一下服务端环境，单个域名在对应的多条IP信息情况下，配置与解析处理。">
@@ -355,10 +355,14 @@
       
         <p><em>这里纪录一下服务端环境，单个域名在对应的多条IP信息情况下，配置与解析处理。</em></p>
 <a id="more"></a>
-<h4 id="1、关于hosts允许主机对应多条IP的参数配置"><a href="#1、关于hosts允许主机对应多条IP的参数配置" class="headerlink" title="1、关于hosts允许主机对应多条IP的参数配置"></a>1、关于hosts允许主机对应多条IP的参数配置</h4><hr>
+<h4 id="关于hosts允许主机对应多条IP的参数配置"><a href="#关于hosts允许主机对应多条IP的参数配置" class="headerlink" title="关于hosts允许主机对应多条IP的参数配置"></a>关于hosts允许主机对应多条IP的参数配置</h4><hr>
 <p>我们知道 <em>gethostbyname()</em> 函数会使用到 hosts 文件进行域名解析，而在解析过程中将按照顺序读取文件内容；</p>
-<p>hosts文件内容如下所示： </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># /etc/hosts</span></div><div class="line">192.168.1.1		www.dns.com</div><div class="line">192.168.1.2		www.dns.com</div><div class="line">192.168.1.3		www.dns.com</div><div class="line">192.168.1.4		www.dns.com</div><div class="line">``` </div><div class="line"></div><div class="line">一般情况下，若未做任何host参数配置的话，仅能够解析到第一条内容(即：192.168.1.1)，</div><div class="line">但如果在 */etc/host.conf* 配置文件中添加 *multi on* (允许主机存在多条IP)，则能够解析到关于该域名的多条IP信息；</div><div class="line"></div><div class="line"><span class="comment">#### 2、主机信息及IP地址列表</span></div><div class="line">---</div><div class="line">hostent(host entry)，该结构体记录主机的信息，包括主机名、别名、地址类型、地址长度和地址列表。之所以主机的地址是一个列表的形式，原因是当一个主机对应多个网络接口时，就存在多个地址。</div><div class="line">```cpp</div><div class="line">    struct hostent</div><div class="line">    &#123;</div><div class="line">        char*	h_name;         /* official name of host */</div><div class="line">        char*	h_aliases;      /* <span class="built_in">alias</span> list */</div><div class="line">        short	h_addrtype;     /* host address <span class="built_in">type</span> */</div><div class="line">        short	h_length;       /* length of address */</div><div class="line">        char**	h_addr_list;    /* list of addresses */</div><div class="line"><span class="comment">#define	h_addr	h_addr_list[0]  /* address, for backward compat */</span></div><div class="line">    &#125;;</div></pre></td></tr></table></figure>
+<p><code>/etc/hosts</code> 文件内容如下所示： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">192.168.1.1		www.dns.com</div><div class="line">192.168.1.2		www.dns.com</div><div class="line">192.168.1.3		www.dns.com</div><div class="line">192.168.1.4		www.dns.com</div></pre></td></tr></table></figure>
+<p>一般情况下，若未做任何host参数配置的话，仅能够解析到第一条内容(即：192.168.1.1)，<br>但如果在 <em>/etc/host.conf</em> 配置文件中添加 <em>multi on</em> (允许主机存在多条IP)，则能够解析到关于该域名的多条IP信息；</p>
+<h4 id="主机信息及IP地址列表"><a href="#主机信息及IP地址列表" class="headerlink" title="主机信息及IP地址列表"></a>主机信息及IP地址列表</h4><hr>
+<p>hostent(host entry)，该结构体记录主机的信息，包括主机名、别名、地址类型、地址长度和地址列表。之所以主机的地址是一个列表的形式，原因是当一个主机对应多个网络接口时，就存在多个地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">    struct hostent</div><div class="line">    &#123;</div><div class="line">        char*	h_name;         /* official name of host */</div><div class="line">        char*	h_aliases;      /* alias list */</div><div class="line">        short	h_addrtype;     /* host address type */</div><div class="line">        short	h_length;       /* length of address */</div><div class="line">        char**	h_addr_list;    /* list of addresses */</div><div class="line">#define	h_addr	h_addr_list[0]  /* address, for backward compat */</div><div class="line">    &#125;;</div></pre></td></tr></table></figure>
 <p><em>h_addr_list</em> 为指针数组，数组中每个元素都是 <em>in_addr</em> 型指针。</p>
 <p>具体域名IP解析的代码如下：</p>
 <pre><code class="cpp"><span class="function"><span class="keyword">void</span> <span class="title">resolve_domain_name</span><span class="params">(<span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span>* host_name)</span>
@@ -580,7 +584,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、关于hosts允许主机对应多条IP的参数配置"><span class="nav-number">1.</span> <span class="nav-text">1、关于hosts允许主机对应多条IP的参数配置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于hosts允许主机对应多条IP的参数配置"><span class="nav-number">1.</span> <span class="nav-text">关于hosts允许主机对应多条IP的参数配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主机信息及IP地址列表"><span class="nav-number">2.</span> <span class="nav-text">主机信息及IP地址列表</span></a></li></ol></div>
             
 
           </div>
