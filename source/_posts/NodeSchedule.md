@@ -4,7 +4,7 @@ categories: "技术"
 tags: [node,schedule,cron] 
 ---
 
-## 1. 什么是任务定时器：
+## 什么是任务定时器：
 
 > 能够在指定时间定期地执行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；
 
@@ -13,7 +13,7 @@ tags: [node,schedule,cron]
 
 <!--more-->
 
-## 2. 定时器的参数说明：
+## 定时器的参数说明：
 
 `Cron` 在类 Unix 系统中有很多的实现，如：cronie、bcron、dcron、fcron 等；
 虽然实现有多种，但是基于 `cron` 风格的时序参数结构却是相似的；
@@ -39,7 +39,7 @@ tags: [node,schedule,cron]
 `Q`: 在 `day of week` 参数上，0 或 7 其实都可以代表星期日(Sunday)，WHY?
 `A`: 原因在于 `cron` 的众多实现版本里，对于这个参数，部分实现的设置为：0 - 6 => Sunday - Saturday，而另一部分实现的设置为：1 - 7 => Monday - Sunday，为了兼容，确保两种设置都正确，所以如上；
 
-## 3. 具体参数设置的试例：
+## 具体参数设置的试例：
 ```
 
 * * * * *           # 例1: 每1分钟执行一次
@@ -68,7 +68,7 @@ tags: [node,schedule,cron]
  
 ```
 
-## 4. 任务定时器在 Node 中的使用
+## 任务定时器在 Node 中的使用
 
 在 Node.JS 中，可以使用 [`Node-Schedule`](https://github.com/node-schedule/node-schedule) 这个 npm 包来进行任务定时器的操作：
 
@@ -76,14 +76,14 @@ tags: [node,schedule,cron]
 
 > 描述： A cron-like and not-cron-like job scheduler for Node.
 
-### 4.1 安装方式：
+### 安装方式：
 ```
 npm install node-schdule
 ```
 
-### 4.2 如何使用：
+### 如何使用：
 
-#### 4.2.1 任务定时器的创建：
+#### 任务定时器的创建：
 ```js
 var schedule = require('node-schedule');
 
@@ -94,12 +94,12 @@ var j = schedule.scheduleJob('42 * * * *', function(){
 ```
 `scheduleJob()` 方法的回调函数用于实现具体定时任务执行的内容;
 
-#### 4.2.2 任务定时器的注销：
+#### 任务定时器的注销：
 ```js
 j.cancel();
 ```
 
-#### 4.2.3 基于JS Date类型的时间参数设置：
+#### 基于JS Date类型的时间参数设置：
 ```js
 var schedule = require('node-schedule');
 // 2012年12月21日5时30分执行
@@ -129,7 +129,7 @@ var j = schedule.scheduleJob(rule, function(){
 });
 ```
 
-#### 4.2.5 指定时间范围的设置：
+#### 指定时间范围的设置：
 ```js
 var rule = new schedule.RecurrenceRule();
 // 每个月的星期四、五、六、日的17点整执行
@@ -143,7 +143,7 @@ var j = schedule.scheduleJob(rule, function(){
 ```
 `RecurrenceRule` 实例的每个cron属性可接受以数组的形式添加多个时间数值，`Range()`方法可指定一个范围的开始值及结束值;
 
-#### 4.2.6 通过对象字面量的方式设置：
+#### 通过对象字面量的方式设置：
 ```js
 // 每周日的14时30分执行
 var j = schedule.scheduleJob({hour: 14, minute: 30, dayOfWeek: 0}, function(){
@@ -151,7 +151,7 @@ var j = schedule.scheduleJob({hour: 14, minute: 30, dayOfWeek: 0}, function(){
 });
 ```
 
-#### 4.2.7 任务定时器的开始及结束时间设置：
+#### 任务定时器的开始及结束时间设置：
 ```js
 // 5秒后任务开始执行且10秒后任务结束，任务在此过程中每秒执行一次
 let startTime = new Date(Date.now() + 5000);

@@ -9,27 +9,28 @@ tags: [C,DNS]
 
 <!--more-->
 
-#### 1、关于hosts允许主机对应多条IP的参数配置
+#### 关于hosts允许主机对应多条IP的参数配置
 ---
 我们知道 *gethostbyname()* 函数会使用到 hosts 文件进行域名解析，而在解析过程中将按照顺序读取文件内容；
 
-hosts文件内容如下所示： 
+`/etc/hosts` 文件内容如下所示： 
 
-```bash 
-# /etc/hosts
-192.168.1.1		www.dns.com
-192.168.1.2		www.dns.com
-192.168.1.3		www.dns.com
-192.168.1.4		www.dns.com
-``` 
+````
+    192.168.1.1		www.dns.com
+    192.168.1.2		www.dns.com
+    192.168.1.3		www.dns.com
+    192.168.1.4		www.dns.com
+
+````
 
 一般情况下，若未做任何host参数配置的话，仅能够解析到第一条内容(即：192.168.1.1)，
 但如果在 */etc/host.conf* 配置文件中添加 *multi on* (允许主机存在多条IP)，则能够解析到关于该域名的多条IP信息；
 
-#### 2、主机信息及IP地址列表
+#### 主机信息及IP地址列表
 ---
 hostent(host entry)，该结构体记录主机的信息，包括主机名、别名、地址类型、地址长度和地址列表。之所以主机的地址是一个列表的形式，原因是当一个主机对应多个网络接口时，就存在多个地址。
-```cpp
+
+````
     struct hostent
     {
         char*	h_name;         /* official name of host */
@@ -40,7 +41,7 @@ hostent(host entry)，该结构体记录主机的信息，包括主机名、别�
 #define	h_addr	h_addr_list[0]  /* address, for backward compat */
     };
 
-```
+````
 
 *h\_addr\_list* 为指针数组，数组中每个元素都是 *in\_addr* 型指针。
 

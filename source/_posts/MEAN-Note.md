@@ -63,7 +63,7 @@ $ mongod --config /usr/local/etc/mongod.conf
 ---
 
 ####  问题汇总：
-######1、新工程创建标准：
+##### 新工程创建标准：
     
 创建一个标准的package.json文件：
 ``` bash
@@ -78,7 +78,7 @@ $ npm install modules_name --save
 通过 --save 参数，就能够在你安装模块的同时，自动将模块的依赖写入 package.json。
 安装完成后，查看 package.json，会多了一项 dependencies 字段，该字段内将罗列具体的依赖模块；
 
-######2、package.json中的dependencies字段与devDependencies字段：
+##### package.json中的dependencies字段与devDependencies字段：
 
 node package存在两种依赖项，一种是dependencies，而另一种是devDependencies，
 其中前者的依赖项是正常运行该包时所需要的依赖项，而后者则是进行开发时所需要的依赖项，如一些单元测试的模块包。
@@ -105,7 +105,7 @@ npm install node_module –save
 npm install node_module –save-dev。
 ```
 
-######3、Most middleware (like session) is no longer bundled with Express and must be installed ……
+##### Most middleware (like session) is no longer bundled with Express and must be installed ……
 解决方法：
 大多数的中间件如session，在Express4.x版本之后不会再随着Express包本身一并被安装，而是被分离出来；原本3.x版本的写法，在这里将不再适用：
 ``` javascript
@@ -134,7 +134,7 @@ app.use(session({
 }));
 ```
 
-######4、Redis的安装：
+##### Redis的安装：
 到[官网](http://redis.io/download)下载最新源码，或者通过命令下载：
 ```bash
 $ wget http://download.redis.io/releases/redis-3.0.1.tar.gz

@@ -18,7 +18,7 @@ SSL/TLS的特性确保了通信双方可以进行端点认证(ndpoint authentica
 
 SSL通信模型采用的是标准C/S结构，因此基于OpenSSL的程序就被分成两个部分：Client和Server。且程序遵循着以下几个重要步骤：
 
-##### (1) OpenSSL初始化
+#### OpenSSL初始化
 
 在使用OpenSSL之前，必须进行相应的初始化工作。完成初始化功能的函数原型如下： 
 ```cpp
@@ -28,7 +28,7 @@ void SSL_load_error_strings(void);      //错误信息的初始化
 ```
 在建立SSL连接之前，要为Client和Server分别指定本次连接采用的协议及其版本，目前能够使用的协议版本包括SSLv2、SSLv3、SSLv2/v3和TLSv1.0。SSL连接若要正常建立，则要求Client和Server必须使用相互兼容的协议。
 
-##### (2) 创建CTX
+#### 创建CTX
 
 在OpenSSL中，CTX是指SSL会话环境。建立连接时使用不同的协议（ [*详见*](http://www.openssl.org/docs/ssl/SSL_CTX_new.html) ），其CTX也不一样。创建CTX的过程中会依次用到以下OpenSSL函数：
 ```cpp
@@ -65,7 +65,7 @@ SSL_CTX_load_verify_locations(SSL_CTX* ctx,const char* CAfile,const char* CApath
 > 3. SSL_VERIFY_FAIL_IF_NO_PEER_CERT:
     服务端使用的一种的模式，此模式下，相当于强制验证客户端的证书，若客户端无证书则SSL握手失败。
 
-##### (3) 建立SSL套接字
+#### 建立SSL套接字
 
 在此之前要先创建普通的流套接字，完成TCP三次握手，建立普通的TCP连接。然后创建SSL套接字，并将其与流套接字绑定。这一过程中会使用以下几个函数：
 ```cpp
@@ -75,7 +75,7 @@ int SSL_set_rfd(SSL *ssl,int fd);   //绑定只读套接字
 int SSL_set_wfd(SSL *ssl,int fd);   //绑定只写套接字
 ```
 
-##### (4) 完成SSL握手
+#### 完成SSL握手
 
 在这一步，我们需要在普通TCP连接的基础上，建立SSL连接。与普通流套接字建立连接的过程类似：
 Client使用函数SSL_connect()发起握手（ *类似于流套接字中用的connect()* ），而Server使用函数SSL_accept()对握手进行响应（ *类似于流套接字中用的accept()* ），从而完成握手过程。两函数原型如下：
@@ -84,7 +84,7 @@ int SSL_connect(SSL *ssl);
 int SSL_accept(SSL *ssl);
 ```
 
-##### (5) 鉴别证书信息
+#### 鉴别证书信息
 
 握手过程完成以后，Client以及Server通常能够获取到对方的证书信息，并对信息进行鉴别。具体实现中会用到以下函数:
 ```cpp
@@ -93,7 +93,7 @@ X509_NAME *X509_get_subject_name(X509 *a);  //获取证书所有者名字
 X509_NAME *X509_get_issuer_name(X509  *a);  //获取证书颁发者名字
 ```
 
-##### (6) 进行数据传输
+#### 进行数据传输
 
 经过前面的一系列过程后，就可以进行安全的数据传输了。
 在数据传输阶段，需要使用SSL_read( )和SSL_write( )来代替普通流套接字所使用的read( )和write( )函数，以此完成对SSL套接字的读写操作,两个新函数的原型分别如下：
@@ -102,7 +102,7 @@ int SSL_read(SSL *ssl,void *buf,int num);           //从SSL套接字读取数�
 int SSL_write(SSL *ssl,const void *buf,int num);    //向SSL套接字写入数据
 ```
 
-##### (7) 会话结束
+#### 会话结束
 
 当Client和Server之间的通信过程完成后，就使用以下函数来释放前面过程中申请的SSL资源： 
 ```cpp

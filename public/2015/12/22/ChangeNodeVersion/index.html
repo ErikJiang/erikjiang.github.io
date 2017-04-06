@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://jiangink.github.io/2015/12/22/ChangeNodeVersion/index.html">
 <meta property="og:site_name" content="牛肉培根冒菜侠">
 <meta property="og:description" content="今天在安装yeoman时，警告提示node版本过低，那么好吧，咱们就来更新node版本。顺带把整个过程梳理一遍，做一个有节操的程序猿。">
-<meta property="og:updated_time" content="2017-03-31T15:05:14.000Z">
+<meta property="og:updated_time" content="2017-04-06T12:20:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于Node版本切换">
 <meta name="twitter:description" content="今天在安装yeoman时，警告提示node版本过低，那么好吧，咱们就来更新node版本。顺带把整个过程梳理一遍，做一个有节操的程序猿。">
@@ -357,14 +357,14 @@
 <a id="more"></a>
 <hr>
 <p>提到node的安装，就不得不说这个 NVM （ Node Version Manager ）Node版本管理器，<br>一般情况下，不建议直接下载node安装程序进行安装，为了便于管理更新频繁的node，<br>比较妥当的做法是通过nvm工具进行安装，而nvm工具本身的安装就不多加细究，<br>在Mac上的方式是通过homebrew管理工具进行安装的，其他平台可Google寻找答案。</p>
-<h4 id="一、NVM的安装及简单使用："><a href="#一、NVM的安装及简单使用：" class="headerlink" title="一、NVM的安装及简单使用："></a>一、NVM的安装及简单使用：</h4><p>Mac上安装nvm的命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install nvm</div></pre></td></tr></table></figure></p>
+<h4 id="NVM的安装及简单使用："><a href="#NVM的安装及简单使用：" class="headerlink" title="NVM的安装及简单使用："></a>NVM的安装及简单使用：</h4><p>Mac上安装nvm的命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install nvm</div></pre></td></tr></table></figure></p>
 <p>我们可以查看nvm是否正常安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvm —version</div></pre></td></tr></table></figure></p>
 <p>如果安装正常，我们可以通过如下命令，查看当前哪些版本可供安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvm ls-remote</div></pre></td></tr></table></figure></p>
 <p>然后可以通过下面命令安装指定版本的node：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvm install &lt;version&gt;</div></pre></td></tr></table></figure></p>
 <p>同样我们可以卸载指定版本的node：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvm uninstall &lt;version&gt;</div></pre></td></tr></table></figure></p>
 <p>查看当前系统中可管理的所有版本node信息：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvm ls</div></pre></td></tr></table></figure></p>
 <hr>
-<h4 id="二、Node安装及版本切换："><a href="#二、Node安装及版本切换：" class="headerlink" title="二、Node安装及版本切换："></a>二、Node安装及版本切换：</h4><p>我这里安装了v0.12.9版本：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ nvm install v0.12.9</div><div class="line"><span class="comment">#################################################### 100.0%</span></div><div class="line">Now using node v0.12.9</div></pre></td></tr></table></figure></p>
+<h4 id="Node安装及版本切换："><a href="#Node安装及版本切换：" class="headerlink" title="Node安装及版本切换："></a>Node安装及版本切换：</h4><p>我这里安装了v0.12.9版本：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ nvm install v0.12.9</div><div class="line"><span class="comment">#################################################### 100.0%</span></div><div class="line">Now using node v0.12.9</div></pre></td></tr></table></figure></p>
 <p>当前我使用v0.12.9版本即可，但如果此时我需要切换至其它版本，就可以使用如下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvm use &lt;version&gt;</div></pre></td></tr></table></figure></p>
 <p>但是使用 nvm use 命令有一个问题，即只对当前shell窗口生效，<br>如果我们此时关闭该shell窗口，重新打开命令行就会发现node的版本又恢复到之前的版本状态；<br>所以针对这种状况，我们需要设置一个默认node版本，命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nvm <span class="built_in">alias</span> default &lt;version&gt;</div></pre></td></tr></table></figure></p>
 <p>此时打开shell窗口，就会使用默认版本的node执行；</p>
@@ -552,7 +552,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、NVM的安装及简单使用："><span class="nav-number">1.</span> <span class="nav-text">一、NVM的安装及简单使用：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、Node安装及版本切换："><span class="nav-number">2.</span> <span class="nav-text">二、Node安装及版本切换：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#NVM的安装及简单使用："><span class="nav-number">1.</span> <span class="nav-text">NVM的安装及简单使用：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node安装及版本切换："><span class="nav-number">2.</span> <span class="nav-text">Node安装及版本切换：</span></a></li></ol></div>
             
 
           </div>

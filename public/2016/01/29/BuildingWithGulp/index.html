@@ -97,7 +97,7 @@
 <meta property="og:description" content="gulp 是什么？
 如果你和我一样，曾做过 Linux C 相关开发，一定知道对于 C 一类的工程，都不可缺少一个编译构建工具 Automake ，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
 而在如今大前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Ha">
-<meta property="og:updated_time" content="2017-03-31T15:05:14.000Z">
+<meta property="og:updated_time" content="2017-04-06T12:20:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 Gulp 构建工程">
 <meta name="twitter:description" content="gulp 是什么？
@@ -366,13 +366,13 @@
 <hr>
 <p>Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 的构建方式，Grunt 在处理过程中会产生一些中间态的临时文件，而任务会最终基于这些临时文件生成构建后的结果文件。在这个过程中 Grunt 会进行大量的 I/O 读写操作，那么如果遇到大型项目工程，Grunt 的构建处理速度将大大拖长，这也就是为什么 Gulp 渐渐取代 Grunt 的原因之一，如果想了解更多，可以试着阅读 <a href="http://segmentfault.com/a/1190000002491282" title="gulp vs grunt" target="_blank" rel="external">《 gulp vs grunt 》</a> 这篇文章。</p>
 <p>由于 Gulp 通过代码优于配置的策略不仅使得任务易于编写，同时也易于维护和阅读。Gulp 基于的 NodeJS 的流，使用管道 Pipe 的概念，这一级的输出作为下一级的输入，中间无需在硬盘上写入任何临时文件和目录，让任务构建的更加迅速。</p>
-<h3 id="一、Gulp-的基本安装-："><a href="#一、Gulp-的基本安装-：" class="headerlink" title="一、Gulp 的基本安装 ："></a>一、Gulp 的基本安装 ：</h3><p>这里我默认您已经安装了 Node.js 以及 NPM 包管理工具，首先需要全局安装 Gulp 工具：</p>
+<h3 id="Gulp-的基本安装-："><a href="#Gulp-的基本安装-：" class="headerlink" title="Gulp 的基本安装 ："></a>Gulp 的基本安装 ：</h3><p>这里我默认您已经安装了 Node.js 以及 NPM 包管理工具，首先需要全局安装 Gulp 工具：</p>
 <pre><code>$ npm install gulp -g
 </code></pre><p>然后，需要在已有的项目中安装 gulp 的依赖包（前提是项目中已存在 package.json 文件）：</p>
 <pre><code>$ npm init    #如果项目中没有 package.json 文件，需要执行此命令生成，有则忽略；
 $ npm install gulp --save-dev    #安装 gulp 依赖包
 </code></pre><p>一切顺利，将会发现 package.json 文件中的 devDependencies 项里多了一个 gulp 子项，且 node_modules 中也多了一个 gulp 的依赖包；</p>
-<h3 id="二、Gulp-插件的安装-："><a href="#二、Gulp-插件的安装-：" class="headerlink" title="二、Gulp 插件的安装 ："></a>二、Gulp 插件的安装 ：</h3><p>要使用 Gulp 中的功能，必须依赖于 Gulp 的插件，在 Gulp 中每个插件完成一个具体的功能任务，而实际的构建工作往往是多个任务的流程，所以就要涉及到多个插件的安装，那么具体要用到哪些插件呢？这里我大概列出了常用的几项，仅供参考。</p>
+<h3 id="Gulp-插件的安装-："><a href="#Gulp-插件的安装-：" class="headerlink" title="Gulp 插件的安装 ："></a>Gulp 插件的安装 ：</h3><p>要使用 Gulp 中的功能，必须依赖于 Gulp 的插件，在 Gulp 中每个插件完成一个具体的功能任务，而实际的构建工作往往是多个任务的流程，所以就要涉及到多个插件的安装，那么具体要用到哪些插件呢？这里我大概列出了常用的几项，仅供参考。</p>
 <ul>
 <li>Sass compile (gulp-ruby-sass)        # css 预处理器编译</li>
 <li>Autoprefixer (gulp-autoprefixer)    # css 浏览器兼容前缀处理</li>
@@ -388,7 +388,7 @@ $ npm install gulp --save-dev    #安装 gulp 依赖包
 </ul>
 <p>安装方式与安装 Gulp 依赖包命令一致：</p>
 <pre><code>$ npm install [package-name] --save-dev
-</code></pre><h3 id="三、Gulp-任务文件的配置-："><a href="#三、Gulp-任务文件的配置-：" class="headerlink" title="三、Gulp 任务文件的配置 ："></a>三、Gulp 任务文件的配置 ：</h3><p>这里我直接使用本人 Github 上的一个聊天室项目 <a href="https://github.com/JiangInk/node_chat" title="node_chat" target="_blank" rel="external">node_chat</a> 来进行讲解。</p>
+</code></pre><h3 id="Gulp-任务文件的配置-："><a href="#Gulp-任务文件的配置-：" class="headerlink" title="Gulp 任务文件的配置 ："></a>Gulp 任务文件的配置 ：</h3><p>这里我直接使用本人 Github 上的一个聊天室项目 <a href="https://github.com/JiangInk/node_chat" title="node_chat" target="_blank" rel="external">node_chat</a> 来进行讲解。</p>
 <pre><code>// 加载插件
 var del = require(&apos;del&apos;),
     gulp = require(&apos;gulp&apos;),
@@ -663,7 +663,7 @@ gulp.task(&apos;watch&apos;, function() {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Gulp-的基本安装-："><span class="nav-number">1.</span> <span class="nav-text">一、Gulp 的基本安装 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Gulp-插件的安装-："><span class="nav-number">2.</span> <span class="nav-text">二、Gulp 插件的安装 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、Gulp-任务文件的配置-："><span class="nav-number">3.</span> <span class="nav-text">三、Gulp 任务文件的配置 ：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gulp-的基本安装-："><span class="nav-number">1.</span> <span class="nav-text">Gulp 的基本安装 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gulp-插件的安装-："><span class="nav-number">2.</span> <span class="nav-text">Gulp 插件的安装 ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gulp-任务文件的配置-："><span class="nav-number">3.</span> <span class="nav-text">Gulp 任务文件的配置 ：</span></a></li></ol></div>
             
 
           </div>

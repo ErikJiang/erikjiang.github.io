@@ -20,7 +20,7 @@ Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 
 
 
 
-###  一、Gulp 的基本安装 ：
+### Gulp 的基本安装 ：
 
 这里我默认您已经安装了 Node.js 以及 NPM 包管理工具，首先需要全局安装 Gulp 工具：
 
@@ -35,7 +35,7 @@ Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 
 
 
 
-###  二、Gulp 插件的安装 ：
+### Gulp 插件的安装 ：
 
 要使用 Gulp 中的功能，必须依赖于 Gulp 的插件，在 Gulp 中每个插件完成一个具体的功能任务，而实际的构建工作往往是多个任务的流程，所以就要涉及到多个插件的安装，那么具体要用到哪些插件呢？这里我大概列出了常用的几项，仅供参考。
 
@@ -55,7 +55,7 @@ Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 
 
 	$ npm install [package-name] --save-dev
 
-###  三、Gulp 任务文件的配置 ：
+### Gulp 任务文件的配置 ：
 	
 这里我直接使用本人 Github 上的一个聊天室项目 [node_chat](https://github.com/JiangInk/node_chat "node_chat") 来进行讲解。
 	
