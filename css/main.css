@@ -1685,7 +1685,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #c9e3ff;
+  background: #7c8eff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2531,4 +2531,8 @@ embed {
 }
 .links-of-blogroll-inline .links-of-blogroll-item {
   display: inline-block;
+}
+#header {
+  background: url("http://7u2pj1.com1.z0.glb.clouddn.com/Background/Crystalline.jpg");
+  background-size: cover;
 }
