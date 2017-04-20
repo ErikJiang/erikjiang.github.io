@@ -1603,6 +1603,7 @@ pre .javascript .function {
   max-width: 96px;
   height: auto;
   border: 2px solid #333;
+  border-radius: 50%;
 }
 .site-author-name {
   margin: 5px 0 0;
@@ -1684,7 +1685,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #5edb1f;
+  background: #7c8eff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2530,4 +2531,8 @@ embed {
 }
 .links-of-blogroll-inline .links-of-blogroll-item {
   display: inline-block;
+}
+#header {
+  background: url("http://7u2pj1.com1.z0.glb.clouddn.com/Background/Crystalline.jpg");
+  background-size: cover;
 }
