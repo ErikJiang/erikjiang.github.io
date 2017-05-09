@@ -1,5 +1,5 @@
 ---
-title: "以 Node 之名, CSV 转 JSON"
+title: "以 Node 方式, CSV 转 JSON"
 date: 2017-05-07 23:09:52
 categories: "技术" 
 tags: 
