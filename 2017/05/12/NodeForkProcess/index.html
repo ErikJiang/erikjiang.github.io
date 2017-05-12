@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://jiangink.github.io/2017/05/12/NodeForkProcess/index.html">
 <meta property="og:site_name" content="牛肉培根冒菜俠">
 <meta property="og:description" content="前段时间在使用 Node 实现一个系统的定时任务功能，定时任务数量较多，且其中存在一些需要 CPU 计算的任务，一开始这些任务被放置在 Node 单线程中运行，可是随着任务数的增长，单一线程渐渐吃不消，任务运行高发时段，CPU 会飙至百分之九十以上，同时造成 Web 页面查询请求卡顿甚者请求无响应；">
-<meta property="og:updated_time" content="2017-05-12T14:53:30.000Z">
+<meta property="og:updated_time" content="2017-05-12T15:05:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node 多进程初探">
 <meta name="twitter:description" content="前段时间在使用 Node 实现一个系统的定时任务功能，定时任务数量较多，且其中存在一些需要 CPU 计算的任务，一开始这些任务被放置在 Node 单线程中运行，可是随着任务数的增长，单一线程渐渐吃不消，任务运行高发时段，CPU 会飙至百分之九十以上，同时造成 Web 页面查询请求卡顿甚者请求无响应；">
@@ -402,7 +402,7 @@
 <h2 id="多进程的集群管理"><a href="#多进程的集群管理" class="headerlink" title="多进程的集群管理"></a>多进程的集群管理</h2><p>采用 fork 单独子进程处理任务，以上述的方式即可满足，可若要充分利用 CPU 多核性能资源，就需要 fork 多个工作进程，但是子进程数量变多，就存在诸如进程协调管理、负载均衡等问题；</p>
 <p>此时就需要考虑使用 <a href="https://nodejs.org/dist/latest-v7.x/docs/api/cluster.html" target="_blank" rel="external">Node Cluster</a> 模块，该模块为 Node 自身内置模块，用于构建多进程并行化程序，实现用于负载均衡的集群；</p>
 <p>当然使用基于 Cluster 模块的 <a href="http://pm2.keymetrics.io/" target="_blank" rel="external">PM2</a> 集群控制工具也是一种很好的选择；</p>
-<p>关于 Cluster 与 PM2 ，待后续文章有机会讲解，本文就此告一段落，OK!</p>
+<p>关于 Cluster 与 PM2 ，待后续文章有机会讲解，本文就此告一段落，如有不妥之处，望指出，感谢。</p>
 
       
     </div>
