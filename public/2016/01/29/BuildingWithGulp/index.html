@@ -88,21 +88,21 @@
 
 
 <meta name="description" content="gulp 是什么？
-如果你和我一样，曾做过 Linux C 相关开发，一定知道对于 C 一类的工程，都不可缺少一个编译构建工具 Automake ，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
-而在如今大前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Ha">
+如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
+而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 Gulp 构建工程">
 <meta property="og:url" content="https://jiangink.github.io/2016/01/29/BuildingWithGulp/index.html">
 <meta property="og:site_name" content="牛肉培根冒菜俠">
 <meta property="og:description" content="gulp 是什么？
-如果你和我一样，曾做过 Linux C 相关开发，一定知道对于 C 一类的工程，都不可缺少一个编译构建工具 Automake ，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
-而在如今大前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Ha">
-<meta property="og:updated_time" content="2017-04-06T13:24:45.000Z">
+如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
+而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
+<meta property="og:updated_time" content="2017-05-10T15:47:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 Gulp 构建工程">
 <meta name="twitter:description" content="gulp 是什么？
-如果你和我一样，曾做过 Linux C 相关开发，一定知道对于 C 一类的工程，都不可缺少一个编译构建工具 Automake ，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
-而在如今大前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Ha">
+如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
+而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
 
 
 
@@ -380,8 +380,8 @@
 
       
         <p>gulp 是什么？</p>
-<p>如果你和我一样，曾做过 Linux C 相关开发，一定知道对于 C 一类的工程，都不可缺少一个编译构建工具 Automake ，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。</p>
-<p>而在如今大前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，而 gulp 即是我所说的这样一种工具。</p>
+<p>如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。</p>
+<p>而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，而 gulp 即是这样的一种工具。</p>
 <a id="more"></a>
 <hr>
 <p>Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 的构建方式，Grunt 在处理过程中会产生一些中间态的临时文件，而任务会最终基于这些临时文件生成构建后的结果文件。在这个过程中 Grunt 会进行大量的 I/O 读写操作，那么如果遇到大型项目工程，Grunt 的构建处理速度将大大拖长，这也就是为什么 Gulp 渐渐取代 Grunt 的原因之一，如果想了解更多，可以试着阅读 <a href="http://segmentfault.com/a/1190000002491282" title="gulp vs grunt" target="_blank" rel="external">《 gulp vs grunt 》</a> 这篇文章。</p>
@@ -626,7 +626,7 @@ gulp.task(&apos;watch&apos;, function() {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -648,7 +648,7 @@ gulp.task(&apos;watch&apos;, function() {
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
