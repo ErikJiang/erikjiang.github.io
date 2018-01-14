@@ -1,0 +1,850 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="serverless," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在Serverless架构中，应用业务逻辑将基于FaaS（function as a service）结构形成多个相互独立的功能组件，并以API服务的形式向外提供服务；serverless让开发者无需关注资源的获取和运维，按需调用付费,节省成本；
+注：FaaS属于serverless的子集，也是实现serverless化的核心服务；FaaS关键特征：事件驱动、细粒度调用、实现弹性伸缩、无需管理服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serverless技术相关梳理">
+<meta property="og:url" content="https://jiangink.github.io/2017/12/14/Serverless/index.html">
+<meta property="og:site_name" content="牛肉培根冒菜俠">
+<meta property="og:description" content="在Serverless架构中，应用业务逻辑将基于FaaS（function as a service）结构形成多个相互独立的功能组件，并以API服务的形式向外提供服务；serverless让开发者无需关注资源的获取和运维，按需调用付费,节省成本；
+注：FaaS属于serverless的子集，也是实现serverless化的核心服务；FaaS关键特征：事件驱动、细粒度调用、实现弹性伸缩、无需管理服务">
+<meta property="og:updated_time" content="2018-01-14T09:49:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Serverless技术相关梳理">
+<meta name="twitter:description" content="在Serverless架构中，应用业务逻辑将基于FaaS（function as a service）结构形成多个相互独立的功能组件，并以API服务的形式向外提供服务；serverless让开发者无需关注资源的获取和运维，按需调用付费,节省成本；
+注：FaaS属于serverless的子集，也是实现serverless化的核心服务；FaaS关键特征：事件驱动、细粒度调用、实现弹性伸缩、无需管理服务">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jiangink.github.io/2017/12/14/Serverless/"/>
+
+
+
+
+
+  <title> Serverless技术相关梳理 | 牛肉培根冒菜俠 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">牛肉培根冒菜俠</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不會寫程序的文青不是好主廚</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-serverless " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2017/12/14/Serverless/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="牛肉培根冒菜俠">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Serverless技术相关梳理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-14T17:46:18+08:00">
+                2017-12-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在Serverless架构中，应用业务逻辑将基于FaaS（function as a service）结构形成多个相互独立的功能组件，并以API服务的形式向外提供服务；<br>serverless让开发者无需关注资源的获取和运维，按需调用付费,节省成本；</p>
+<p>注：FaaS属于serverless的子集，也是实现serverless化的核心服务；FaaS关键特征：事件驱动、细粒度调用、实现弹性伸缩、无需管理服务器等底层资源；</p>
+<a id="more"></a>
+<hr>
+<h3 id="一、Serverless-优势："><a href="#一、Serverless-优势：" class="headerlink" title="一、Serverless 优势："></a>一、Serverless 优势：</h3><ol>
+<li>节约使用成本：根据调用次数计费，节省成本，业务高峰弹性扩容，将资源分享给其他客户；</li>
+<li>简化设备运维：底层硬件透明化，无需运维；</li>
+<li>提升可维护性：serverless架构采用多种第三方功能服务模块组合，结构清晰，维护性高；</li>
+</ol>
+<h3 id="二、Serverless-行业场景："><a href="#二、Serverless-行业场景：" class="headerlink" title="二、Serverless 行业场景："></a>二、Serverless 行业场景：</h3><ol>
+<li><p>低频请求场景：（物联网行业）<br>物联网中，设备传输数据量小，且往往数据传输频率固定，<br>所以采购serverless低频的资源即可满足计算需求；</p>
+</li>
+<li><p>流量突发场景：（移动互联网行业）<br>互联网中，经常会遇到突发流量场景，如电商网站促销活动期间流量爆增，但平时的流量会回到均值，传统架构需要扩展硬件能力以支持突发情况，但平时这些资源会被浪费，采用serverless的弹性扩展，可以在高峰时扩容，高峰后释放不用的资源，节省成本；</p>
+</li>
+<li><p>基于事件的数据处理：<br>在图片视频处理后端进行视频转码、图片处理等等任务时，可结合对象存储的触发器，执行severless的事件处理函数进行对应任务的处理；</p>
+</li>
+</ol>
+<h3 id="三、Severless-与-微服务："><a href="#三、Severless-与-微服务：" class="headerlink" title="三、Severless 与 微服务："></a>三、Severless 与 微服务：</h3><p>两者都强调系统的解耦，微服务是以业务的粒度进行拆分，而serverless则是以函数function的粒度进行拆分，serverless的粒度更加细化；</p>
+<h3 id="四、serverless-与-运维："><a href="#四、serverless-与-运维：" class="headerlink" title="四、serverless 与 运维："></a>四、serverless 与 运维：</h3><p>Serverless并不等于没有运维，只是运维的工作由机器设备运维转变为业务运维，运维不再关心过去的配置、操作系统、内核网络等问题，而去关心系统业务的合理性、业务间的依赖关系、业务的报警监控等，serverless将推动 DevOps 的发展；</p>
+<h3 id="五、Serverless-业内竞品"><a href="#五、Serverless-业内竞品" class="headerlink" title="五、Serverless 业内竞品:"></a>五、Serverless 业内竞品:</h3><ol>
+<li>亚马逊 AWS Lambda</li>
+<li>微软 Azure Function</li>
+<li>谷歌 Google Cloud Functions</li>
+<li>阿里云 Function Compute</li>
+</ol>
+<h3 id="六、基于-serverless-的程序框架"><a href="#六、基于-serverless-的程序框架" class="headerlink" title="六、基于 serverless 的程序框架"></a>六、基于 serverless 的程序框架</h3><ul>
+<li><a href="https://github.com/serverless/serverless" target="_blank" rel="external">https://github.com/serverless/serverless</a></li>
+</ul>
+<h3 id="七、阿里云-Serverless-生态："><a href="#七、阿里云-Serverless-生态：" class="headerlink" title="七、阿里云 Serverless 生态："></a>七、阿里云 Serverless 生态：</h3><p>目前阿里云围绕着 Serverless 推出的平台服务：</p>
+<h4 id="1-函数计算-function-computer"><a href="#1-函数计算-function-computer" class="headerlink" title="1. 函数计算(function computer)"></a>1. 函数计算(function computer)</h4><p>事件驱动的全托管计算服务，</p>
+<ul>
+<li>无需管理服务器基础设施：无需考虑服务器规格、配置、升级、宕机、负载均衡、等等因素；</li>
+<li>弹性伸缩，按需付费</li>
+<li>以事件驱动方式与对象存储、api网关无缝链接；</li>
+</ul>
+<h4 id="2-对象存储-Object-Storage-Service"><a href="#2-对象存储-Object-Storage-Service" class="headerlink" title="2. 对象存储 (Object Storage Service)"></a>2. 对象存储 (Object Storage Service)</h4><ul>
+<li>图片、音视频、日志等海量文件存储；</li>
+<li>网页或移动应用静态文件的分离；</li>
+<li>可对OSS云端数据进行媒体转码或图片处理；</li>
+<li>对象存储触发函数计算事件处理函数：</li>
+</ul>
+<p><a href="https://help.aliyun.com/document_detail/53097.html?spm=5176.doc51784.6.553.nvicSg" target="_blank" rel="external">https://help.aliyun.com/document_detail/53097.html?spm=5176.doc51784.6.553.nvicSg</a></p>
+<h4 id="3-API网关-API-Gateway"><a href="#3-API网关-API-Gateway" class="headerlink" title="3. API网关 (API Gateway)"></a>3. API网关 (API Gateway)</h4><ul>
+<li>API 录入维护统一管理</li>
+<li>按实际调用付费</li>
+<li>采用分布式部署，自动扩展，能够满足大规模访问场景</li>
+<li><p>提供权限管理、流量管控、访问监控、安全预警、计量统计等功能</p>
+</li>
+<li><p>以函数计算作为Api网关的后端服务:</p>
+</li>
+</ul>
+<p>流程：<code>创建事件处理函数 -&gt; 将函数授权给API网关 -&gt; 配置API</code></p>
+<p><a href="https://help.aliyun.com/document_detail/54788.html?spm=5176.product29462.6.584.7YpH2m" target="_blank" rel="external">https://help.aliyun.com/document_detail/54788.html?spm=5176.product29462.6.584.7YpH2m</a></p>
+<h4 id="4-表格存储-Table-Store"><a href="#4-表格存储-Table-Store" class="headerlink" title="4. 表格存储 (Table Store)"></a>4. 表格存储 (Table Store)</h4><p>一种NoSQL数据存储服务，提供海量结构化数据存储和实时访问；<br>特性：</p>
+<ul>
+<li>表格存储以<code>实例</code>和<code>表</code>的形式组织数据，通过分片和负载均衡实现规模的无缝扩展；</li>
+<li>屏蔽底层硬件故障及错误，可快速恢复，提供高可用性；</li>
+<li><p>数据被存储在SSD中且有多个备份，提供快速访问性能及可靠性；</p>
+</li>
+<li><p>通过表格存储触发器，可实现table store stream 和函数计算的自动对接：</p>
+</li>
+</ul>
+<p>流程：<code>创建开通Stream流的数据表 -&gt; 创建函数计算事件处理函数 -&gt;在数据表下创建触发器</code></p>
+<p><a href="https://help.aliyun.com/document_detail/60304.html?spm=5176.doc60304.6.593.IoKlsE" target="_blank" rel="external">https://help.aliyun.com/document_detail/60304.html?spm=5176.doc60304.6.593.IoKlsE</a></p>
+<h4 id="5-日志服务-Log-Service"><a href="#5-日志服务-Log-Service" class="headerlink" title="5. 日志服务 (Log Service)"></a>5. 日志服务 (Log Service)</h4><p>提供日志类数据的采集、消费、投递及查询分析等功能</p>
+<ul>
+<li>函数计算访问日志服务：<br><a href="https://help.aliyun.com/document_detail/61023.html?spm=5176.doc60984.6.558.fjRIfN" target="_blank" rel="external">https://help.aliyun.com/document_detail/61023.html?spm=5176.doc60984.6.558.fjRIfN</a></li>
+</ul>
+<h4 id="6-批量计算-BatchCompute"><a href="#6-批量计算-BatchCompute" class="headerlink" title="6. 批量计算 (BatchCompute)"></a>6. 批量计算 (BatchCompute)</h4><p>一种适用于大规模并行批处理作业的分布式云服务。可支持海量作业并发规模，系统自动完成资源管理、作业调度和数据加载，并按实际使用量计费；</p>
+<ul>
+<li>批量计算采用对象存储服务(OSS)作为持久化存储，同时批量计算可以通过文件接口访问OSS中的资源；</li>
+<li>批量计算的程序默认运行于VM中，也支持采用Docker容器；</li>
+<li>批量计算中提交的作业(Job)包含多个任务(Task);</li>
+</ul>
+<!--7. MQTT 消息队列遥测传输-->
+<!--8. RAM 访问控制（资源访问管理）-->
+<h3 id="八、函数计算无状态服务实现有状态逻辑"><a href="#八、函数计算无状态服务实现有状态逻辑" class="headerlink" title="八、函数计算无状态服务实现有状态逻辑"></a>八、函数计算无状态服务实现有状态逻辑</h3><h4 id="大体思路："><a href="#大体思路：" class="headerlink" title="大体思路："></a>大体思路：</h4><ol>
+<li>在函数计算初始化阶段在其本地启动一个<code>Express</code>服务；</li>
+<li>创建一个函数计算事件处理函数；</li>
+<li>前置服务<code>API Gateway</code>将关联 该函数计算事件处理函数；</li>
+<li>当前端或移动端发送请求给<code>Api</code>网关时，网关会将请求以事件触发给函数计算；</li>
+<li>此时函数计算的事件处理函数接收到了<code>event</code>事件数据源；</li>
+<li>函数计算对此事件数据源进行解析，需要解析出<code>URL</code>、<code>Header</code>、<code>Method</code>、<code>queryParams</code>、<code>body</code>等请求信息，并向本地<code>Express</code>服务发送该<code>http</code>请求；</li>
+<li>函数计算中启动的<code>Express</code>服务，处理完请求后返回结果，事件处理函数会对该结果进行一次输出格式的封装，以便<code>Api</code>网关能够识别，最终结果通过callback返回给Api网关；</li>
+</ol>
+<h4 id="代码实例："><a href="#代码实例：" class="headerlink" title="代码实例："></a>代码实例：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">&apos;use strict&apos;</div><div class="line">require(__dirname + &quot;/bin/www&quot;);    // 初始化阶段在本地启动Express服务</div><div class="line">const request = require(&apos;request&apos;);</div><div class="line">const Promise = require(&apos;bulebird&apos;);</div><div class="line">const httpRequest = Promise.promisify(request);</div><div class="line"></div><div class="line">// 函数计算 事件处理函数入口</div><div class="line">module.exports.handler = (event, ctx, cb) =&gt; &#123;</div><div class="line">    // 1. 入参判空等校验容错处理</div><div class="line">    ...</div><div class="line">    </div><div class="line">    // 2. 获取事件请求参数</div><div class="line">    let options = &#123;</div><div class="line">        url: event.url,</div><div class="line">        headers: event.headers,</div><div class="line">        method: event.httpMethod,</div><div class="line">        qs: event.queryParams,</div><div class="line">        body: event.body</div><div class="line">        ...</div><div class="line">    &#125;;</div><div class="line">    </div><div class="line">    // 3. 发送请求给本地Express服务</div><div class="line">    return httpRequest(options)</div><div class="line">    .then(res =&gt; &#123;</div><div class="line">        ...</div><div class="line">        // 4. 按照API网关识别格式返回结果</div><div class="line">        cb(null, &#123;</div><div class="line">            statusCode: res.statusCode,</div><div class="line">            isBase64Encoded: isBase64Encoded,</div><div class="line">            headers: res.headers,</div><div class="line">            body: res.body </div><div class="line">        &#125;);</div><div class="line">    &#125;)</div><div class="line">    .catch(err =&gt; &#123;</div><div class="line">        ...</div><div class="line">        cb(null, &#123;</div><div class="line">            statusCode: 500,</div><div class="line">            isBase64Encoded: false,</div><div class="line">            headers: &#123;duration: duration&#125;,</div><div class="line">            body: JSON.stringify(err)</div><div class="line">        &#125;);</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<hr>
+<!--1. 目前的程序使用到哪些资源（包括即将用到的）-->
+<!--2. 这些资源分别起什么作用-->
+<!--3. 相互如何配合-->
+<!--4. 最终如何实现在没有任何固定服务器资源的情况下，通常需要买服务器和带宽等才能实现的效果-->
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/serverless/" rel="tag"># serverless</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/24/DesignP109/" rel="next" title="关于信息过载">
+                <i class="fa fa-chevron-left"></i> 关于信息过载
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead3.jpg"
+               alt="Ink Jiang" />
+          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=419594258&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Serverless-优势："><span class="nav-number">1.</span> <span class="nav-text">一、Serverless 优势：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Serverless-行业场景："><span class="nav-number">2.</span> <span class="nav-text">二、Serverless 行业场景：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、Severless-与-微服务："><span class="nav-number">3.</span> <span class="nav-text">三、Severless 与 微服务：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、serverless-与-运维："><span class="nav-number">4.</span> <span class="nav-text">四、serverless 与 运维：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、Serverless-业内竞品"><span class="nav-number">5.</span> <span class="nav-text">五、Serverless 业内竞品:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、基于-serverless-的程序框架"><span class="nav-number">6.</span> <span class="nav-text">六、基于 serverless 的程序框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、阿里云-Serverless-生态："><span class="nav-number">7.</span> <span class="nav-text">七、阿里云 Serverless 生态：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-函数计算-function-computer"><span class="nav-number">7.1.</span> <span class="nav-text">1. 函数计算(function computer)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-对象存储-Object-Storage-Service"><span class="nav-number">7.2.</span> <span class="nav-text">2. 对象存储 (Object Storage Service)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-API网关-API-Gateway"><span class="nav-number">7.3.</span> <span class="nav-text">3. API网关 (API Gateway)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-表格存储-Table-Store"><span class="nav-number">7.4.</span> <span class="nav-text">4. 表格存储 (Table Store)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-日志服务-Log-Service"><span class="nav-number">7.5.</span> <span class="nav-text">5. 日志服务 (Log Service)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-批量计算-BatchCompute"><span class="nav-number">7.6.</span> <span class="nav-text">6. 批量计算 (BatchCompute)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、函数计算无状态服务实现有状态逻辑"><span class="nav-number">8.</span> <span class="nav-text">八、函数计算无状态服务实现有状态逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#大体思路："><span class="nav-number">8.1.</span> <span class="nav-text">大体思路：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码实例："><span class="nav-number">8.2.</span> <span class="nav-text">代码实例：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
