@@ -287,20 +287,83 @@ isinstance(iter([]), Iterator) => True
 * 函数可以接收另一个函数作为参数传入，这样的函数成为高阶函数
 
 1. map/reduce
+```
+# map
+<Iterator迭代器对象> = map(<function>, <Iterable可迭代对象>)
 
+# reduce
+reduce(f, [x1, x2, x3, x4]) = f(f(f(x1, x2), x3), x4)
+```
 2. filter
-
+```
+filter()把传入的函数依次作用于每个元素，然后根据返回值是True还是False决定保留还是丢弃该元素。
+```
 3. sorted
+```
+sorted(['bob','about','Zoo','Credit'], key=str.lower, reverse=True)
+# key指定的函数将作用于list的每一个元素上，并根据key函数返回的结果进行排序
+# 要进行反向排序，可以传入第三个参数reverse=True
+```
 
 ### 返回函数
-
+```
+* 当一个函数返回了一个函数后，其内部的局部变量会被新函数引用，这样的程序结构称为闭包；
+* 返回闭包时牢记一点：返回函数不要引用任何循环变量，或者后续会发生变化的变量。
+* 如果一定要引用循环变量,方法是再创建一个函数，用该函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到函数参数的值不变：
+```
 ### 匿名函数
+```
+* 关键字 lambda 表示匿名函数，冒号:前面表示函数的参数；lambda函数只能有一个表达式且不需要return;
+* 匿名函数不需要函数名称，且是一个函数对象可以赋值给一个变量；
+```
+### 装饰器(Decorator)
+在面向对象（OOP）的设计模式中，decorator被称为装饰模式。OOP的装饰模式需要通过继承和组合来实现，而Python除了能支持OOP的decorator外，直接从语法层次支持decorator。Python的decorator可以用函数实现，也可以用类实现。
+```
+# 本质上，decorator就是一个返回函数的高阶函数
+import functools
 
-### 装饰器
+def log(text):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            print('%s %s():' % (text, func.__name__))
+            return func(*args, **kw)
+        return wrapper
+    return decorator
 
-### 偏函数
+```
+
+### 偏函数(Partial function)
+```
+当函数的参数个数太多，需要简化时，使用functools.partial可以创建一个新的函数，这个新函数可以固定住原函数的部分参数，从而在调用时更简单。
+import functools
+functools.partial(<func name>, arg=<设定值>)
+```
 
 ## 模块
+### 作用域
+* 正常的函数和变量名是公开的（public）
+* 类似_xxx和__xxx这样的函数或变量就是非公开的（private），不应该被直接引用
+* 类似__xxx__这样的变量是特殊变量，可以被直接引用，但是有特殊用途,比如__author__，__name__
+
+### 第三方模块
+* 在Python中，安装第三方模块，是通过包管理工具pip完成的
+* 可以直接安装Anaconda，内置了数十个常用的第三方模块
+
+## 面向对象编程
+### 类和实例
+### 访问权限
+### 继承与多态
+### 获取对象信息
+### 实例属性与类属性
+
+## 面向对象高级编程
+### 使用__slots__
+### 使用@property
+### 多重继承
+### 定制类
+### 使用枚举类
+### 使用元类
 
 ### 需要掌握的技术栈
 * html/css/js
