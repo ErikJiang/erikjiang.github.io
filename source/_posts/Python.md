@@ -543,10 +543,54 @@ Hello = type('Hello', (Object,), dict(hello=fn))
 ## 错误、调试与测试
 
 ### 错误处理
+* `try...except...finally...`:
+    
+    1. 当try中的代码块执行错误，则会进入except中去执行异常处理,执行完成后如果存在finally,则执行finally中代码;
+    2. 当try中的代码块正常执行完成，则不会进入except,然后若存在finally,则执行finally中代码;
+    3. 当try中存在的错误类型并非一种，则except可以针对不同的错误类型定义多个except异常处理代码块;
+    4. 可以在except之后添加else,这样当try中的代码块没有错误发生，则else会被执行;
+
+* Python的错误同样是类，所有的错误都从`BaseException`类中派生而来;
+* Python内置`logging`模块可以清晰大打印错误栈信息
+
+    ```
+    import logging
+    logging.exception()
+    ```
+* 使用`raise`抛出一个错误
+    ```
+    raise ValueError('invalid value')
+
+    ```
 
 ### 调试
 
+* 调试手段1: 通过打印`print()`
+* 调试手段2: 通过断言`assert()`,同时python启动器可以通过`-O`参数关闭断言
+* 调试手段3: 通过日志`import logging`,可以设置记录日志信息的级别
+* 调试手段4: 通过Python调试器pdb,可以进行单步运行调试
+* 调试手段5: 同样通过Python调试器pdb,使用pdb.set_trace()打断点,无需单步执行
+* 调试手段6: 通过IDE,如`VSCode`、`PyCharm`
+
+推荐：logging + IDE 配合方式
+
 ### 单元测试
+* 单元测试：即对单一模块、函数、类进行正确性验证的测试
+* python自带的单元测试模块`unittest`
+    1. 编写单元测试时，要定义一个测试类，并继承unittest.TestCase
+    2. 编写具体测试方法时，方法名称要以`test`开头
+    ```
+    # unittest常见的断言类型
+    # 1. 判断是否相等
+    self.assertEqual()
+    # 2. 判断是否与预期的错误类型一致
+    self.assertRaises(KeyError):
+        value = dict1['empty']
+    # 3. 判断是否为True
+    self.assertTrue()
+
+    ```
+* 
 
 ### 文档测试
 
