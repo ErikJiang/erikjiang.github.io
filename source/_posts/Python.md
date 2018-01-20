@@ -352,25 +352,206 @@ functools.partial(<func name>, arg=<设定值>)
 
 ## 面向对象编程
 ### 类和实例
+```
+# 类的定义 类名首字母大写
+class ClassName(object):
+    pass
+
+# 类的实例化
+instance = ClassName()
+
+# 类的属性参数绑定
+class Student(object):
+    # __init__方法类似于JS中的constructor,且第一个参数永远是self
+    # self指向创建的实例本身，调用时self不用传
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+    # 类中定义的函数第一个参数永远是self
+
+# 类中数据的封装
+通过在类中定义函数来实现访问类中的数据
+```
 
 ### 访问权限
+```
+# 通过`__`定义的内部变量会被识别为类的私有变量(private)
+# 私有变量只能在内部访问，外部不能访问
+class Student(object):
+    def __init__(self, name, score):
+        self.__name = name
+        self.__score = score
+    def print_score(self):
+        print('%s: %s' % (self.__name, self.__score))
+    def get_name(self):
+        return self.__name
+    def set_name(self, name):
+        return self.__name
+# 私有变量并非完全无法访问，私有变量其实可以通过如下方式访问
+<instance>._<classname>__<propname>
+# 例如：
+studentInst = Student()
+studentInst._Student__name
+
+# Python 类的机制不能完全的防范开发的行为，所以需要自觉遵守正常的方式
+
+```
 
 ### 继承与多态
+在OOP程序设计中，当定义Class时，可以从现有的Class继承，新的Class称为子类（Subclass）,被继承的类称为基类、父类和超类（BaseClass、SuperClass）;
+```
+# 继承
+class BasicClass(object):
+    def run(self):
+        pass
+class SubClass(BasicClass):
+    pass
+
+subinst = SubClass()
+subinst.run()
+
+# 静态类型语言的继承必须传入规定类型的父类
+# 动态语言"鸭子类型" 不严格要求继承体系，只要父类存在子类所需的属性方法即可
+
+```
 
 ### 获取对象信息
+* 判断对象的类型可以使用`type()`函数, 返回对应的Class类型;
+* `isinstance()`可以判断对象是否为该类型本身或者是否位于该类型父级继承链上;
+* 使用`dir()`可以列出对象的属性及方法名称，返回一个包含str的list;
+* 获取对象属性`getattr()`,设置对象属性`setattr()`,判断对象属性是否存在`hasattr()`
+
+```
+# 判断对象是否为函数类型
+def fn():
+    pass
+type(fn) == types.FunctionType
+type(abs) == types.BuiltinFunctionType
+type(lambda x:x) == types.LambdaType
+type((x for x in range(10))) == types.GeneratorType
+
+# 判断是否是 list or tuple
+isinstance([1, 2, 3], (list, tuple))
+
+```
 
 ### 实例属性与类属性
-
+* 实例属性属于各个实例所有，互不干扰；
+* 类属性属于类所有，所有实例共享一个属性；
+* 不要对实例属性和类属性使用相同的名字，否则将产生难以发现的错误。
 
 ## 面向对象高级编程
 ### 使用__slots__
-### 使用@property
-### 多重继承
-### 定制类
-### 使用枚举类
-### 使用元类
+* 为实例对象绑定方法，通常可以使用`MethodType`,但仅对当前作用的实例生效，对其他实例无效;
+* 当需要对实例对象绑定的属性作出限制时，可以使用`__slots__`;
+* `__slots__`仅对当前类的实例起到属性限制作用，对于继承其的子类没有效果;
 
-### 需要掌握的技术栈
+```
+# 通过MethodType为实例对象绑定一个方法
+s = Student()
+def set_age(self, age):
+    self.age = age
+from types import MethodType
+s.set_age = MethodType(set_age, s)
+
+# 限制对象实例中定义的属性
+class Student(object):
+    __slots__ = ('name', 'age') # 用tuple定义允许绑定的属性名称
+
+```
+### 使用@property
+* `@property`是Python内置的装饰器,其作用是将类中的方法转换为属性的调用方式;
+* 将一个属性的`getter`方法变成属性，仅需要在其方法上添加`@property`;
+* 将一个属性的`setter`方法变成属性，必须先使用`@property`创建`getter`方法，然后在其`setter`方法之上添加`@<funcName>.setter`即可;
+* 如果一个方法仅仅定义了`getter`方法，没有定义`setter`,那么所转换的属性将是一个只读属性;
+```
+class Student(object):
+    # setter 方法
+    @property
+    def name(self):
+        return self.__name
+
+    # getter 方法
+    @name.setter
+    def name(self, name):
+        if not isinstance(name, str):
+            raise ValueError('name must be a string!')
+        self.__name = name
+
+```
+
+### 多重继承
+* 多重继承: 类名后面括号中的继承类参数可以传入多个继承类;
+* 通过多重继承，可以混入额外的功能，我们将这种设计称为`MixIn`;
+```
+# 多重继承
+class ClassName(Class1,Class2...):
+    pass
+
+```
+### 定制类
+为方便生成特定的类，Python提供类用于定制类的多个方法：
+* __str__() 设置打印类实例的信息，针对于用户展示;
+* __repr__() 设置显示类实例的信息，针对于开发者调试;
+* __iter__() 设置对象为可迭代对象，设置后可用于`for in`循环;
+* __next__() 当设置__iter__()后返回迭代对象，`for in`调用是会执行__next__()方法返回下一个值;
+* __getitem__() 将类实例设置为一个具有list tuple dict类型属性的实例，可通过数组下标访问;
+* __setitem__() 将类实例设置为能够具有list tuple dict类型的赋值能力
+* __delitem__() 删除某个元素
+* __getattr__() 在没有找到属性时，动态返回属性或方法
+* __call__() 将类的实例本身作为函数方法调用，可调用的对象被称为`Callable`对象
+
+
+### 使用枚举类
+* python 提供了`Enum`枚举类，用于定义同种类型属性的常量
+```
+# 通过枚举类定义月份常量
+from enum import Enum
+Month = Enum('Month', (
+    'Jan', 'Feb', 'Mar', 'Apr', 
+    'May', 'Jun', 'Jul', 'Aug', 
+    'Sep', 'Oct', 'Nov', 'Dec'
+    ))
+
+# 通过枚举类进行自定义类 @unique 可以帮助检测是否存在重复
+from enum import Enum, unique
+@unique
+class Weekday(Enum):
+    Sun=0
+    Mon=1
+    Tue=2
+    Wed=3
+    Thu=4
+    Fri=5
+    Sat=6
+
+```
+
+### 使用元类
+* 使用`type()`方式可以创建类，通常的class定义方式其实仅仅是扫描了定义的语法然后调用type()创建class而已;
+* 除了使用`type()`创建类，还可以使用`metaclass`,其使用顺序：`先定义metaclass`->`创建类`->`创建实例`;
+
+```
+# 使用type()动态创建类的方式
+def fn(self, name='world'):
+    print('Hello, %s' % name)
+Hello = type('Hello', (Object,), dict(hello=fn))
+# type(<类名称>,<继承的父类元组集合>,<绑定函数的字典>)
+
+```
+
+## 错误、调试与测试
+
+### 错误处理
+
+### 调试
+
+### 单元测试
+
+### 文档测试
+
+
+### 技术栈
 * html/css/js
 * vue.js
 * docker
