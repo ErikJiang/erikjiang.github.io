@@ -590,9 +590,56 @@ Hello = type('Hello', (Object,), dict(hello=fn))
     self.assertTrue()
 
     ```
-* 
+* 推荐命令行使用`-m unittest`直接运行单元测试脚本，这样可以批量运行测试脚本；
+* setup 与 tearDown 方法会在每个测试方法前后运行
+    用于添加预定义操作和执行完成后的内存释放等工作
+ 
 
 ### 文档测试
+* Python 内置了文档测试(doctest)模块，通过用`'''`的方式编写注释文档，如下：
+```
+class Dict(dict):
+    '''
+    Simple dict but also support access as x.y style.
+
+    >>> d1 = Dict()
+    >>> d1['x'] = 100
+    >>> d1.x
+    100
+    >>> d1.y = 200
+    >>> d1['y']
+    200
+    >>> d2 = Dict(a=1, b=2, c='3')
+    >>> d2.c
+    '3'
+    >>> d2['empty']
+    Traceback (most recent call last):
+        ...
+    KeyError: 'empty'
+    >>> d2.empty
+    Traceback (most recent call last):
+        ...
+    AttributeError: 'Dict' object has no attribute 'empty'
+    '''
+    def __init__(self, **kw):
+        super(Dict, self).__init__(**kw)
+
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(r"'Dict' object has no attribute '%s'" % key)
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+if __name__=='__main__':
+    import doctest
+    doctest.testmod()
+
+```
+* 当在命令行执行脚本时，会调用doctest进行文档测试，当脚本作为模块导出时，不会进行文档测试
+
 
 
 ### 技术栈
