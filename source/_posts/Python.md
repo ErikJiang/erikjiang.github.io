@@ -641,7 +641,31 @@ if __name__=='__main__':
 * 当在命令行执行脚本时，会调用doctest进行文档测试，当脚本作为模块导出时，不会进行文档测试
 
 ## IO编程
+* I/O 即计算机中的Input输入(读)/Output输出(写)
+* IO Stream 中数据从外部(磁盘网络)流入内存称为`Input Stream`；
+* IO Stream 中数据从内存流入外部(磁盘网络)称为`Output Stream`；
+* 由于内存速度远远高于外设的速度，所以围绕着运行性能效率，IO编程中出现了`同步IO`与`异步IO`两种不同方式；
+* 异步IO性能高于同步IO，但异步IO编程模型复杂，异步的消息通知机制有`回调`及`轮询`等模式；
+
 ### 文件读写
+* 如果文件很小，read()一次性读取最方便；
+* 如果不能确定文件大小，反复调用read(size)比较保险；
+* 如果是配置文件，调用readlines()最方便
+```
+# 写法一 使用try...finally
+try:
+    f = open('/path/file', r)
+    print(f.read())
+finally:
+    if f:
+        f.close()
+# 写法二 使用with无需每次调用f.close()
+with open('/path/file', r) as f:
+    print(f.read())
+with open('/Users/michael/test.txt', 'w') as f:
+    f.write('Hello, world!')
+    
+```
 ### StringIO和BytesIO
 ### 操作文件和目录
 ### 序列化
