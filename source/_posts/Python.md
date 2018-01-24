@@ -667,8 +667,103 @@ with open('/Users/michael/test.txt', 'w') as f:
     
 ```
 ### StringIO和BytesIO
+
+### StringIO 在内存中读写str
+* getvalue() 用于获取写入的str
+
+```
+from io import StringIO
+f = StringIO()  # 实例化
+f.write('hello world') # 写入操作
+print(f.getvalue()) => 'hello world'
+f.readline() # 读取操作
+```
+### BytesIO 用于内存中读写二进制数据
+```
+from io import BytesIO
+f = BytesIO()
+f.write('您好 世界'.encode('utf-8')) # 写入经过UTF8编码得到Bytes
+print(f.getvalue()) => b'\xe4\xb8\xad\xe6\x96\x87'
+f.read() # 读取二进制数据
+
+```
+
 ### 操作文件和目录
+> 通过Python内置的`os`模块可以直接调用操作系统提供的接口函数
+* 除了os内置模块外，还有shutil模块提供了更多的实用函数
+
+```
+import os
+os.name # 获取操作系统类型 posix or nt
+os.uname # 获取详细系统信息 windows环境不提供
+os.environ # 获取操作系统定义的环境变量
+os.environ.get('PATH') # 获取环境变量PATH的内容
+os.path.abspath('.') # 查看当前目录的绝对路径 如：'/user/src'
+os.path.join('/user/src', 'testdir') # 在某个目录下创建新目录 如：'/user/src/testdir'
+os.mkdir('/user/src/testdir') # 创建目录
+os.rmdir('/user/src/testdir') # 删除目录
+os.path.split('/user/src/testdir/file.txt') # 拆分目录 如：('/user/src/testdir', 'file.txt')
+os.path.splitext() # 获取文件后缀名
+os.rename('test.txt', 'test.py') # # 对文件重命名
+os.remove('test.py') # 删掉文件
+
+```
 ### 序列化
+> 变量从内存中变成可被存储或利于传输的过程称为序列化，在Python中成为Pickling，其他语言称为serialization
+
+> 通过序列化之后，即可以将结果写入磁盘或通过网络传输到其他终端
+
+> 反之，变量内容由序列化对象重新读入内存的过程成为 反序列化 即unpickling
+
+> Python 中提供 pickle 模块实现序列化
+
+> Python 中提供 json 模块实现JSON标准序列化，提供的方法`dump()`&`load()`与pickle类似
+
+```
+import pickle
+
+# 序列化
+d = dict(name='Bob', age=20, score=88)
+pickle.dumps(d) # pickle.dumps() 将任何对象序列化为bytes
+
+f = open('dump.txt', 'wb')
+pickle.dump(d) # pickle.dumps() 将任何对象序列化后写入`类文件对象(file-like Object)`
+f.close()
+
+# 反序列化
+pickle.loads() # 将bytes反序列化为对象
+
+f = open('dump.txt', 'rb')
+d = pickle.load(f) # 从`类文件对象`中反序列化出对象
+f.close()
+
+```
+> 将Python Class转换为JSON序列化，需要编写转换函数，不同直接进行转换
+```
+# 类的序列化与反序列化
+import json
+class Student(object):
+    def __init__(self, name, age, score):
+        self.name = name
+        self.age = age
+        self.score = score
+
+s = Student('Bob', 20, 88)
+
+def student2dict(std):
+    return {
+        'name': std.name,
+        'age': std.age,
+        'score': std.score
+    }
+print(json.dumps(s, default=student2dict))
+
+def dict2student(d):
+    return Student(d['name'], d['age'], d['score'])
+json_str = '{"age": 20, "score": 88, "name": "Bob"}'
+print(json.loads(json_str, object_hook=dict2student))
+
+```
 
 ## 进程与线程
 ### 多进程
