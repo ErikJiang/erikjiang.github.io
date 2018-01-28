@@ -860,10 +860,94 @@ if __name__=='__main__':
 ```
 
 ### 多线程
+* 一个进程默认会启动一个线程，这个默认线程称为`主线程`（MainThread）;
+* Python标准库内置两个线程模块：`_thread`和`threading`，其中`threading`是对`_thread`的高级封装，一般情况使用`threading`
+* 多线程与多进程最大的不同是，多进程的变量，各自的进程会拷贝一份，互不影响；多线程的变量则可以在所有线程中共享，任何一个变量都可以被任何一个线程修改；
+* 多线程锁机制，使用`threading.Lock()`
+    1. 锁的好处：确保某段代码从头至尾只能由一个线程执行完成；
+    2. 锁的坏处：不能进行多线程并发，使用锁后仅能单线程执行，效率下降；另外存在多线程死锁问题；
+* 由于Python解析器存在GIL(Global Interpreter Lock)全局解析器锁，使得多线程只能在单核上执行，所以要实现多核多线程任务，只能通过多个进程来实现；
+```
+import time, threading
+
+# 新线程执行的代码:
+def loop():
+    # current_thread()返回值永远是当前线程的实例
+    print('thread %s is running...' % threading.current_thread().name)
+    n = 0
+    while n < 5:
+        n = n + 1
+        print('thread %s >>> %s' % (threading.current_thread().name, n))
+        time.sleep(1)
+    print('thread %s ended.' % threading.current_thread().name)
+
+print('thread %s is running...' % threading.current_thread().name)
+t = threading.Thread(target=loop, name='LoopThread') # 指定线程执行函数及线程的名称
+t.start()
+t.join()
+print('thread %s ended.' % threading.current_thread().name)
+
+# 线程锁
+balance = 0
+lock = threading.Lock()
+
+def change_it(n):
+    # 先存后取，结果应该为0:
+    global balance
+    balance = balance + n
+    balance = balance - n
+
+def run_thread(n):
+    for i in range(100000):
+        # 先要获取锁:
+        lock.acquire()
+        try:
+            # 放心地改吧:
+            change_it(n)
+        finally:
+            # 改完了一定要释放锁:
+            lock.release()
+
+t1 = threading.Thread(target=run_thread, args=(5,))
+t2 = threading.Thread(target=run_thread, args=(8,))
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+print(balance)
+
+```
 
 
 ### ThreadLocal
+* 我们知道多线程中的全局变量是可以共享的，导致会出现全局变量污染的问题，为了解决变量在线程间可被随意篡改的问题，出现了`ThreadLocal`;
+* ThreadLocal可被理解为单个线程内的全局变量，但不会被其他线程所干扰篡改；
+```
+import threading
+
+# 创建全局ThreadLocal对象:
+local_school = threading.local()
+
+def process_student():
+    # 获取当前线程关联的student:
+    std = local_school.student
+    print('Hello, %s (in %s)' % (std, threading.current_thread().name))
+
+def process_thread(name):
+    # 绑定ThreadLocal的student:
+    local_school.student = name
+    process_student()
+
+t1 = threading.Thread(target= process_thread, args=('Alice',), name='Thread-A')
+t2 = threading.Thread(target= process_thread, args=('Bob',), name='Thread-B')
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+```
+
 ### 进程 vs. 线程
+
 ### 分布式进程
 
 ## 正则表达式
