@@ -766,8 +766,102 @@ print(json.loads(json_str, object_hook=dict2student))
 ```
 
 ## 进程与线程
-### 多进程
+* 多任务的实现方式：
+    1. 多进程模式
+    2. 多线程模式
+    3. 多进程+多线程模式（相比前两种模式复杂度更高，所以很少采用）
+
+### 多进程（multiprocessing）
+* multiprocessing模块 fork()函数
+* 由于windows平台不支持fork(),故除了使用内置的fork()外，还可以使用跨平台的`multiprocessing`，可以兼容Windows
+* multiprocessing模块 Process类创建单进程实例
+```
+from multiprocessing import Process
+import os
+
+# 子进程要执行的代码
+def run_proc(name):
+    print('Run child process %s (%s)...' % (name, os.getpid()))
+
+if __name__=='__main__':
+    print('Parent process %s.' % os.getpid())
+    p = Process(target=run_proc, args=('test',))
+    print('Child process will start.')
+    p.start()
+    p.join()    # 等待子进程执行完成后才继续往下执行
+    print('Child process end.')
+```
+* multiprocessing模块 Pool进程池批量创建子进程
+```
+from multiprocessing import Pool
+import os, time, random
+
+def long_time_task(name):
+    print('Run task %s (%s)...' % (name, os.getpid()))
+    start = time.time()
+    time.sleep(random.random() * 3)
+    end = time.time()
+    print('Task %s runs %0.2f seconds.' % (name, (end - start)))
+
+if __name__=='__main__':
+    print('Parent process %s.' % os.getpid())
+    p = Pool(4)
+    for i in range(5):
+        p.apply_async(long_time_task, args=(i,))
+    print('Waiting for all subprocesses done...')
+    p.close() # 在join()前调用close(),在调用close()之后不能添加创建新的进程实例
+    p.join()  # 等待所有子进程执行完毕后才能继续往下执行
+    print('All subprocesses done.')
+```
+* subprocess 模块可以方便的启动子进程并控制其输入输出
+```
+import subprocess
+
+print('$ nslookup')
+p = subprocess.Popen(['nslookup'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+output, err = p.communicate(b'set q=mx\npython.org\nexit\n')
+print(output.decode('utf-8'))
+print('Exit code:', p.returncode)
+
+```
+* 进程间通信，multiprocessing模块中提供了`Queue`、`Pipes`等多种方式进行进程间数据交换
+```
+from multiprocessing import Process, Queue
+import os, time, random
+
+# 写数据进程执行的代码:
+def write(q):
+    print('Process to write: %s' % os.getpid())
+    for value in ['A', 'B', 'C']:
+        print('Put %s to queue...' % value)
+        q.put(value)
+        time.sleep(random.random())
+
+# 读数据进程执行的代码:
+def read(q):
+    print('Process to read: %s' % os.getpid())
+    while True:
+        value = q.get(True)
+        print('Get %s from queue.' % value)
+
+if __name__=='__main__':
+    # 父进程创建Queue，并传给各个子进程：
+    q = Queue()
+    pw = Process(target=write, args=(q,))
+    pr = Process(target=read, args=(q,))
+    # 启动子进程pw，写入:
+    pw.start()
+    # 启动子进程pr，读取:
+    pr.start()
+    # 等待pw结束:
+    pw.join()
+    # pr进程里是死循环，无法等待其结束，只能强行终止:
+    pr.terminate()
+```
+
 ### 多线程
+
+
 ### ThreadLocal
 ### 进程 vs. 线程
 ### 分布式进程
