@@ -1053,23 +1053,189 @@ m.group(2) # 第二组‘12345’
 ## 常用内建模块
 
 ### datetime
+```
+from datetime import datetime
+
+# 获取当前日期
+now = datetime.now()
+
+# 获取制定日期及时间
+dt = datetime(2015, 4, 19, 12, 20) => 2015-04-19 12:20:00
+
+# datetime转换timestamp
+dt.timestamp()
+
+# timestamp转换datetime
+datetime.fromtimestamp(14294172200.00) => 2015-04-19 12:20:00
+
+# str转换datetime
+datetime.strptime('2015-6-1 18:19:59', '%Y-%m-%d %H:%M:%S')
+
+# datetime转换str
+now = datetime.now()
+now.strftime('%a, %b %d %H:%M')
+
+# datetime加减
+now = datetime.now()
+now + timedelta(hours=10) # 加10小时
+now - timedelta(days=1)   # 减1天
+now + timedelta(days=2, hours=12) # 加2天12个小时
+
+```
 ### collections
+集合模块，提供了许多有用的集合类
+* namedtuple 命名元组
+
+`namedtuple`本身是个函数，用于创建自定义tuple对象，规定了tuple元素的个数，
+并可以使用属性而非索引的方式引用tuple中的元素;
+```
+from collections import namedtuple
+Point = namedtuple('Point', ['x', 'y'])
+p = Point(1,2)
+p.x => 1
+p.y => 2
+```
+* deque 双向列表
+
+`list`对于查询效率高，但是对于删除及插入等操作效率很低;
+`deque`可以实现插入和删除操作双向列表，适合队列和栈;
+* defaultdict 默认值字典
+
+使用`dict`时，当引用不存在的key时，会抛出keyError;
+使用`defaultdict`可以在引用不存在Key时，提供一个默认值;
+```
+from collections import defaultdict
+dd = defaultdict(lambda: 'N/A')
+dd['key1'] = 'abc'
+dd['key1']
+dd['key2'] => 'N/A'
+
+```
+* OrderedDict 有序字典
+
+普通的`dict`的key是无序的，`OrderedDict`是按照插入的顺序排列的，不是按Key本身排序;
+
+* Counter 计数器
+
+```
+from collections import Counter
+c = Counter
+for ch in 'programming':
+    c[ch] = c[ch]+1
+
+c => Counter({'g': 2, 'm': 2, 'r': 2, 'a': 1, 'i': 1, 'o': 1, 'n': 1, 'p': 1})
+```
+
 ### base64
+
+可以将任意二进制转换为文本字符串的编码方式;
+
+```
+import base64
+
+base64.b64encode(b'binary\x00string') => b'YmluYXJ5AHN0cmluZw=='
+base64.b64decode(b'YmluYXJ5AHN0cmluZw==') => b'binary\x00string'
+
+```
 ### struct
+* Python没有专门处理字节的数据类型，但可以通过b'str'表示字节;
+* `struct`模块用于解决`bytes`和其他二进制数据类型的转换;
+* struct.pack()可以将任意数据类型转变为`bytes`;
+* unpack()把`byte`变成相应的数据类型;
+``` py
+import struct
+# >表示字节顺序是big-endian，也就是网络序，I表示4字节无符号整数
+struct.pack('>I', 10240099) => b'\x00\x9c@c'
+struct.unpack('>IH', b'\xf0\xf0\xf0\xf0\x80\x80')
+```
+
 ### hashlib
+提供常用的摘要算法，如MD5、SHA1等;
+``` py
+import hashlib
+
+md5 = hashlib.md5()
+md5.update('hello world!'.encode('utf-8'))
+md5.hexdigest()
+```
 ### hmac
+hmac是在计算哈希摘要的过程中，混入key的算法，这样可以防止通过彩虹表反推原始口令;
+``` py
+import hmac
+msg = b'hello, world!'
+key = b'secret'
+h = hmac.new(key, msg, digestmod='MD5')
+h.hexdigest() => 'fa4ee7d173f2d97ee79022d1a7355bcf'
+
+```
+
 ### itertools
+主要提供可用于操作迭代对象的工具函数
+```
+import itertools
+# 无限迭代器
+natuals = intertools.count(1) # 连续输出自然数
+cs = intertools.cycle('ABC')  # 无限循环迭代
+ns = itertools.repeat('A', 3) # 将A重复迭代3次
+
+# takewhile()可通过条件判断截取有限个序列
+natuals = itertools.count(1)
+itertools.takewhile(lambda x: x <= 10, natuals)
+
+# chain()可以将一组迭代对象串联起来，形成一个更大的迭代器
+for c in itertools.chain('ABC', 'XYZ'):
+    print(c) => 'A' 'B' 'C' 'X' 'Y' 'Z'
+
+# groupby()把迭代器中相邻的重复元素挑出来放在一起
+for key, group in itertools.groupby('AAABBBCCAAA'):
+```
 ### contextlib
+
+在关闭资源等操作时, 会用到`try...finally`, 但该方法繁琐, 可以使用`with`;
+通过with实现上下文管理是通过`__enter__`和`__exit__`两个方法实现
+
 ### urllib
+提供了操作URL的一系列功能
 ### xml
+提供XML格式数据的解析
 ### htmlParser
+提供解析HTML格式的文件
 
 ## 常用第三方模块
+第三方模块可以用pip安装，同时建议安装anaconda,其中包含数十个常用第三方呢模块
 
 ### Pillow
+图形处理标准库
 ### requests
+由于内置的urllib,提供更加方便的请求访问URL资源的工具
 ### chardet
+在遇到未知的字符编码时，可以使用chardet对编码进行检测确认;
 ### psutil
+用于获取系统信息
+``` py
+import psutil
+psutil.cpu_count() # CPU逻辑数
+psutil.cpu_times() # 统计CPU用户以及系统空余时间
+psutil.virtual_memory() # 获取物理内存空间
+psutil.swap_memory() # 获取交换内存空间
+psutil.disk_partitions() # 获取磁盘分区信息
+psutil.disk_usage('/') # 磁盘使用情况
+psutil.net_io_counters() # 获取网络读写字节／包的个数
+psutil.net_if_addrs() # 获取网络接口信息
+psutil.net_connections() # 获取当前网络连接信息
+psutil.pids() # 所有进程ID
+p = psutil.Process(3776) # 获取指定进程ID=3776，其实就是当前Python交互环境
+```
+
+## virtualenv 虚拟环境
+
+在开发多个应用程序时，每个应用的运行环境会有不同，
+为每个应用创建一套独立且隔离的运行环境, 就可以使用virtualenv
+
+1. 在项目根目录运行虚拟环境,命令：`virtualenv --no-site-packages venv`
+2. 在虚拟环境中安装所需要的第三方包（这些包都被安装到venv目录下，不受pyhon环境影响）
+3. 退出环境使用`deactivate`命令;
+
 
 ### 技术栈
 * html/css/js
