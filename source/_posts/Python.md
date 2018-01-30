@@ -1320,7 +1320,22 @@ loop.run_forever()
 ```
 
 
+## Pipenv [python包依赖管理工具](http://odoo.com.cn/posts/pipenv/)
 
+* Pipenv 工具集pip, Pipfile, virtualenv于一身;
+* 有别于Pyenv,Pyenv适用于管理python版本的;
+* 而Pipenv用于管理python项目中的安装包依赖;
+* 通过pipfile和Pipfile.lock来管理项目中的依赖包;
+* 第一次安装时需要指定`--three`or`--two`版本3或版本2
+``` py
+# 安装pipenv
+pip install pipenv
+
+# 安装依赖包 `--three`参数指定python3.x运行环境
+pipenv install --three requests
+```
+> 在第一次执行`pipenv install`时，会在该项目创建对应的虚拟环境，
+同时生成Pipfile及Pipfile.lock文件，用于管理项目中Python包依赖;
 
 
 
