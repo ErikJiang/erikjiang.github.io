@@ -1237,6 +1237,117 @@ p = psutil.Process(3776) # 获取指定进程ID=3776，其实就是当前Python�
 3. 退出环境使用`deactivate`命令;
 
 
+## web dev
+
+### WSGI规范标准 (Web Server Gateway Interface) web服务网关接口
+* 仅要求web开发者实现一个函数接口，即可响应http请求
+* 符合WSGI标准的http处理函数，至少包含两个参数`requst`和`response`,用于接收请求参数和响应结果;
+* 主流web框架都是基于WSGI标准;
+
+## 异步IO
+
+###　协程（Coroutine），又称微线程，或者纤程
+* 协程内的子程序可以在执行过程中断，转而执行别的子程序，在适当的时候再返回执行余下程序;
+* 协程可在一个线程中完成多个任务子程序;
+* 协程没有线程切换的开销，故执行效率高;
+* 协程因为仅运行在一个线程，故没有写变量冲突，故不需要线程锁机制;
+
+### 异步标准库　asyncio
+asyncio的编程模型是`EventLoop`消息循环
+* asyncio提供了完善的异步IO支持
+* 异步操作需要在coroutine中通过yield from完成
+* 多个`coroutine`可以封装成一组Task然后并发执行
+``` py
+import asyncio
+
+# 定义协程
+@asyncio.coroutine
+def hello():
+    print("Hello world!")
+    # 异步调用asyncio.sleep(1):
+    r = yield from asyncio.sleep(1)
+    print("Hello again!")
+
+# 获取EventLoop:
+loop = asyncio.get_event_loop()
+# 执行协程
+loop.run_until_complete(hello())
+loop.close()
+
+```
+
+### async await (适用于v3.5)
+async & await 是针对于协程`coroutine`的语法，
+用于替换`@asyncio.coroutine`及`yield from`:
+具体使用方式：
+1. 把`@asyncio.coroutine`替换为`async`;
+2. 把`yield from`替换为`await`;
+``` py
+async def hello():
+    print("Hello world!")
+    # 异步调用asyncio.sleep(1):
+    r = await asyncio.sleep(1)
+    print("Hello again!")
+```
+### aiohttp 异步http框架
+> asyncio实现了`TCP`,`UDP`,`SSL`等协议,而`aiohttp`是基于asyncio的http框架
+
+``` py
+import asyncio
+
+from aiohttp import web
+
+async def index(request):
+    await asyncio.sleep(0.5)
+    return web.Response(body=b'<h1>Index</h1>')
+
+async def hello(request):
+    await asyncio.sleep(0.5)
+    text = '<h1>hello, %s!</h1>' % request.match_info['name']
+    return web.Response(body=text.encode('utf-8'))
+
+async def init(loop):
+    app = web.Application(loop=loop)
+    app.router.add_route('GET', '/', index)
+    app.router.add_route('GET', '/hello/{name}', hello)
+    srv = await loop.create_server(app.make_handler(), '127.0.0.1', 8000)
+    print('Server started at http://127.0.0.1:8000...')
+    return srv
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(init(loop))
+loop.run_forever()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 技术栈
 * html/css/js
 * vue.js
