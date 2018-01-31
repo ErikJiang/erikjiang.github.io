@@ -87,22 +87,18 @@
 
 
 
-<meta name="description" content="gulp 是什么？
-如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
-而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
+<meta name="description" content="gulp 是什么？ 如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。 而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
+<meta name="keywords" content="gulp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 Gulp 构建工程">
 <meta property="og:url" content="https://jiangink.github.io/2016/01/29/BuildingWithGulp/index.html">
 <meta property="og:site_name" content="牛肉培根冒菜俠">
-<meta property="og:description" content="gulp 是什么？
-如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
-而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
-<meta property="og:updated_time" content="2017-05-10T15:47:43.000Z">
+<meta property="og:description" content="gulp 是什么？ 如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。 而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-17T11:38:05.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 Gulp 构建工程">
-<meta name="twitter:description" content="gulp 是什么？
-如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。
-而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
+<meta name="twitter:description" content="gulp 是什么？ 如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。 而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，">
 
 
 
@@ -384,7 +380,7 @@
 <p>而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，而 gulp 即是这样的一种工具。</p>
 <a id="more"></a>
 <hr>
-<p>Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 的构建方式，Grunt 在处理过程中会产生一些中间态的临时文件，而任务会最终基于这些临时文件生成构建后的结果文件。在这个过程中 Grunt 会进行大量的 I/O 读写操作，那么如果遇到大型项目工程，Grunt 的构建处理速度将大大拖长，这也就是为什么 Gulp 渐渐取代 Grunt 的原因之一，如果想了解更多，可以试着阅读 <a href="http://segmentfault.com/a/1190000002491282" title="gulp vs grunt" target="_blank" rel="external">《 gulp vs grunt 》</a> 这篇文章。</p>
+<p>Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 的构建方式，Grunt 在处理过程中会产生一些中间态的临时文件，而任务会最终基于这些临时文件生成构建后的结果文件。在这个过程中 Grunt 会进行大量的 I/O 读写操作，那么如果遇到大型项目工程，Grunt 的构建处理速度将大大拖长，这也就是为什么 Gulp 渐渐取代 Grunt 的原因之一，如果想了解更多，可以试着阅读 <a href="http://segmentfault.com/a/1190000002491282" title="gulp vs grunt" target="_blank" rel="noopener">《 gulp vs grunt 》</a> 这篇文章。</p>
 <p>由于 Gulp 通过代码优于配置的策略不仅使得任务易于编写，同时也易于维护和阅读。Gulp 基于的 NodeJS 的流，使用管道 Pipe 的概念，这一级的输出作为下一级的输入，中间无需在硬盘上写入任何临时文件和目录，让任务构建的更加迅速。</p>
 <h3 id="Gulp-的基本安装-："><a href="#Gulp-的基本安装-：" class="headerlink" title="Gulp 的基本安装 ："></a>Gulp 的基本安装 ：</h3><p>这里我默认您已经安装了 Node.js 以及 NPM 包管理工具，首先需要全局安装 Gulp 工具：</p>
 <pre><code>$ npm install gulp -g
@@ -408,7 +404,7 @@ $ npm install gulp --save-dev    #安装 gulp 依赖包
 </ul>
 <p>安装方式与安装 Gulp 依赖包命令一致：</p>
 <pre><code>$ npm install [package-name] --save-dev
-</code></pre><h3 id="Gulp-任务文件的配置-："><a href="#Gulp-任务文件的配置-：" class="headerlink" title="Gulp 任务文件的配置 ："></a>Gulp 任务文件的配置 ：</h3><p>这里我直接使用本人 Github 上的一个聊天室项目 <a href="https://github.com/JiangInk/node_chat" title="node_chat" target="_blank" rel="external">node_chat</a> 来进行讲解。</p>
+</code></pre><h3 id="Gulp-任务文件的配置-："><a href="#Gulp-任务文件的配置-：" class="headerlink" title="Gulp 任务文件的配置 ："></a>Gulp 任务文件的配置 ：</h3><p>这里我直接使用本人 Github 上的一个聊天室项目 <a href="https://github.com/JiangInk/node_chat" title="node_chat" target="_blank" rel="noopener">node_chat</a> 来进行讲解。</p>
 <pre><code>// 加载插件
 var del = require(&apos;del&apos;),
     gulp = require(&apos;gulp&apos;),
@@ -626,7 +622,7 @@ gulp.task(&apos;watch&apos;, function() {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -637,7 +633,7 @@ gulp.task(&apos;watch&apos;, function() {
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -648,7 +644,7 @@ gulp.task(&apos;watch&apos;, function() {
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

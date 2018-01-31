@@ -88,12 +88,14 @@
 
 
 <meta name="description" content="简述需求:有时，我们会在项目中遇到导入文档数据的功能需求，具体的比如可能会需要将 excel 表格数据导入到项目系统的数据库中，通过读取文件内容，解析并转换数据，最终存储至数据库的表中；">
+<meta name="keywords" content="node,csv">
 <meta property="og:type" content="article">
 <meta property="og:title" content="以 Node 方式, CSV 转 JSON">
 <meta property="og:url" content="https://jiangink.github.io/2017/05/07/NodeCsvToJson/index.html">
 <meta property="og:site_name" content="牛肉培根冒菜俠">
 <meta property="og:description" content="简述需求:有时，我们会在项目中遇到导入文档数据的功能需求，具体的比如可能会需要将 excel 表格数据导入到项目系统的数据库中，通过读取文件内容，解析并转换数据，最终存储至数据库的表中；">
-<meta property="og:updated_time" content="2017-05-09T15:23:53.000Z">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-17T11:38:05.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="以 Node 方式, CSV 转 JSON">
 <meta name="twitter:description" content="简述需求:有时，我们会在项目中遇到导入文档数据的功能需求，具体的比如可能会需要将 excel 表格数据导入到项目系统的数据库中，通过读取文件内容，解析并转换数据，最终存储至数据库的表中；">
@@ -375,7 +377,7 @@
       
         <h2 id="简述需求"><a href="#简述需求" class="headerlink" title="简述需求:"></a>简述需求:</h2><p>有时，我们会在项目中遇到导入文档数据的功能需求，具体的比如可能会需要将 excel 表格数据导入到项目系统的数据库中，通过读取文件内容，解析并转换数据，最终存储至数据库的表中；</p>
 <a id="more"></a>
-<h2 id="可行方案："><a href="#可行方案：" class="headerlink" title="可行方案："></a>可行方案：</h2><p>针对于上述的这一系列较为繁琐的处理过程，在 Node 开发中，NPM 提供了 <a href="https://github.com/Keyang/node-csvtojson" target="_blank" rel="external">csv to json</a> 的工具模块，它能够将 CSV 标准文件转换成 JSON 数据，从而方便程序进一步的数据存储；</p>
+<h2 id="可行方案："><a href="#可行方案：" class="headerlink" title="可行方案："></a>可行方案：</h2><p>针对于上述的这一系列较为繁琐的处理过程，在 Node 开发中，NPM 提供了 <a href="https://github.com/Keyang/node-csvtojson" target="_blank" rel="noopener">csv to json</a> 的工具模块，它能够将 CSV 标准文件转换成 JSON 数据，从而方便程序进一步的数据存储；</p>
 <p>具体的思路：</p>
 <ol>
 <li>需要将 Excel 表格文件转换为 CSV 标准文件；</li>
@@ -385,9 +387,9 @@
 <blockquote>
 <p>注: 使用 Mac 版 MicroOffice 将 EXCEL 表格文件转为 CSV  格式文件后，在终端中打开 CSV 文件中文出现乱码?</p>
 </blockquote>
-<p>也不知为何，微软在做 CSV 文件转换时，对字符集支持有限，导致中文乱码；该问题使用 <a href="https://www.libreoffice.org/" target="_blank" rel="external">Libre Office</a> 则可以解决，Libreoffice 在转换 CSV 时提供字符编码转换设置，转换时设置 UTF-8 即可, 据说使用 <a href="https://www.google.com/sheets/about/" target="_blank" rel="external">Google Sheets</a> 可以达到相同效果；</p>
+<p>也不知为何，微软在做 CSV 文件转换时，对字符集支持有限，导致中文乱码；该问题使用 <a href="https://www.libreoffice.org/" target="_blank" rel="noopener">Libre Office</a> 则可以解决，Libreoffice 在转换 CSV 时提供字符编码转换设置，转换时设置 UTF-8 即可, 据说使用 <a href="https://www.google.com/sheets/about/" target="_blank" rel="noopener">Google Sheets</a> 可以达到相同效果；</p>
 <h2 id="操作说明"><a href="#操作说明" class="headerlink" title="操作说明"></a>操作说明</h2><p>安装：<br><code>npm install csvtojson --save</code></p>
-<p>实例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** csv file</span></div><div class="line"> account,password,company,username,phone</div><div class="line"> test1@demo.com,123456,安徽公司,小明,13112310168</div><div class="line"> test2@demo.com,123456,浙江公司,小伟,13327223199</div><div class="line">**/</div><div class="line"></div><div class="line"><span class="keyword">const</span> csvFilePath=<span class="string">'&lt;path to csv file&gt;'</span>;</div><div class="line"><span class="keyword">const</span> csv=<span class="built_in">require</span>(<span class="string">'csvtojson'</span>);</div><div class="line"><span class="keyword">let</span> userData = [];</div><div class="line">csv()</div><div class="line">.fromFile(csvFilePath)</div><div class="line">.on(<span class="string">'json'</span>,(jsonObj)=&gt;&#123;</div><div class="line">	<span class="comment">// 结合 CSV 头部属性逐行将内容转换为 JSON 对象</span></div><div class="line">	userData.push(jsonObj);</div><div class="line">&#125;)</div><div class="line">.on(<span class="string">'done'</span>,(error)=&gt;&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'result: '</span> + <span class="built_in">JSON</span>.stringify(userData));</div><div class="line">	<span class="comment">/**</span></div><div class="line">	[</div><div class="line">    	&#123;</div><div class="line">        	account:'test1@demo.com',</div><div class="line">        	password:'123456',</div><div class="line">        	company:'安徽公司',</div><div class="line">        	username:'小明',</div><div class="line">        	phone: '13112310168'</div><div class="line">    	&#125;,</div><div class="line">    	&#123;</div><div class="line">        	account:'test2@demo.com',</div><div class="line">        	password:'123456',</div><div class="line">        	company:'浙江公司',</div><div class="line">        	username:'小伟',</div><div class="line">        	phone: '13327223199'</div><div class="line">    	&#125;</div><div class="line">	]</div><div class="line">	**/</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>实例：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** csv file</span></span><br><span class="line"><span class="comment"> account,password,company,username,phone</span></span><br><span class="line"><span class="comment"> test1@demo.com,123456,安徽公司,小明,13112310168</span></span><br><span class="line"><span class="comment"> test2@demo.com,123456,浙江公司,小伟,13327223199</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> csvFilePath=<span class="string">'&lt;path to csv file&gt;'</span>;</span><br><span class="line"><span class="keyword">const</span> csv=<span class="built_in">require</span>(<span class="string">'csvtojson'</span>);</span><br><span class="line"><span class="keyword">let</span> userData = [];</span><br><span class="line">csv()</span><br><span class="line">.fromFile(csvFilePath)</span><br><span class="line">.on(<span class="string">'json'</span>,(jsonObj)=&gt;&#123;</span><br><span class="line">	<span class="comment">// 结合 CSV 头部属性逐行将内容转换为 JSON 对象</span></span><br><span class="line">	userData.push(jsonObj);</span><br><span class="line">&#125;)</span><br><span class="line">.on(<span class="string">'done'</span>,(error)=&gt;&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'result: '</span> + <span class="built_in">JSON</span>.stringify(userData));</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	[</span></span><br><span class="line"><span class="comment">    	&#123;</span></span><br><span class="line"><span class="comment">        	account:'test1@demo.com',</span></span><br><span class="line"><span class="comment">        	password:'123456',</span></span><br><span class="line"><span class="comment">        	company:'安徽公司',</span></span><br><span class="line"><span class="comment">        	username:'小明',</span></span><br><span class="line"><span class="comment">        	phone: '13112310168'</span></span><br><span class="line"><span class="comment">    	&#125;,</span></span><br><span class="line"><span class="comment">    	&#123;</span></span><br><span class="line"><span class="comment">        	account:'test2@demo.com',</span></span><br><span class="line"><span class="comment">        	password:'123456',</span></span><br><span class="line"><span class="comment">        	company:'浙江公司',</span></span><br><span class="line"><span class="comment">        	username:'小伟',</span></span><br><span class="line"><span class="comment">        	phone: '13327223199'</span></span><br><span class="line"><span class="comment">    	&#125;</span></span><br><span class="line"><span class="comment">	]</span></span><br><span class="line"><span class="comment">	**/</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -516,7 +518,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -527,7 +529,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -538,7 +540,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

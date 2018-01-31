@@ -3,17 +3,15 @@ date: 2015-03-26 21:13:58
 categories: 計劃  
 tags: [个人日志] 
 type: "tags"
---- 
+---
 
-*Do not go gentle into that good night.*
-*不要溫和地踏入那個良夜。*
-*Rage, rage against the dying of the light.*
-*怒斥、怒斥將逝的時光。*
-
+> Do not go gentle into that good night.
+> 不要溫和地踏入那個良夜。
+> Rage, rage against the dying of the light.
+> 怒斥、怒斥將逝的時光。
 
 <!--more--> 
 
----
 
 - 專業相關：
  +  《Node.JS開發指南》 BYVoid 「2015年03月30日 已讀完」

@@ -88,12 +88,14 @@
 
 
 <meta name="description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
+<meta name="keywords" content="mongoLab,redis4You,heroku">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NodeJS应用部署初探">
 <meta property="og:url" content="https://jiangink.github.io/2016/01/13/DeployNodeApp/index.html">
 <meta property="og:site_name" content="牛肉培根冒菜俠">
 <meta property="og:description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
-<meta property="og:updated_time" content="2017-04-06T13:25:58.000Z">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-17T11:38:05.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NodeJS应用部署初探">
 <meta name="twitter:description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
@@ -377,7 +379,7 @@
 <a id="more"></a>
 <hr>
 <h3 id="首先，使用-MongoLab-："><a href="#首先，使用-MongoLab-：" class="headerlink" title="首先，使用 MongoLab ："></a>首先，使用 MongoLab ：</h3><p>MongoLab 与 MongoHQ 是当今比较流行的 MongoDB 云数据库提供商。MongoLab 的免费套餐提供了 500MB 的存储空间，MongoLab 的使用比较简单明了，这里简要概述一二。</p>
-<h4 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h4><p><a href="https://mongolab.com/signup/" title="signup" target="_blank" rel="external">mongolab.com/signup</a></p>
+<h4 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h4><p><a href="https://mongolab.com/signup/" title="signup" target="_blank" rel="noopener">mongolab.com/signup</a></p>
 <h4 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h4><p>注册成功后，此时进入到自己的控制面板页，点击 <code>Create new</code> 创建一个数据库。在 <code>Plan</code> 选项选择 <code>Single-node</code> 的 <code>Sandbox</code> 免费套餐。在 <code>Darebase name</code> 除填写数据库的名字，点击 <code>Create new MongoDB deployment</code> 完成创建。</p>
 <p>创建成功后跳转到了控制面板页，点击刚才创建的数据库进入该数据库配置页面。我们需要先为数据库创建一个拥有读写权限的用户，点击 <code>Click here</code> 添加一个用户。</p>
 <p>打开 mongodb.js ，将：</p>
@@ -386,7 +388,7 @@
 <pre><code>mongoose.connect(&apos;your_mongolab_url&apos;, {server: {poolSize: 10}});
 </code></pre><p>注意：将 <code>&lt;dbuser&gt;</code> 和 <code>&lt;dbpassword&gt;</code> 分别替换为刚才为数据库创建的用户名和密码。</p>
 <h3 id="然后，使用-Redis4You-："><a href="#然后，使用-Redis4You-：" class="headerlink" title="然后，使用 Redis4You ："></a>然后，使用 Redis4You ：</h3><p>redis4you 是一家 Redis 云服务提供商，提供多个档次的 Redis 实例供选择，所有类型的服务包括免费的 5M 试用版，都提供诸如多 DB，持久化等功能。这里我们仅供测试使用。</p>
-<h4 id="注册-1"><a href="#注册-1" class="headerlink" title="注册"></a>注册</h4><p><a href="http://redis4you.com/login_new.php" title="redis4you.com" target="_blank" rel="external">redis4you.com/login_new</a></p>
+<h4 id="注册-1"><a href="#注册-1" class="headerlink" title="注册"></a>注册</h4><p><a href="http://redis4you.com/login_new.php" title="redis4you.com" target="_blank" rel="noopener">redis4you.com/login_new</a></p>
 <h4 id="创建数据库-1"><a href="#创建数据库-1" class="headerlink" title="创建数据库"></a>创建数据库</h4><p>验证邮箱完成注册。登录 Redis4You，点击右上角的 <code>My Redis Instanses</code> 进入 <code>Redis</code> 管理页面，点击 <code>Provision new instance</code> 创建一个新的数据库。点击 5MB 的免费套餐右边的 <code>Select this instance</code> 完成创建。</p>
 <p>此时跳转到 Redis 管理页面，点击 <code>Information</code> 查看数据库详情。我们只会用到 Host、Port 和 Auth 这三项，其中 Auth 为随机生成的访问数据库的凭证。</p>
 <p>注意：一定要点击左上角的 <code>start</code> 启动数据库。</p>
@@ -396,7 +398,7 @@
 <pre><code>var client = redis.createClient(Port, Host, {auth_pass: Auth});
 </code></pre><p>注意：将 Host、Port 和 Auth 分别替换为给定的值。</p>
 <h3 id="最后，部署到-HeroKu-："><a href="#最后，部署到-HeroKu-：" class="headerlink" title="最后，部署到 HeroKu ："></a>最后，部署到 HeroKu ：</h3><p>Heroku 是一个主流的 PaaS 提供商，在开发人员中广受欢迎。这个服务围绕着基于 Git 的工作流设计，假如你熟悉 Git ，那部署就十分简单。这个服务原本是为托管 Ruby 应用程序而设计的，但 Heroku 之后加入了对 Node.js 、Clojure 、Scala 、Python 和 Java 等语言的支持。Heroku 的基础服务是免费的。</p>
-<h4 id="注册-2"><a href="#注册-2" class="headerlink" title="注册"></a>注册</h4><p><a href="https://www.heroku.com/" title="heroku.com" target="_blank" rel="external">heroku.com</a></p>
+<h4 id="注册-2"><a href="#注册-2" class="headerlink" title="注册"></a>注册</h4><p><a href="https://www.heroku.com/" title="heroku.com" target="_blank" rel="noopener">heroku.com</a></p>
 <h4 id="创建一个应用"><a href="#创建一个应用" class="headerlink" title="创建一个应用"></a>创建一个应用</h4><p>右上角 “＋” 中点击 <code>Create a new app</code> ，填写独一无二的应用名称后，点击 <code>creat app</code> 即创建成功，然后点击 <code>Open app</code> 即可打开应用 URL 链接 。</p>
 <h4 id="安装-Heroku-Toolbelt"><a href="#安装-Heroku-Toolbelt" class="headerlink" title="安装 Heroku Toolbelt"></a>安装 Heroku Toolbelt</h4><p>Heroku 官方提供了 Heroku Toolbelt 工具更方便地部署和管理应用。它包含三个部分：</p>
 <ul>
@@ -404,7 +406,7 @@
 <li>Foreman ：一个在本地运行你的 app 的不错的选择</li>
 <li>Git ：分布式版本控制工具，用来把应用推送到 Heroku</li>
 </ul>
-<p>Heroku Toolbelt 下载地址：<a href="https://toolbelt.heroku.com/" title="toolbelt.heroku.com" target="_blank" rel="external">toolbelt.heroku.com</a> 。</p>
+<p>Heroku Toolbelt 下载地址：<a href="https://toolbelt.heroku.com/" title="toolbelt.heroku.com" target="_blank" rel="noopener">toolbelt.heroku.com</a> 。</p>
 <p>注意：假如你的电脑上已经安装了 Git ，那么在安装的时候选择 <code>Custom Installation</code> 并去掉安装 Git 的选项，否则选择 <code>Full Installation</code> 。</p>
 <p>安装成功后，打开终端 shell ，输入 <code>heroku login</code> ，然后输入在 Heroku 注册的帐号和密码进行登录。Git 会检测是否有 SSH 密钥，如果有，则使用此密钥并上传，如果没有，则创建一个密钥并上传。</p>
 <p>Tips：SSH 密钥通常用于授予用户访问服务器的权限。可将它们用于某些配置中，以便无需密码即可访问服务器。许多 PaaS 提供商都使用了此功能。</p>
@@ -434,7 +436,7 @@ port 22
 <hr>
 <p>参考：</p>
 <ul>
-<li><a href="https://github.com/nswbmw" title="nswbmw" target="_blank" rel="external">nswbmw github</a></li>
+<li><a href="https://github.com/nswbmw" title="nswbmw" target="_blank" rel="noopener">nswbmw github</a></li>
 </ul>
 
       
@@ -566,7 +568,7 @@ port 22
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -577,7 +579,7 @@ port 22
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -588,7 +590,7 @@ port 22
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
