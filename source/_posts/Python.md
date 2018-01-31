@@ -1337,6 +1337,23 @@ pipenv install --three requests
 > 在第一次执行`pipenv install`时，会在该项目创建对应的虚拟环境，
 同时生成Pipfile及Pipfile.lock文件，用于管理项目中Python包依赖;
 
+## Autoenv　自动切换项目环境
+1. 安装autoenv
+使用pip方式安装存在问题，会导致terminal异常退出，之后的版本也许会更新;
+``` bash
+$ git clone git://github.com/kennethreitz/autoenv.git ~/.autoenv
+$ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
+``` 
+2. 创建`.env`文件
+在已有的pipenv项目中运行`pipenv shell`,
+会得到虚拟环境路径信息，通过信息创建`.env`运行环境文件;
+```
+echo "source /home/{userName}/.local/share/virtualenvs/{projectName}/bin/activate" > {projectName}/.env
+```
+3. 再次进入项目目录，将自动启动该项目的虚拟环境
+---
+
+
 
 
 
