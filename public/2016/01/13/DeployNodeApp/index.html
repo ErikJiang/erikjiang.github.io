@@ -1,0 +1,828 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mongoLab,redis4You,heroku," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NodeJS应用部署初探">
+<meta property="og:url" content="https://jiangink.github.io/2016/01/13/DeployNodeApp/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
+<meta property="og:updated_time" content="2017-04-06T13:25:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NodeJS应用部署初探">
+<meta name="twitter:description" content="尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jiangink.github.io/2016/01/13/DeployNodeApp/"/>
+
+
+
+
+
+  <title> NodeJS应用部署初探 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有心碎的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2016/01/13/DeployNodeApp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                NodeJS应用部署初探
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-13T21:13:51+08:00">
+                2016-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。</p>
+<a id="more"></a>
+<hr>
+<h3 id="首先，使用-MongoLab-："><a href="#首先，使用-MongoLab-：" class="headerlink" title="首先，使用 MongoLab ："></a>首先，使用 MongoLab ：</h3><p>MongoLab 与 MongoHQ 是当今比较流行的 MongoDB 云数据库提供商。MongoLab 的免费套餐提供了 500MB 的存储空间，MongoLab 的使用比较简单明了，这里简要概述一二。</p>
+<h4 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h4><p><a href="https://mongolab.com/signup/" title="signup" target="_blank" rel="external">mongolab.com/signup</a></p>
+<h4 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h4><p>注册成功后，此时进入到自己的控制面板页，点击 <code>Create new</code> 创建一个数据库。在 <code>Plan</code> 选项选择 <code>Single-node</code> 的 <code>Sandbox</code> 免费套餐。在 <code>Darebase name</code> 除填写数据库的名字，点击 <code>Create new MongoDB deployment</code> 完成创建。</p>
+<p>创建成功后跳转到了控制面板页，点击刚才创建的数据库进入该数据库配置页面。我们需要先为数据库创建一个拥有读写权限的用户，点击 <code>Click here</code> 添加一个用户。</p>
+<p>打开 mongodb.js ，将：</p>
+<pre><code>mongoose.connect(&apos;mongodb://localhost/drifter&apos;, {server: {poolSize: 10}});
+</code></pre><p>修改为：</p>
+<pre><code>mongoose.connect(&apos;your_mongolab_url&apos;, {server: {poolSize: 10}});
+</code></pre><p>注意：将 <code>&lt;dbuser&gt;</code> 和 <code>&lt;dbpassword&gt;</code> 分别替换为刚才为数据库创建的用户名和密码。</p>
+<h3 id="然后，使用-Redis4You-："><a href="#然后，使用-Redis4You-：" class="headerlink" title="然后，使用 Redis4You ："></a>然后，使用 Redis4You ：</h3><p>redis4you 是一家 Redis 云服务提供商，提供多个档次的 Redis 实例供选择，所有类型的服务包括免费的 5M 试用版，都提供诸如多 DB，持久化等功能。这里我们仅供测试使用。</p>
+<h4 id="注册-1"><a href="#注册-1" class="headerlink" title="注册"></a>注册</h4><p><a href="http://redis4you.com/login_new.php" title="redis4you.com" target="_blank" rel="external">redis4you.com/login_new</a></p>
+<h4 id="创建数据库-1"><a href="#创建数据库-1" class="headerlink" title="创建数据库"></a>创建数据库</h4><p>验证邮箱完成注册。登录 Redis4You，点击右上角的 <code>My Redis Instanses</code> 进入 <code>Redis</code> 管理页面，点击 <code>Provision new instance</code> 创建一个新的数据库。点击 5MB 的免费套餐右边的 <code>Select this instance</code> 完成创建。</p>
+<p>此时跳转到 Redis 管理页面，点击 <code>Information</code> 查看数据库详情。我们只会用到 Host、Port 和 Auth 这三项，其中 Auth 为随机生成的访问数据库的凭证。</p>
+<p>注意：一定要点击左上角的 <code>start</code> 启动数据库。</p>
+<p>打开 redis.js ，将：</p>
+<pre><code>var client = redis.createClient();
+</code></pre><p>修改为：</p>
+<pre><code>var client = redis.createClient(Port, Host, {auth_pass: Auth});
+</code></pre><p>注意：将 Host、Port 和 Auth 分别替换为给定的值。</p>
+<h3 id="最后，部署到-HeroKu-："><a href="#最后，部署到-HeroKu-：" class="headerlink" title="最后，部署到 HeroKu ："></a>最后，部署到 HeroKu ：</h3><p>Heroku 是一个主流的 PaaS 提供商，在开发人员中广受欢迎。这个服务围绕着基于 Git 的工作流设计，假如你熟悉 Git ，那部署就十分简单。这个服务原本是为托管 Ruby 应用程序而设计的，但 Heroku 之后加入了对 Node.js 、Clojure 、Scala 、Python 和 Java 等语言的支持。Heroku 的基础服务是免费的。</p>
+<h4 id="注册-2"><a href="#注册-2" class="headerlink" title="注册"></a>注册</h4><p><a href="https://www.heroku.com/" title="heroku.com" target="_blank" rel="external">heroku.com</a></p>
+<h4 id="创建一个应用"><a href="#创建一个应用" class="headerlink" title="创建一个应用"></a>创建一个应用</h4><p>右上角 “＋” 中点击 <code>Create a new app</code> ，填写独一无二的应用名称后，点击 <code>creat app</code> 即创建成功，然后点击 <code>Open app</code> 即可打开应用 URL 链接 。</p>
+<h4 id="安装-Heroku-Toolbelt"><a href="#安装-Heroku-Toolbelt" class="headerlink" title="安装 Heroku Toolbelt"></a>安装 Heroku Toolbelt</h4><p>Heroku 官方提供了 Heroku Toolbelt 工具更方便地部署和管理应用。它包含三个部分：</p>
+<ul>
+<li>Heroku client ：创建和管理 Heroku 应用的命令行工具</li>
+<li>Foreman ：一个在本地运行你的 app 的不错的选择</li>
+<li>Git ：分布式版本控制工具，用来把应用推送到 Heroku</li>
+</ul>
+<p>Heroku Toolbelt 下载地址：<a href="https://toolbelt.heroku.com/" title="toolbelt.heroku.com" target="_blank" rel="external">toolbelt.heroku.com</a> 。</p>
+<p>注意：假如你的电脑上已经安装了 Git ，那么在安装的时候选择 <code>Custom Installation</code> 并去掉安装 Git 的选项，否则选择 <code>Full Installation</code> 。</p>
+<p>安装成功后，打开终端 shell ，输入 <code>heroku login</code> ，然后输入在 Heroku 注册的帐号和密码进行登录。Git 会检测是否有 SSH 密钥，如果有，则使用此密钥并上传，如果没有，则创建一个密钥并上传。</p>
+<p>Tips：SSH 密钥通常用于授予用户访问服务器的权限。可将它们用于某些配置中，以便无需密码即可访问服务器。许多 PaaS 提供商都使用了此功能。</p>
+<h4 id="Procfile"><a href="#Procfile" class="headerlink" title="Procfile"></a>Procfile</h4><p>在工程的根目录下新建一个 Procfile 文件，添加如下内容：</p>
+<pre><code>web: ./bin/www
+</code></pre><p>Procfile 文件告诉了服务器该使用什么命令启动一个 web 服务，这里我们通过 <code>./bin/www</code> 执行 Node 脚本。为什么这里声明了一个 web 类型呢？官方解释为：</p>
+<blockquote>
+<p>The name “web” is important here. It declares that this process type will be attached to the HTTP routing stack of Heroku, and receive web traffic when deployed.</p>
+</blockquote>
+<h4 id="上传应用"><a href="#上传应用" class="headerlink" title="上传应用"></a>上传应用</h4><p>首先 clone 一份 git 仓库源码到你的本地机器中；</p>
+<pre><code>$ heroku git:clone -a web_app_name
+$ cd web_app_name
+</code></pre><p>使用 git 将源码变动的部分更新以及部署到 heroku 当中.</p>
+<pre><code>$ git add .
+$ git commit -am &quot;make it better&quot;
+$ git push heroku master
+</code></pre><p>在 push 到 heroku 服务器之前，我们还需要做一个工作。由于我国某些政策的原因，我们需到 ~/.ssh/ 目录下，新建一个 config 文件，内容如下：</p>
+<pre><code>Host git.heroku.com
+User yourName
+Hostname 107.21.95.3
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa
+port 22
+</code></pre><p>然后回到 Git Bash ，输入：</p>
+<pre><code>$ git push heroku master
+</code></pre><p>稍等片刻即上传成功。</p>
+<hr>
+<p>参考：</p>
+<ul>
+<li><a href="https://github.com/nswbmw" title="nswbmw" target="_blank" rel="external">nswbmw github</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongoLab/" rel="tag"># mongoLab</a>
+          
+            <a href="/tags/redis4You/" rel="tag"># redis4You</a>
+          
+            <a href="/tags/heroku/" rel="tag"># heroku</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/05/RedisNote/" rel="next" title="Redis学习笔记">
+                <i class="fa fa-chevron-left"></i> Redis学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/19/WebSocketNote/" rel="prev" title="WebSocket学习笔记">
+                WebSocket学习笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead3.jpg"
+               alt="Ink Jiang" />
+          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=419594258&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先，使用-MongoLab-："><span class="nav-number">1.</span> <span class="nav-text">首先，使用 MongoLab ：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注册"><span class="nav-number">1.1.</span> <span class="nav-text">注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建数据库"><span class="nav-number">1.2.</span> <span class="nav-text">创建数据库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#然后，使用-Redis4You-："><span class="nav-number">2.</span> <span class="nav-text">然后，使用 Redis4You ：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注册-1"><span class="nav-number">2.1.</span> <span class="nav-text">注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建数据库-1"><span class="nav-number">2.2.</span> <span class="nav-text">创建数据库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后，部署到-HeroKu-："><span class="nav-number">3.</span> <span class="nav-text">最后，部署到 HeroKu ：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注册-2"><span class="nav-number">3.1.</span> <span class="nav-text">注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建一个应用"><span class="nav-number">3.2.</span> <span class="nav-text">创建一个应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装-Heroku-Toolbelt"><span class="nav-number">3.3.</span> <span class="nav-text">安装 Heroku Toolbelt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Procfile"><span class="nav-number">3.4.</span> <span class="nav-text">Procfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#上传应用"><span class="nav-number">3.5.</span> <span class="nav-text">上传应用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
