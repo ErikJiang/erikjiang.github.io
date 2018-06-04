@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="node,debug," />
+  <meta name="keywords" content="go," />
 
 
 
@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
+<meta name="description" content="GoLang特点：静态编译语言、语法简洁、类型与内存安全、支持并发控制及并行分布式计算;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Node调试工具的使用">
-<meta property="og:url" content="https://jiangink.github.io/2015/05/11/NodeInspector/index.html">
+<meta property="og:title" content="Go语言基础">
+<meta property="og:url" content="https://jiangink.github.io/2018/06/04/GoLangBase/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
-<meta property="og:description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
-<meta property="og:updated_time" content="2017-04-06T13:26:59.000Z">
+<meta property="og:description" content="GoLang特点：静态编译语言、语法简洁、类型与内存安全、支持并发控制及并行分布式计算;">
+<meta property="og:updated_time" content="2018-06-04T15:47:04.401Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Node调试工具的使用">
-<meta name="twitter:description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
+<meta name="twitter:title" content="Go语言基础">
+<meta name="twitter:description" content="GoLang特点：静态编译语言、语法简洁、类型与内存安全、支持并发控制及并行分布式计算;">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="https://jiangink.github.io/2015/05/11/NodeInspector/"/>
+  <link rel="canonical" href="https://jiangink.github.io/2018/06/04/GoLangBase/"/>
 
 
 
 
 
-  <title> Node调试工具的使用 | 冒菜略寡味 </title>
+  <title> Go语言基础 | 冒菜略寡味 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -279,7 +279,7 @@
   
 
   <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2015/05/11/NodeInspector/">
+    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2018/06/04/GoLangBase/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ink Jiang">
@@ -300,7 +300,7 @@
             
             
               
-                Node调试工具的使用
+                Go语言基础
               
             
           </h1>
@@ -315,8 +315,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-05-11T22:22:57+08:00">
-                2015-05-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-04T20:10:05+08:00">
+                2018-06-04
               </time>
             
 
@@ -373,22 +373,14 @@
       
 
       
-        <p>今天发现一个在浏览器上调试node代码的工具，分享一下.<br>这个工具名叫：<a href="https://github.com/node-inspector/node-inspector" target="_blank" rel="external">Node Inspector</a><br>感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；<br><a id="more"></a></p>
-<h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h4><p>安装命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install –g node-inspector</div></pre></td></tr></table></figure></p>
-<h4 id="运行步骤"><a href="#运行步骤" class="headerlink" title="运行步骤"></a>运行步骤</h4><p>1）首先，需要启动node.js应用<br>命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug-brk=[app port] [app name]</div></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug=[app port] [app name]</div></pre></td></tr></table></figure></p>
-<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug-brk=3001 bin/www</div></pre></td></tr></table></figure></p>
-<p>[debug与debug-brk两种配参见<a href="https://github.com/node-inspector/node-inspector#troubleshooting" target="_blank" rel="external">说明</a>]</p>
-<p>2）然后，启动node-inspector调试工具：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-inspector --web-port [web port] --debug-port [app port]</div></pre></td></tr></table></figure></p>
-<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-inspector --web-port 8081 --debug-port 3001</div></pre></td></tr></table></figure></p>
-<p>[注：8081为web访问端口；3001为应用调试端口]</p>
-<p>3)最后，访问chrome浏览器：<br>具体访问的网址，其实在启动调试工具后会有输出提示，大致如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1:8081/debug?ws=127.0.0.1:8081&amp;port=3001</div></pre></td></tr></table></figure></p>
-<hr>
-<p>具体也可参考如下：</p>
-<ol>
-<li><a href="http://jingyan.baidu.com/article/dca1fa6fbd580ff1a44052de.html" target="_blank" rel="external">百度经验</a></li>
-<li><a href="http://www.noanylove.com/2011/12/node-the-inspector-debugging-node-js/" target="_blank" rel="external">用node-inspector调试Node.js</a></li>
-</ol>
+        <blockquote>
+<p>GoLang特点：静态编译语言、语法简洁、类型与内存安全、支持并发控制及并行分布式计算;</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h2><h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h2 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h2><h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h2 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h2><h2 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h2><h2 id="切片-slice"><a href="#切片-slice" class="headerlink" title="切片(slice)"></a>切片(slice)</h2><h2 id="范围-range"><a href="#范围-range" class="headerlink" title="范围(range)"></a>范围(range)</h2><h2 id="集合-map"><a href="#集合-map" class="headerlink" title="集合(map)"></a>集合(map)</h2><h2 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h2><h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><h2 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h2><hr>
+<ul>
+<li><a href="http://www.runoob.com/go/go-tutorial.html" target="_blank" rel="external">GoLang Tutorial</a></li>
+</ul>
 
       
     </div>
@@ -418,9 +410,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/node/" rel="tag"># node</a>
-          
-            <a href="/tags/debug/" rel="tag"># debug</a>
+            <a href="/tags/go/" rel="tag"># go</a>
           
         </div>
       
@@ -433,8 +423,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/04/08/MEANNote/" rel="next" title="MEAN学习笔记">
-                <i class="fa fa-chevron-left"></i> MEAN学习笔记
+              <a href="/2018/05/31/YouAreNotPitiful/" rel="next" title="不算可怜">
+                <i class="fa fa-chevron-left"></i> 不算可怜
               </a>
             
           </div>
@@ -442,10 +432,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/22/ChangeNodeVersion/" rel="prev" title="关于Node版本切换">
-                关于Node版本切换 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -598,7 +584,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装步骤"><span class="nav-number">1.</span> <span class="nav-text">安装步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行步骤"><span class="nav-number">2.</span> <span class="nav-text">运行步骤</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境安装"><span class="nav-number">1.</span> <span class="nav-text">环境安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构"><span class="nav-number">2.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础语法"><span class="nav-number">3.</span> <span class="nav-text">基础语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型"><span class="nav-number">4.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">5.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常量"><span class="nav-number">6.</span> <span class="nav-text">常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符"><span class="nav-number">7.</span> <span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件语句"><span class="nav-number">8.</span> <span class="nav-text">条件语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#循环语句"><span class="nav-number">9.</span> <span class="nav-text">循环语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">10.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量作用域"><span class="nav-number">11.</span> <span class="nav-text">变量作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组"><span class="nav-number">12.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指针"><span class="nav-number">13.</span> <span class="nav-text">指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体"><span class="nav-number">14.</span> <span class="nav-text">结构体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切片-slice"><span class="nav-number">15.</span> <span class="nav-text">切片(slice)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#范围-range"><span class="nav-number">16.</span> <span class="nav-text">范围(range)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合-map"><span class="nav-number">17.</span> <span class="nav-text">集合(map)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#递归函数"><span class="nav-number">18.</span> <span class="nav-text">递归函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型转换"><span class="nav-number">19.</span> <span class="nav-text">类型转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口"><span class="nav-number">20.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误处理"><span class="nav-number">21.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发工具"><span class="nav-number">22.</span> <span class="nav-text">开发工具</span></a></li></ol></div>
             
 
           </div>
