@@ -60,6 +60,18 @@ time_format: HH:mm:ss
 per_page: 5
 pagination_dir: page
 
+# Flowchart
+flowchart:
+  raphael: https://cdn.bootcss.com/raphael/2.2.7/raphael.min.js
+  flowchart: https://cdn.bootcss.com/flowchart/1.7.0/flowchart.min.js
+  options": 
+      scale: 1,
+      line-width: 2
+      line-length: 50
+      text-margin: 10
+      font-size: 12
+
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
