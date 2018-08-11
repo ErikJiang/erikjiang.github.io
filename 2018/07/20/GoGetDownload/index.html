@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替；
 但是，当进行golang开发时，由于golang.org及其他相关开发站点被GFW屏蔽，就不再那么好运了，而这里主要记录了一些方法，希望能让go get安装时显得不那么痛苦；">
-<meta property="og:updated_time" content="2018-08-11T06:24:29.300Z">
+<meta property="og:updated_time" content="2018-08-11T14:25:10.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="长城下的Go Get, 被安排的明明白白">
 <meta name="twitter:description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替；
@@ -395,6 +395,7 @@
 <h4 id="再然后启用环境变量："><a href="#再然后启用环境变量：" class="headerlink" title="再然后启用环境变量："></a>再然后启用环境变量：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">source</span> ~/.profile <span class="comment"># 启用环境变量</span></div><div class="line">$ <span class="built_in">echo</span> <span class="variable">$http_proxy</span>  <span class="comment"># 查看是否生效</span></div></pre></td></tr></table></figure>
 <h4 id="最后，后台启动cow："><a href="#最后，后台启动cow：" class="headerlink" title="最后，后台启动cow："></a>最后，后台启动cow：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cow &amp;</div></pre></td></tr></table></figure>
 <p>一切配置完毕，就可以愉快的使用<code>go get</code>安装下载需要的依赖包了；</p>
+<h3 id="总结最后"><a href="#总结最后" class="headerlink" title="总结最后"></a>总结最后</h3><p>说了这么多，其实还是希望不要这么麻烦，但愿谷歌早日重返中国吧，至于李彦宏能不能赢就不知道了….</p>
 <hr>
 
       
@@ -438,8 +439,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/09/TimerEventLoop/" rel="next" title="NodeJS定时器与事件循环">
-                <i class="fa fa-chevron-left"></i> NodeJS定时器与事件循环
+              <a href="/2018/07/05/GoMicroGuide/" rel="next" title="Go Micro 入门指南">
+                <i class="fa fa-chevron-left"></i> Go Micro 入门指南
               </a>
             
           </div>
@@ -599,7 +600,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#人肉搬运大法"><span class="nav-number">1.</span> <span class="nav-text">人肉搬运大法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代理安装大法"><span class="nav-number">2.</span> <span class="nav-text">代理安装大法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装完成后，需要在其配置-HOME-cow-rc中修改如下："><span class="nav-number">2.1.</span> <span class="nav-text">安装完成后，需要在其配置$HOME/.cow/rc中修改如下：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#然后在-profile中添加环境变量："><span class="nav-number">2.2.</span> <span class="nav-text">然后在~/.profile中添加环境变量：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#再然后启用环境变量："><span class="nav-number">2.3.</span> <span class="nav-text">再然后启用环境变量：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最后，后台启动cow："><span class="nav-number">2.4.</span> <span class="nav-text">最后，后台启动cow：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#人肉搬运大法"><span class="nav-number">1.</span> <span class="nav-text">人肉搬运大法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代理安装大法"><span class="nav-number">2.</span> <span class="nav-text">代理安装大法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装完成后，需要在其配置-HOME-cow-rc中修改如下："><span class="nav-number">2.1.</span> <span class="nav-text">安装完成后，需要在其配置$HOME/.cow/rc中修改如下：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#然后在-profile中添加环境变量："><span class="nav-number">2.2.</span> <span class="nav-text">然后在~/.profile中添加环境变量：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#再然后启用环境变量："><span class="nav-number">2.3.</span> <span class="nav-text">再然后启用环境变量：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最后，后台启动cow："><span class="nav-number">2.4.</span> <span class="nav-text">最后，后台启动cow：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结最后"><span class="nav-number">3.</span> <span class="nav-text">总结最后</span></a></li></ol></div>
             
 
           </div>
