@@ -1,0 +1,829 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="go," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这篇的内容关于Go的程序结构，包含命令、声明、变量、赋值、类型、作用域等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go笔记之程序结构">
+<meta property="og:url" content="https://jiangink.github.io/2018/08/01/GoProgramStruct/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="这篇的内容关于Go的程序结构，包含命令、声明、变量、赋值、类型、作用域等">
+<meta property="og:updated_time" content="2018-08-19T10:16:46.191Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go笔记之程序结构">
+<meta name="twitter:description" content="这篇的内容关于Go的程序结构，包含命令、声明、变量、赋值、类型、作用域等">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jiangink.github.io/2018/08/01/GoProgramStruct/"/>
+
+
+
+
+
+  <title> Go笔记之程序结构 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有心碎的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2018/08/01/GoProgramStruct/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Go笔记之程序结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T19:17:03+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇的内容关于Go的程序结构，包含<code>命令</code>、<code>声明</code>、<code>变量</code>、<code>赋值</code>、<code>类型</code>、<code>作用域</code>等</p>
+<a id="more"></a>
+<h3 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h3><ul>
+<li><p>25个关键字：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">break</span>      <span class="keyword">default</span>       <span class="function"><span class="keyword">func</span>     <span class="title">interface</span>   <span class="title">select</span></span></div><div class="line"><span class="title">case</span>       <span class="title">defer</span>         <span class="title">go</span>       <span class="title">map</span>         <span class="title">struct</span></div><div class="line"><span class="title">chan</span>       <span class="title">else</span>          <span class="title">goto</span>     <span class="title">package</span>     <span class="title">switch</span></div><div class="line"><span class="title">const</span>      <span class="title">fallthrough</span>   <span class="title">if</span>       <span class="title">range</span>       <span class="title">type</span></div><div class="line"><span class="title">continue</span>   <span class="title">for</span>           <span class="title">import</span>   <span class="title">return</span>      <span class="title">var</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>30余个预定义名：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">内建常量: <span class="literal">true</span> <span class="literal">false</span> <span class="literal">iota</span> <span class="literal">nil</span></div><div class="line"></div><div class="line">内建类型: <span class="keyword">int</span> <span class="keyword">int8</span> <span class="keyword">int16</span> <span class="keyword">int32</span> <span class="keyword">int64</span></div><div class="line">          <span class="keyword">uint</span> <span class="keyword">uint8</span> <span class="keyword">uint16</span> <span class="keyword">uint32</span> <span class="keyword">uint64</span> <span class="keyword">uintptr</span></div><div class="line">          <span class="keyword">float32</span> <span class="keyword">float64</span> <span class="keyword">complex128</span> <span class="keyword">complex64</span></div><div class="line">          <span class="keyword">bool</span> <span class="keyword">byte</span> <span class="keyword">rune</span> <span class="keyword">string</span> error</div><div class="line"></div><div class="line">内建函数: <span class="built_in">make</span> <span class="built_in">len</span> <span class="built_in">cap</span> <span class="built_in">new</span> <span class="built_in">append</span> <span class="built_in">copy</span> <span class="built_in">close</span> <span class="built_in">delete</span></div><div class="line">          <span class="built_in">complex</span> <span class="built_in">real</span> <span class="built_in">imag</span></div><div class="line">          <span class="built_in">panic</span> <span class="built_in">recover</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>命名的作用域</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">命名于函数内：函数作用域，仅函数内部可以访问；</div><div class="line">命名于函数外：包级作用域，可在当前包的所有文件中访问；</div><div class="line">命名于函数外且首字母大写：可被导出，允许被外部包所访问；</div></pre></td></tr></table></figure>
+</li>
+<li><p>命名要求简短且遵循驼峰命名原则</p>
+</li>
+</ul>
+<h3 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h3><ul>
+<li>四种声明语句<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span>     <span class="comment">// 变量</span></div><div class="line"><span class="keyword">const</span>   <span class="comment">// 常量</span></div><div class="line"><span class="keyword">type</span>    <span class="comment">// 类型</span></div><div class="line"><span class="function"><span class="keyword">func</span>    // 函数</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><ul>
+<li><p>变量声明的一般语法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 常见的几种变量声明方式</span></div><div class="line"><span class="keyword">var</span> 变量名 类型 = 表达式</div><div class="line"><span class="keyword">var</span> 变量名 = 表达式 <span class="comment">// 若没有类型，则通过表达式推导变量类型</span></div><div class="line"><span class="keyword">var</span> 变量名 类型     <span class="comment">// 若没有表达式，则将对应类型零值初始化给该变量</span></div><div class="line"><span class="keyword">var</span> 变量<span class="number">1</span>, 变量<span class="number">2</span>, 变量<span class="number">3</span> 类型 <span class="comment">// 没有表达式的多变量声明</span></div><div class="line"><span class="keyword">var</span> 变量<span class="number">1</span>, 变量<span class="number">2</span>, 变量<span class="number">3</span> = 表达式<span class="number">1</span>, 表达式<span class="number">2</span>, 表达式<span class="number">3</span> <span class="comment">// 没有表达式的多变量声明</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>零值初始化机制：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> 数值类变量零值为<span class="number">0</span></div><div class="line"><span class="number">2.</span> 布尔类变量零值为<span class="literal">false</span></div><div class="line"><span class="number">3.</span> 字符串类变量零值为<span class="string">""</span>（空字符串）</div><div class="line"><span class="number">4.</span> 接口或引用类型（slice、指针、<span class="keyword">map</span>、<span class="keyword">chan</span>、<span class="function"><span class="keyword">func</span>）变量对应零值为<span class="title">nil</span></span></div><div class="line">5. 数组或结构体等聚合类型变量的零值是该类型下元素具体类型的对应零值</div><div class="line"></div><div class="line">由于零值初始化机制使得<span class="title">Go</span>语言不存在未初始化变量；</div></pre></td></tr></table></figure>
+</li>
+<li><p>简短变量声明<br><code>简短变量声明语句</code>用于声明和初始化<code>局部变量</code>，并且<code>仅允许在函数内部使用</code>;<br><code>变量名 := 表达式</code>，注：<code>:=</code>是一个变量声明语句<br><code>Q</code>: 关于变量声明，什么时候用var？什么时候使用简短变量声明？<br><code>A</code>: var往往用于需要显示指定变量类型的地方及变量稍后会重新赋值而初始值无关紧要的地方，而简短变量声明则不要求严格指定类型可接收根据表达式推导且声明当即要能表达式赋值的地方；</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">i := <span class="number">100</span>                  <span class="comment">// an int</span></div><div class="line"><span class="keyword">var</span> boiling <span class="keyword">float64</span> = <span class="number">100</span> <span class="comment">// a float64</span></div><div class="line"><span class="keyword">var</span> names []<span class="keyword">string</span></div><div class="line"><span class="keyword">var</span> err error</div><div class="line"><span class="keyword">var</span> p Point</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>简短变量声明中的变量名必须保证在之前没有被声明过(单一变量时)，当简短变量声明多个变量时，变量中至少要保证有一个在之前未声明过，其他已声明的变量仅做赋值操作；<br>简短变量声明语句只有对已经在同级词法域声明过的变量才和赋值操作语句等价，如果变量是在外部词法域声明的，那么简短变量声明语句将会在当前词法域重新声明一个新的变量。</p>
+<ul>
+<li><p>指针<br>如果用 <code>var x int</code> 声明语句声明一个x变量，那么&amp;x表达式（取x变量的内存地址）将产生一个指向该整数变量的指针，指针对应的数据类型是<em>int，指针被称之为“指向int类型的指针”。如果指针名字为p，那么可以说“p指针指向变量x”，或者说“p指针保存了x变量的内存地址”。同时</em>p表达式对应p指针指向的变量的值。一般<em>p表达式读取指针指向的变量的值，这里为int类型的值，同时因为</em>p对应一个变量，所以该表达式也可以出现在赋值语句的左边，表示更新指针所指向的变量的值；</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x := <span class="number">1</span></div><div class="line">p := &amp;x         <span class="comment">// p, of type *int, points to x</span></div><div class="line">fmt.Println(*p) <span class="comment">// "1"</span></div><div class="line">*p = <span class="number">2</span>          <span class="comment">// equivalent to x = 2</span></div><div class="line">fmt.Println(x)  <span class="comment">// "2"</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>new函数<br>调用内建函数<code>new</code>也可以创建变量；表达式new(T)将创建一个T类型的匿名变量，初始化为T类型的零值，然后返回变量地址，返回的指针类型为*T。<br>new并不是关键字，而是自定义函数，所以要注意new内建函数名称被重新定义为其他类型的情况；</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">p := <span class="built_in">new</span>(<span class="keyword">int</span>)   <span class="comment">// p, *int 类型, 指向匿名的 int 变量</span></div><div class="line">fmt.Println(*p) <span class="comment">// "0"</span></div><div class="line">*p = <span class="number">2</span>          <span class="comment">// 设置 int 匿名变量的值为 2</span></div><div class="line">fmt.Println(*p) <span class="comment">// "2"</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>变量的生命周期<br>变量的生命周期指的是在程序运行期间变量有效存在的时间段。对于在包一级声明的变量来说，它们的生命周期和整个程序的运行周期是一致的。而相比之下，局部变量的生命周期则是动态的：每次从创建一个新变量的声明语句开始，直到该变量不再被引用为止，然后变量的存储空间可能被回收。函数的参数变量和返回值变量都是局部变量。它们在函数每次被调用的时候创建。<br>因为一个变量的有效周期只取决于是否可达，因此一个循环迭代内部的局部变量的生命周期可能超出其局部作用域。同时，局部变量可能在函数返回之后依然存在。</p>
+</li>
+</ul>
+<h3 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h3><ul>
+<li>元组赋值<br>当出现以下三种类型赋值语句时，右边的变量都会出现<code>ok</code>布尔变量值，用以判断赋值是否成功；<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">v, ok = m[key]             <span class="comment">// map lookup映射查询</span></div><div class="line">v, ok = x.(T)              <span class="comment">// type assertion类型断言</span></div><div class="line">v, ok = &lt;-ch               <span class="comment">// channel receive通道接收</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>和变量声明一样，我们可以用下划线空白标识符_来丢弃不需要的值；</p>
+<ul>
+<li>可赋值性<br>不管是隐式还是显式地赋值，在赋值语句左边的变量和右边最终的求到的值必须有相同的数据类型。更直白地说，只有右边的值对于左边的变量是可赋值的，赋值语句才是允许的。</li>
+</ul>
+<h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><ul>
+<li>类型声明<br>类型声明语句 <code>type 类型名字 底层类型</code> 一般出现在包级作用域，若类型名首字母大写则可被包外使用；<br>例如：<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> tempconv</div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></div><div class="line"></div><div class="line"><span class="keyword">type</span> Celsius <span class="keyword">float64</span>    <span class="comment">// 摄氏温度</span></div><div class="line"><span class="keyword">type</span> Fahrenheit <span class="keyword">float64</span> <span class="comment">// 华氏温度</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> (</div><div class="line">    AbsoluteZeroC Celsius = <span class="number">-273.15</span> <span class="comment">// 绝对零度</span></div><div class="line">    FreezingC     Celsius = <span class="number">0</span>       <span class="comment">// 结冰点温度</span></div><div class="line">    BoilingC      Celsius = <span class="number">100</span>     <span class="comment">// 沸水温度</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">CToF</span><span class="params">(c Celsius)</span> <span class="title">Fahrenheit</span></span> &#123; <span class="keyword">return</span> Fahrenheit(c*<span class="number">9</span>/<span class="number">5</span> + <span class="number">32</span>) &#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">FToC</span><span class="params">(f Fahrenheit)</span> <span class="title">Celsius</span></span> &#123; <span class="keyword">return</span> Celsius((f - <span class="number">32</span>) * <span class="number">5</span> / <span class="number">9</span>) &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其中以<code>类型名(x)</code>方式可以将传参x转换成与类型名一致的类型，但是前提是x参数的类型要与类型名的底层类型保持一致；</p>
+<p>比较运算符==和&lt;也可以用来比较一个命名类型的变量和另一个有相同类型的变量，或有着相同底层类型的未命名类型的值之间做比较。但是如果两个值有着不同的类型，则不能直接进行比较：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> c Celsius</div><div class="line"><span class="keyword">var</span> f Fahrenheit</div><div class="line">fmt.Println(c == <span class="number">0</span>)          <span class="comment">// "true"</span></div><div class="line">fmt.Println(f &gt;= <span class="number">0</span>)          <span class="comment">// "true"</span></div><div class="line">fmt.Println(c == f)          <span class="comment">// compile error: type mismatch</span></div><div class="line">fmt.Println(c == Celsius(f)) <span class="comment">// "true"!</span></div></pre></td></tr></table></figure></p>
+<h3 id="包与文件"><a href="#包与文件" class="headerlink" title="包与文件"></a>包与文件</h3><ul>
+<li>Go语言中的包和其他语言的库或模块的概念类似，目的都是为了支持模块化、封装、单独编译和代码重用。</li>
+<li>每个包都对应一个独立的名字空间。</li>
+<li>如果导入了一个包，但是又没有使用该包将被当作一个编译错误处理</li>
+<li>包的初始化<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123; <span class="comment">/* ... */</span> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p><code>声明语句的作用域</code>是指源代码中可以有效使用这个名字的范围;</p>
+<ul>
+<li><p>作用域与生命周期<br><code>声明语句的作用域</code>对应的是一个源代码的文本区域；它是一个编译时的属性。<br><code>变量的生命周期</code>是指程序运行时变量存在的有效时间段，在此时间区域内它可以被程序的其他部分引用；是一个运行时的概念。</p>
+</li>
+<li><p>句法块<br><code>句法块</code>是由花括弧所包含的一系列语句，就像函数体或循环体花括弧包裹的内容一样;<br>句法块<code>内部声明的名字是无法被外部块访问</code>。即<code>块</code>决定块内变量的作用域；</p>
+</li>
+<li><p>词法块<br><code>词法块</code>即是没有显式地使用花括号包裹的申明代码；<br><code>全局词法块</code>是对于全局源代码来说存在的一个整体词法块；<br>其他的词法块如：<code>包级词法块</code>、<code>for语句词法块</code>、<code>if语句词法块</code>、<code>switch语句词法块</code>、<code>switch分支词法块</code>、<code>select分支词法块</code>、<code>显式词法块（即花括弧内的句法块）</code>；</p>
+</li>
+</ul>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag"># go</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/20/GoGetDownload/" rel="next" title="长城下的Go Get, 被安排的明明白白">
+                <i class="fa fa-chevron-left"></i> 长城下的Go Get, 被安排的明明白白
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead2.jpg"
+               alt="Ink Jiang" />
+          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#命名"><span class="nav-number">1.</span> <span class="nav-text">命名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明"><span class="nav-number">2.</span> <span class="nav-text">声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量"><span class="nav-number">3.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#赋值"><span class="nav-number">4.</span> <span class="nav-text">赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型"><span class="nav-number">5.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#包与文件"><span class="nav-number">6.</span> <span class="nav-text">包与文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作用域"><span class="nav-number">7.</span> <span class="nav-text">作用域</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
