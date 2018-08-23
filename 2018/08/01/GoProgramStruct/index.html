@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://jiangink.github.io/2018/08/01/GoProgramStruct/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="这篇的内容关于Go的程序结构，包含命名、声明、变量、赋值、类型、作用域等">
-<meta property="og:updated_time" content="2018-08-19T14:49:37.462Z">
+<meta property="og:updated_time" content="2018-08-23T13:51:42.809Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go笔记之程序结构">
 <meta name="twitter:description" content="这篇的内容关于Go的程序结构，包含命名、声明、变量、赋值、类型、作用域等">
@@ -399,12 +399,15 @@
 <li><p>零值初始化机制：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> 数值类变量零值为<span class="number">0</span></div><div class="line"><span class="number">2.</span> 布尔类变量零值为<span class="literal">false</span></div><div class="line"><span class="number">3.</span> 字符串类变量零值为<span class="string">""</span>（空字符串）</div><div class="line"><span class="number">4.</span> 接口或引用类型（slice、指针、<span class="keyword">map</span>、<span class="keyword">chan</span>、<span class="function"><span class="keyword">func</span>）变量对应零值为<span class="title">nil</span></span></div><div class="line">5. 数组或结构体等聚合类型变量的零值是该类型下元素具体类型的对应零值</div><div class="line"></div><div class="line">由于零值初始化机制使得<span class="title">Go</span>语言不存在未初始化变量；</div></pre></td></tr></table></figure>
 </li>
-<li><p>简短变量声明<br><code>简短变量声明语句</code>用于声明和初始化<code>局部变量</code>，并且<code>仅允许在函数内部使用</code>;<br><code>变量名 := 表达式</code>，注：<code>:=</code>是一个变量声明语句<br><code>Q</code>: 关于变量声明，什么时候用var？什么时候使用简短变量声明？<br><code>A</code>: var往往用于需要显示指定变量类型的地方及变量稍后会重新赋值而初始值无关紧要的地方，而简短变量声明则不要求严格指定类型可接收根据表达式推导且声明当即要能表达式赋值的地方；</p>
+<li><p>简短变量声明<br>简短变量声明的类型确定是在编译期完成的，因此不会对程序的运行效率产生影响；<br><code>简短变量声明语句</code>用于声明和初始化<code>局部变量</code>，并且<code>仅允许在函数内部使用</code>;<br><code>变量名 := 表达式</code>，注：<code>:=</code>是一个变量声明语句<br><code>Q</code>: 关于变量声明，什么时候用var？什么时候使用简短变量声明？<br><code>A</code>: var往往用于需要显示指定变量类型的地方及变量稍后会重新赋值而初始值无关紧要的地方，而简短变量声明则不要求严格指定类型可接收根据表达式推导且声明当即要能表达式赋值的地方；</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">i := <span class="number">100</span>                  <span class="comment">// an int</span></div><div class="line"><span class="keyword">var</span> boiling <span class="keyword">float64</span> = <span class="number">100</span> <span class="comment">// a float64</span></div><div class="line"><span class="keyword">var</span> names []<span class="keyword">string</span></div><div class="line"><span class="keyword">var</span> err error</div><div class="line"><span class="keyword">var</span> p Point</div></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>简短变量声明中的变量名必须保证在之前没有被声明过(单一变量时)，当简短变量声明多个变量时，变量中至少要保证有一个在之前未声明过，其他已声明的变量仅做赋值操作；<br>简短变量声明语句只有对已经在同级词法域声明过的变量才和赋值操作语句等价，如果变量是在外部词法域声明的，那么简短变量声明语句将会在当前词法域重新声明一个新的变量。</p>
 <ul>
+<li><p>变量的重声明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt; 1. 由于变量的类型在其初始化时就已经确定了，所以对它再次声明时赋予的类型必须与其原本的类型相同，否则会产生编译错误;</div><div class="line"></div><div class="line">&gt; 2. 变量的重声明只可能发生在某一个代码块中。如果与当前的变量重名的是外层代码块中的变量，那么就会在当前代码块中声明一个新的变量，而非外层变量的重声明；</div><div class="line"></div><div class="line">&gt; 3. 变量的重声明只有在使用短变量声明时才会发生，否则也无法通过编译。如果要在此处声明全新的变量，那么就应该使用包含关键字var的声明语句，但是这时就不能与同一个代码块中的任何变量有重名了。</div><div class="line"></div><div class="line">&gt; 4. 被“声明并赋值”的变量必须是多个，并且其中至少有一个是新的变量。这时我们才可以说对其中的旧变量进行了重声明。</div></pre></td></tr></table></figure>
+</li>
 <li><p>指针<br>如果用 <code>var x int</code> 声明语句声明一个x变量，那么&amp;x表达式（取x变量的内存地址）将产生一个指向该整数变量的指针，指针对应的数据类型是<em>int，指针被称之为“指向int类型的指针”。如果指针名字为p，那么可以说“p指针指向变量x”，或者说“p指针保存了x变量的内存地址”。同时</em>p表达式对应p指针指向的变量的值。一般<em>p表达式读取指针指向的变量的值，这里为int类型的值，同时因为</em>p对应一个变量，所以该表达式也可以出现在赋值语句的左边，表示更新指针所指向的变量的值；</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x := <span class="number">1</span></div><div class="line">p := &amp;x         <span class="comment">// p, of type *int, points to x</span></div><div class="line">fmt.Println(*p) <span class="comment">// "1"</span></div><div class="line">*p = <span class="number">2</span>          <span class="comment">// equivalent to x = 2</span></div><div class="line">fmt.Println(x)  <span class="comment">// "2"</span></div></pre></td></tr></table></figure>
 </li>
