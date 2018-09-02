@@ -1,0 +1,826 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="go," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="接口类型是对其它类型行为的抽象和概括；因为接口类型不会和特定的实现细节绑定在一起，通过这种抽象的方式可以让我们的函数更加灵活和更具有适应能力；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go笔记之接口">
+<meta property="og:url" content="https://jiangink.github.io/2018/08/24/GoInterface/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="接口类型是对其它类型行为的抽象和概括；因为接口类型不会和特定的实现细节绑定在一起，通过这种抽象的方式可以让我们的函数更加灵活和更具有适应能力；">
+<meta property="og:updated_time" content="2018-09-02T14:41:29.076Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go笔记之接口">
+<meta name="twitter:description" content="接口类型是对其它类型行为的抽象和概括；因为接口类型不会和特定的实现细节绑定在一起，通过这种抽象的方式可以让我们的函数更加灵活和更具有适应能力；">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jiangink.github.io/2018/08/24/GoInterface/"/>
+
+
+
+
+
+  <title> Go笔记之接口 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有心碎的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2018/08/24/GoInterface/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Go笔记之接口
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-24T22:10:05+08:00">
+                2018-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>接口类型是对其它类型行为的抽象和概括；<br>因为接口类型不会和特定的实现细节绑定在一起，通过这种抽象的方式可以让我们的函数更加灵活和更具有适应能力；</p>
+<a id="more"></a>
+<h3 id="接口约定"><a href="#接口约定" class="headerlink" title="接口约定"></a>接口约定</h3><p>接口类型是一种抽象的类型(不同于数组、映射、切片等具体类型)。它不会暴露出它所代表的对象的内部值的结构和这个对象支持的基础操作的集合；它们只会表现出它们自己的方法。也就是说当你有看到一个接口类型的值时，你不知道它是什么，唯一知道的就是可以通过它的方法来做什么。</p>
+<h3 id="接口类型"><a href="#接口类型" class="headerlink" title="接口类型"></a>接口类型</h3><p>接口类型具体描述了一系列方法的集合，一个实现了这些方法的具体类型是这个接口类型的实例。</p>
+<ul>
+<li>接口类型可以通过组合已有的接口来定义<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Reader <span class="keyword">interface</span> &#123;</div><div class="line">    Read(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</div><div class="line">&#125;</div><div class="line"><span class="keyword">type</span> Closer <span class="keyword">interface</span> &#123;</div><div class="line">    Close() error</div><div class="line">&#125;</div><div class="line"><span class="keyword">type</span> ReadWriter <span class="keyword">interface</span> &#123;</div><div class="line">    Reader</div><div class="line">    Writer</div><div class="line">&#125;</div><div class="line"><span class="keyword">type</span> ReadWriteCloser <span class="keyword">interface</span> &#123;</div><div class="line">    Reader</div><div class="line">    Writer</div><div class="line">    Closer</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>以上接口类型的组合类似于结构内嵌，可以称为接口内嵌</p>
+<h3 id="实现接口的条件"><a href="#实现接口的条件" class="headerlink" title="实现接口的条件"></a>实现接口的条件</h3><ul>
+<li><p>接口指定规则<br>表达一个类型属于某个接口只要这个类型实现这个接口</p>
+</li>
+<li><p>即使具体类型有其它的方法，也只有接口类型暴露出来的方法能被调用到</p>
+</li>
+<li><p>空接口类型<br>空接口类型<code>interface{}</code><br>空接口类型对实现它的类型没有要求，所以我们可以将任意一个值赋给空接口类型;<br>interface{}代表空接口，任何类型都是它的实现类型；<br>将非接口类型标识符x转换为接口类型：<code>interface{}(x)</code>;</p>
+</li>
+<li><p>空花括号<br><code>{}</code>: 一对不包裹任何东西的花括号，除了可以代表空的代码块之外，还可以用于表示不包含任何内容的数据结构（或者说数据类型）</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span>&#123;&#125; <span class="comment">// 代表了不包含任何字段和方法的、空的结构体类型</span></div><div class="line"><span class="keyword">interface</span>&#123;&#125; <span class="comment">// 代表了不包含任何方法定义的、空的接口类型</span></div><div class="line">[]<span class="keyword">string</span>&#123;&#125;  <span class="comment">// 代表空切片，值不包含任何元素</span></div><div class="line"><span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">string</span>&#123;&#125; <span class="comment">// 空字典</span></div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+<li><p>类型转换<br>语法形式是<code>T(x)</code>，其中的x可以是一个变量，也可以是一个代表值的字面量，还可以是一个表达式。注意，如果是表达式，那么该表达式的结果只能是一个值，而不能是多个值。在这个上下文中，x可以被叫做源值，它的类型就是源类型，而那个T代表的类型就是目标类型。</p>
+</li>
+</ul>
+<ul>
+<li>并非仅指针类型才能实现接口类型<br>接口类型也能被其他引用类型实现，如slice、map、function等，甚至基本类型也可以实现一些接口；</li>
+</ul>
+<h3 id="flag-Value接口"><a href="#flag-Value接口" class="headerlink" title="flag.Value接口"></a>flag.Value接口</h3><h3 id="接口值"><a href="#接口值" class="headerlink" title="接口值"></a>接口值</h3><p>接口值，由两个部分组成，一个具体的类型和那个类型的值。它们被称为接口的动态类型和动态值;</p>
+<ul>
+<li><p>空接口值即其类型type和值value都为nil</p>
+</li>
+<li><p>调用一个空接口值上的任意方法都会产生panic</p>
+</li>
+<li><p>接口值可以使用==和!＝来进行比较<br>两个接口值相等仅当它们都是nil值，或者它们的动态类型相同并且动态值也根据这个动态类型的==操作相等。因为接口值是可比较的，所以它们可以用在map的键或者作为switch语句的操作数。</p>
+</li>
+<li><p>通过<code>%T</code>获取接口值类型<br>在fmt包内部，使用反射来获取接口动态类型的名称<br><code>fmt.Printf(&quot;%T\n&quot;, w)</code></p>
+</li>
+<li><p>一个包含nil指针的接口不是nil接口<br>一个不包含任何值的nil接口值和一个刚好包含nil指针的接口值是不同的</p>
+</li>
+</ul>
+<h3 id="sort-Interface接口"><a href="#sort-Interface接口" class="headerlink" title="sort.Interface接口"></a>sort.Interface接口</h3><p>内置的排序算法需要知道三个东西：</p>
+<ol>
+<li>序列的长度</li>
+<li>表示两个元素比较的结果</li>
+<li>一种交换两个元素的方式</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package sort</div><div class="line"></div><div class="line">type Interface interface &#123;</div><div class="line">    Len() int</div><div class="line">    Less(i, j int) bool // i, j are indices of sequence elements</div><div class="line">    Swap(i, j int)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为了对序列进行排序，我们需要定义一个实现了这三个方法的类型，然后对这个类型的一个实例应用sort.Sort函数。</p>
+<h3 id="http-Handler接口"><a href="#http-Handler接口" class="headerlink" title="http.Handler接口"></a>http.Handler接口</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> http</div><div class="line"></div><div class="line"><span class="keyword">type</span> Handler <span class="keyword">interface</span> &#123;</div><div class="line">    ServeHTTP(w ResponseWriter, r *Request)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">ListenAndServe</span><span class="params">(address <span class="keyword">string</span>, h Handler)</span> <span class="title">error</span></span></div></pre></td></tr></table></figure>
+<h3 id="error-接口"><a href="#error-接口" class="headerlink" title="error 接口"></a>error 接口</h3><p>error类型实际上是interface类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">type error interface &#123;</div><div class="line">    Error() string</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>创建error方式</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 三种</span></div><div class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></div><div class="line"><span class="keyword">import</span> <span class="string">"errors"</span></div><div class="line">errors.New()    <span class="comment">// 创建error</span></div><div class="line">fmt.Errorf()    <span class="comment">// 创建error并格式化，是errors.New()的封装</span></div><div class="line">syscall.Errno(<span class="number">1</span>)<span class="comment">// 创建err的数字类型，满足标准错误接口</span></div></pre></td></tr></table></figure>
+<h3 id="类型断言"><a href="#类型断言" class="headerlink" title="类型断言"></a>类型断言</h3><p>类型断言是一个使用在接口值上的操作(非接口类型需要通过<code>interface{}</code>进行转换后再进行断言操作)。语法上它看起来像<code>x.(T)</code>被称为断言类型，这里<code>x</code>表示一个接口的类型而<code>T</code>表示一个类型。一个类型断言检查它操作对象的动态类型是否和断言的类型匹配。</p>
+<ul>
+<li><p>断言的两种可能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; 1. 断言的类型T为具体类型</div><div class="line">&gt; 2. 断言的类型T为接口类型</div></pre></td></tr></table></figure>
+</li>
+<li><p>断言时返回两个参数可以避免发生panic</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var w io.Writer = os.Stdout</div><div class="line">f, ok := w.(*os.File)      // success:  ok, f == os.Stdout</div><div class="line">b, ok := w.(*bytes.Buffer) // failure: !ok, b == nil</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="基于类型断言识别错误类型"><a href="#基于类型断言识别错误类型" class="headerlink" title="基于类型断言识别错误类型"></a>基于类型断言识别错误类型</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> (</div><div class="line">    <span class="string">"errors"</span></div><div class="line">    <span class="string">"syscall"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="keyword">var</span> ErrNotExist = errors.New(<span class="string">"file does not exist"</span>)</div><div class="line"></div><div class="line"><span class="comment">// IsNotExist returns a boolean indicating whether the error is known to</span></div><div class="line"><span class="comment">// report that a file or directory does not exist. It is satisfied by</span></div><div class="line"><span class="comment">// ErrNotExist as well as some syscall errors.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">IsNotExist</span><span class="params">(err error)</span> <span class="title">bool</span></span> &#123;</div><div class="line">    <span class="comment">// 错误类型断言</span></div><div class="line">    <span class="keyword">if</span> pe, ok := err.(*PathError); ok &#123;</div><div class="line">        err = pe.Err</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> err == syscall.ENOENT || err == ErrNotExist</div><div class="line">&#125;</div><div class="line">_, err := os.Open(<span class="string">"/no/such/file"</span>)</div><div class="line">fmt.Println(os.IsNotExist(err)) <span class="comment">// "true"</span></div></pre></td></tr></table></figure>
+<h3 id="通过类型断言查询接口"><a href="#通过类型断言查询接口" class="headerlink" title="通过类型断言查询接口"></a>通过类型断言查询接口</h3><p>我们不能对任意io.Writer类型的变量，假设它也拥有WriteString方法。但是我们可以定义一个只有这个方法的新接口并且使用类型断言来检测是否变量的动态类型满足这个新接口。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">writeString</span><span class="params">(w io.Writer, s <span class="keyword">string</span>)</span> <span class="params">(n <span class="keyword">int</span>, err error)</span></span> &#123;</div><div class="line">    <span class="comment">// 定义新接口</span></div><div class="line">    <span class="keyword">type</span> stringWriter <span class="keyword">interface</span> &#123;</div><div class="line">        WriteString(<span class="keyword">string</span>) (n <span class="keyword">int</span>, err error)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 类型断言检测接口方法是否存在</span></div><div class="line">    <span class="keyword">if</span> sw, ok := w.(stringWriter); ok &#123;</div><div class="line">        <span class="keyword">return</span> sw.WriteString(s) <span class="comment">// avoid a copy</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> w.Write([]<span class="keyword">byte</span>(s)) <span class="comment">// allocate temporary copy</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">writeHeader</span><span class="params">(w io.Writer, contentType <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> _, err := writeString(w, <span class="string">"Content-Type: "</span>); err != <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> err</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> _, err := writeString(w, contentType); err != <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> err</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="类型分支"><a href="#类型分支" class="headerlink" title="类型分支"></a>类型分支</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">func sqlQuote(x interface&#123;&#125;) string &#123;</div><div class="line">    switch x := x.(type) &#123;</div><div class="line">    case nil:</div><div class="line">        return &quot;NULL&quot;</div><div class="line">    case int, uint:</div><div class="line">        return fmt.Sprintf(&quot;%d&quot;, x) // x has type interface&#123;&#125; here.</div><div class="line">    case bool:</div><div class="line">        if x &#123;</div><div class="line">            return &quot;TRUE&quot;</div><div class="line">        &#125;</div><div class="line">        return &quot;FALSE&quot;</div><div class="line">    case string:</div><div class="line">        return sqlQuoteString(x) // (not shown)</div><div class="line">    default:</div><div class="line">        panic(fmt.Sprintf(&quot;unexpected type %T: %v&quot;, x, x))</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>虽然x的类型是interface{}，但是我们把它认为是一个int，uint，bool，string，和nil值的discriminated union（可识别联合）</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><ul>
+<li>设计新包时，并不一定要用到接口<br>只有当有两个或两个以上的具体类型，且都必须以相同的方式进行处理时，才需要使用接口;</li>
+</ul>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag"># go</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/19/GoFunction/" rel="next" title="Go笔记之函数">
+                <i class="fa fa-chevron-left"></i> Go笔记之函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead2.jpg"
+               alt="Ink Jiang" />
+          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口约定"><span class="nav-number">1.</span> <span class="nav-text">接口约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口类型"><span class="nav-number">2.</span> <span class="nav-text">接口类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现接口的条件"><span class="nav-number">3.</span> <span class="nav-text">实现接口的条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flag-Value接口"><span class="nav-number">4.</span> <span class="nav-text">flag.Value接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口值"><span class="nav-number">5.</span> <span class="nav-text">接口值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sort-Interface接口"><span class="nav-number">6.</span> <span class="nav-text">sort.Interface接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http-Handler接口"><span class="nav-number">7.</span> <span class="nav-text">http.Handler接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#error-接口"><span class="nav-number">8.</span> <span class="nav-text">error 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型断言"><span class="nav-number">9.</span> <span class="nav-text">类型断言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于类型断言识别错误类型"><span class="nav-number">10.</span> <span class="nav-text">基于类型断言识别错误类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过类型断言查询接口"><span class="nav-number">11.</span> <span class="nav-text">通过类型断言查询接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型分支"><span class="nav-number">12.</span> <span class="nav-text">类型分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">13.</span> <span class="nav-text">补充</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
