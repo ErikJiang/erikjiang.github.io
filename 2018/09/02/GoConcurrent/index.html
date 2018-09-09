@@ -1,0 +1,843 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="go," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这篇我们了解下并发机制；尤其是多goroutine之间的共享变量，并发问题的分析手段，以及解决这些问题的基本模式；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go笔记之基于共享变量的并发">
+<meta property="og:url" content="https://jiangink.github.io/2018/09/02/GoConcurrent/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="这篇我们了解下并发机制；尤其是多goroutine之间的共享变量，并发问题的分析手段，以及解决这些问题的基本模式；">
+<meta property="og:updated_time" content="2018-09-09T09:53:55.235Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go笔记之基于共享变量的并发">
+<meta name="twitter:description" content="这篇我们了解下并发机制；尤其是多goroutine之间的共享变量，并发问题的分析手段，以及解决这些问题的基本模式；">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jiangink.github.io/2018/09/02/GoConcurrent/"/>
+
+
+
+
+
+  <title> Go笔记之基于共享变量的并发 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有心碎的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2018/09/02/GoConcurrent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead2.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Go笔记之基于共享变量的并发
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-02T10:40:11+08:00">
+                2018-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇我们了解下并发机制；<br>尤其是多goroutine之间的共享变量，<br>并发问题的分析手段，以及解决这些问题的基本模式；</p>
+<a id="more"></a>
+<h3 id="竞争条件"><a href="#竞争条件" class="headerlink" title="竞争条件"></a>竞争条件</h3><p>竞争条件指的是程序在多个goroutine交叉执行操作时，没有给出正确的结果。<br>竞争条件带来的问题非常难以复现而且难以分析诊断。</p>
+<ul>
+<li>并发安全</li>
+</ul>
+<p>如果一个程序或函数或类型在线性程序中能够正常操作运行，却当在并发情况下依然能够正常操作运行，那么我们认为该程序或函数或类型是并发安全的；</p>
+<ul>
+<li><p>导出包级别的函数一般情况都是并发安全的；而包级变量必须采用互斥条件；</p>
+</li>
+<li><p>数据竞争</p>
+</li>
+</ul>
+<p>数据竞争会在两个以上的goroutine并发访问相同的变量且至少其中一个为写操作时发生。<br>避免数据竞争的三种方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; 不要对变量进行写操作；</div><div class="line">&gt; 避免从多个goroutine访问变量，使用channel；</div><div class="line">&gt; 多goroutine访问变量，采用互斥方式，同一时刻最多仅有一个goroutine访问；</div></pre></td></tr></table></figure></p>
+<h3 id="sync-Mutex-互斥锁"><a href="#sync-Mutex-互斥锁" class="headerlink" title="sync.Mutex 互斥锁"></a>sync.Mutex 互斥锁</h3><ul>
+<li>通过容量为1的缓存通道实现互斥</li>
+</ul>
+<p>一个只能为1和0的信号量叫做二元信号量；<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> (</div><div class="line">    sema    = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, <span class="number">1</span>) <span class="comment">// a binary semaphore guarding balance</span></div><div class="line">    balance <span class="keyword">int</span></div><div class="line">)</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Deposit</span><span class="params">(amount <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">    sema &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125; <span class="comment">// acquire token</span></div><div class="line">    balance = balance + amount</div><div class="line">    &lt;-sema <span class="comment">// release token</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>通过sync.Mutex进行互斥操作</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> (</div><div class="line">    mu      sync.Mutex <span class="comment">// guards balance</span></div><div class="line">    balance <span class="keyword">int</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Deposit</span><span class="params">(amount <span class="keyword">int</span>)</span></span> &#123;</div><div class="line">    mu.Lock()</div><div class="line">    balance = balance + amount <span class="comment">// 临界区代码段</span></div><div class="line">    mu.Unlock()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>共享变量与临界区</p>
+</li>
+</ul>
+<p>mutex 所保护的共享变量一般在mutex变量声明之后立刻声明；<br>在Lock和Unlock之间包含的代码段可以进行正常读写操作，这之间的代码段称为临界区；</p>
+<ul>
+<li><p>Lock与Unlock必须成对调用</p>
+</li>
+<li><p>临界区逻辑复杂时，使用<code>defer Unlock()</code></p>
+</li>
+</ul>
+<p>在临界区代码段逻辑复杂情况下，可使用<code>defer Unlock()</code>以简化代码逻辑分支中重复的<code>Unlock()</code>调用<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Balance</span><span class="params">()</span> <span class="title">int</span></span> &#123;</div><div class="line">    mu.Lock()</div><div class="line">    <span class="keyword">defer</span> mu.Unlock()</div><div class="line">    <span class="keyword">return</span> balance</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>互斥所无法重入</li>
+</ul>
+<p>go中互斥锁无法重入，即无法对已经上锁的mutex再次上锁，这将会导致程序死锁，没法继续执行，从而使得程序一直保持阻塞状态；</p>
+<p>遇到重入情况，可以将代码拆分封装为多个函数，消除锁重入情况；</p>
+<h3 id="sync-RWMutex-读写锁"><a href="#sync-RWMutex-读写锁" class="headerlink" title="sync.RWMutex 读写锁"></a>sync.RWMutex 读写锁</h3><p>有时会存在一个接口要求写操作完全互斥，而读操作希望是并行执行的，这种时候的锁称为“多读单写”锁，go提供<code>sync.RWMutex</code>支持该锁行为；<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mu sync.RWMutex</div><div class="line"><span class="keyword">var</span> balance <span class="keyword">int</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Balance</span><span class="params">()</span> <span class="title">int</span></span> &#123;</div><div class="line">    mu.RLock() <span class="comment">// readers lock</span></div><div class="line">    <span class="keyword">defer</span> mu.RUnlock()</div><div class="line">    <span class="keyword">return</span> balance</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>RLock只能在临界区共享变量没有任何写入操作时可用。一般来说，我们不应该假设逻辑上的只读函数/方法也不会去更新某一些变量。如果对这类函数/方法的读写行为不确定，请使用互斥锁；</p>
+<h3 id="内存同步"><a href="#内存同步" class="headerlink" title="内存同步"></a>内存同步</h3><p>由于现代计算机常见为多处理器，每个处理器都会有其本地缓存，出于效率，对内存的写入操作一般会在每个处理器中缓存，并在必要时一并flush到主存。<br>而在多任务并行时，多个goroutine会在不同的CPU上运行，每个CPU存在独立的本地缓存，各goroutine的写入操作首先仅能作用于CPU本地缓存，在没有同步到主存之前，各CPU的写入操作均为不可见的；</p>
+<p>所以在设计到内存同步问题时，建议如下：</p>
+<ol>
+<li>将变量限定于goroutine内部；</li>
+<li>若为多goroutine都需要访问的变量，采用互斥条件来访问；</li>
+</ol>
+<h3 id="sync-Once-初始化"><a href="#sync-Once-初始化" class="headerlink" title="sync.Once 初始化"></a>sync.Once 初始化</h3><p>在多goroutine并发情况下进行初始化操作，可能会存在goroutine重复初始化操作的情况，这时，可以使用<code>sync.Once</code>进行初始化操作，它将锁定mutex,并检测是否已初始化的布尔变量，若为初始化，则执行初始化函数并设置布尔变量为true；当其他goroutine执行时，会检测该布尔值，为false代表未初始化，为true表示已执行完成初始化操作；其中<code>Do</code>方法传参为初始化函数；<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">loadIcons</span><span class="params">()</span></span> &#123;</div><div class="line">    icons = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]image.Image)</div><div class="line">    icons[<span class="string">"spades.png"</span>] = loadIcon(<span class="string">"spades.png"</span>)</div><div class="line">    icons[<span class="string">"hearts.png"</span>] = loadIcon(<span class="string">"hearts.png"</span>)</div><div class="line">    icons[<span class="string">"diamonds.png"</span>] = loadIcon(<span class="string">"diamonds.png"</span>)</div><div class="line">    icons[<span class="string">"clubs.png"</span>] = loadIcon(<span class="string">"clubs.png"</span>)</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> loadIconsOnce sync.Once</div><div class="line"><span class="keyword">var</span> icons <span class="keyword">map</span>[<span class="keyword">string</span>]image.Image</div><div class="line"><span class="comment">// Concurrency-safe.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Icon</span><span class="params">(name <span class="keyword">string</span>)</span> <span class="title">image</span>.<span class="title">Image</span></span> &#123;</div><div class="line">    loadIconsOnce.Do(loadIcons)</div><div class="line">    <span class="keyword">return</span> icons[name]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="竞争条件检测"><a href="#竞争条件检测" class="headerlink" title="竞争条件检测"></a>竞争条件检测</h3><p>go的运行时环境和工具链提供了一套动态分析工具，专用于并发程序的竞态检测（the race detector）。</p>
+<ul>
+<li><p>go命令<code>-race</code>选项<br>只要在<code>go build</code>，<code>go run</code>或者<code>go test</code>命令后面加上-race的flag，<br>就会使编译器创建一个你的应用的“修改”版或者一个附带了能够记录所有运行期对共享变量访问工具的test，并且会记录下每一个读或者写共享变量的goroutine的身份信息。</p>
+</li>
+<li><p>race仅能检测到运行时的竞争条件<br>确保并发测试能够尽可能的覆盖；</p>
+</li>
+<li><p>添加race的程序运行会慢一些<br>由于需要额外的记录，因此构建时加了竞争检测的程序跑起来会慢一些，且需要更大的内存，即使是这样，这些代价对于很多生产环境的工作来说还是可以接受的；</p>
+</li>
+</ul>
+<h3 id="Goroutines与线程之间比较"><a href="#Goroutines与线程之间比较" class="headerlink" title="Goroutines与线程之间比较"></a>Goroutines与线程之间比较</h3><ul>
+<li>栈：</li>
+</ul>
+<p>goroutine: 栈大小动态伸缩（2KB~1GB）<br>thread: 栈大小固定（一般2MB）</p>
+<ul>
+<li>调度方式：</li>
+</ul>
+<p>goroutine: 语言本身特性实现调度<br>协程的切换步骤：</p>
+<ol>
+<li>休眠当前goroutine</li>
+<li>唤醒执行下一个goroutine<br>整个过程不需要进入内核上下文，开销成本低；</li>
+</ol>
+<p>thread: 操作系统内核实现调度<br>线程的切换步骤：</p>
+<ol>
+<li>挂起当前线程</li>
+<li>保存挂起线程的寄存器信息</li>
+<li>检查线程列表选出下一个执行线程</li>
+<li>恢复执行线程的寄存器信息</li>
+<li>恢复执行线程环境并执行<br>整个步骤需要完整的上下文切换，切换效率很慢；</li>
+</ol>
+<ul>
+<li>操作系统CPU多核利用</li>
+</ul>
+<p>goroutine:<br>可以使用<code>GOMAXPROCS</code>变量来决定同时执行Go代码的操作系统CPU核心数；天然支持多核利用；</p>
+<p>thread:<br>各语言线程利用多核方式不同；多进程方式较多；</p>
+<ul>
+<li>程序单元身份ID</li>
+</ul>
+<p>goroutine:<br>goroutine设计上取消掉了身份ID,简化了多任务并行处理复杂度；</p>
+<p>thread:<br>线程存在身份ID,可以使用线程本地存储（thread-local storage）进行管理,但是线程本地存储总被滥用，是的函数行为别的不可预知，过于复杂化；</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag"># go</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/01/GoGoroutines/" rel="next" title="Go笔记之协程及通道">
+                <i class="fa fa-chevron-left"></i> Go笔记之协程及通道
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7u2pj1.com1.z0.glb.clouddn.com/About/MinHead2.jpg"
+               alt="Ink Jiang" />
+          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#竞争条件"><span class="nav-number">1.</span> <span class="nav-text">竞争条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sync-Mutex-互斥锁"><span class="nav-number">2.</span> <span class="nav-text">sync.Mutex 互斥锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sync-RWMutex-读写锁"><span class="nav-number">3.</span> <span class="nav-text">sync.RWMutex 读写锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存同步"><span class="nav-number">4.</span> <span class="nav-text">内存同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sync-Once-初始化"><span class="nav-number">5.</span> <span class="nav-text">sync.Once 初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#竞争条件检测"><span class="nav-number">6.</span> <span class="nav-text">竞争条件检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Goroutines与线程之间比较"><span class="nav-number">7.</span> <span class="nav-text">Goroutines与线程之间比较</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
