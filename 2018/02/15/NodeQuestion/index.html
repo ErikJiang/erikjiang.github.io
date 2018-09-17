@@ -89,35 +89,35 @@
 
 <meta name="description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。
 
-01. node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
+node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
 (1) 两者关系：
 exports 是 module.exports 的引用
 
 (2) 何时使用 exports 何时使用 module.exports:
-module">
+module.exp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="“NodeJS问题集萃”">
 <meta property="og:url" content="https://jiangink.github.io/2018/02/15/NodeQuestion/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。
 
-01. node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
+node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
 (1) 两者关系：
 exports 是 module.exports 的引用
 
 (2) 何时使用 exports 何时使用 module.exports:
-module">
-<meta property="og:updated_time" content="2018-09-17T08:51:10.267Z">
+module.exp">
+<meta property="og:updated_time" content="2018-09-17T14:41:33.866Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="“NodeJS问题集萃”">
 <meta name="twitter:description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。
 
-01. node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
+node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
 (1) 两者关系：
 exports 是 module.exports 的引用
 
 (2) 何时使用 exports 何时使用 module.exports:
-module">
+module.exp">
 
 
 
@@ -396,7 +396,7 @@ module">
       
         <p>这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。</p>
 <hr>
-<h3 id="01-node-modules-中，exports-及-module-exports-的区别？"><a href="#01-node-modules-中，exports-及-module-exports-的区别？" class="headerlink" title="01. node modules 中，exports 及 module.exports 的区别？"></a>01. node modules 中，exports 及 module.exports 的区别？</h3><p>需要注意，模块导出返回的永远是<code>module.exports</code></p>
+<h3 id="node-modules-中，exports-及-module-exports-的区别？"><a href="#node-modules-中，exports-及-module-exports-的区别？" class="headerlink" title="node modules 中，exports 及 module.exports 的区别？"></a>node modules 中，exports 及 module.exports 的区别？</h3><p>需要注意，模块导出返回的永远是<code>module.exports</code></p>
 <h4 id="1-两者关系："><a href="#1-两者关系：" class="headerlink" title="(1) 两者关系："></a>(1) 两者关系：</h4><blockquote>
 <p>exports 是 module.exports 的引用</p>
 </blockquote>
@@ -405,7 +405,17 @@ module">
 <li>exports 一般导出的是模块实例:<br>如<code>exports.PI = 3.1415;</code></li>
 </ul>
 <hr>
-<h3 id="02-解释一下-同步和异步-以及-阻塞与非阻塞？"><a href="#02-解释一下-同步和异步-以及-阻塞与非阻塞？" class="headerlink" title="02. 解释一下 同步和异步 以及 阻塞与非阻塞？"></a>02. 解释一下 同步和异步 以及 阻塞与非阻塞？</h3><ul>
+<h3 id="描述一下-require-一个-module-的过程？"><a href="#描述一下-require-一个-module-的过程？" class="headerlink" title="描述一下 require 一个 module 的过程？"></a>描述一下 require 一个 module 的过程？</h3><ol>
+<li>检查 module._cacahe 是否已经缓存了模块.</li>
+<li>如果没有缓存，则创建一个新的模块实例并且存入缓存.</li>
+<li>根据所给的模块名调用 module.load() 方法，load 完毕后会调用 module.compile() 方法进行编译.</li>
+<li>如果装载/编译过程中出现了错误，则会抛出错误并且将错误的模块从缓存中移除.</li>
+<li>最后返回所依赖的模块: module.exports</li>
+</ol>
+<hr>
+<h3 id="哪些后缀扩展名的文件会被自动识别并require-？"><a href="#哪些后缀扩展名的文件会被自动识别并require-？" class="headerlink" title="哪些后缀扩展名的文件会被自动识别并require ？"></a>哪些后缀扩展名的文件会被自动识别并require ？</h3><p>require 默认会加载.js、.json、.node 格式的文件</p>
+<hr>
+<h3 id="解释一下-同步和异步-以及-阻塞与非阻塞？"><a href="#解释一下-同步和异步-以及-阻塞与非阻塞？" class="headerlink" title="解释一下 同步和异步 以及 阻塞与非阻塞？"></a>解释一下 同步和异步 以及 阻塞与非阻塞？</h3><ul>
 <li><p>同步异步关注的是: <code>消息通信机制</code> (发生调用是否立即返回)<br><code>同步</code>即在发生调用时，在没有得到结果时，该调用不会返回，待得到结果后，调用才会返回；<br><code>异步</code>即在发生调用时，在没有得到结果时，该调用直接返回，待得到结果后，通过状态、消息通知调用者，或通过回调函数处理该调用；</p>
 </li>
 <li><p>阻塞与非阻塞关注的是: <code>程序等待调用结果时的状态</code> （当前线程是否被挂起）<br><code>阻塞</code>即指调用结果返回前，当前线程会被挂起，直到得到结果返回；<br><code>非阻塞</code>即指调用结果返回前，该调用不会阻塞挂起当前线程；</p>
@@ -414,7 +424,7 @@ module">
 </li>
 </ul>
 <hr>
-<h3 id="03-什么是C10K问题，聊聊它的技术变革及演进方向？"><a href="#03-什么是C10K问题，聊聊它的技术变革及演进方向？" class="headerlink" title="03. 什么是C10K问题，聊聊它的技术变革及演进方向？"></a>03. 什么是C10K问题，聊聊它的技术变革及演进方向？</h3><p><code>C10K</code>即单机1万个并发连接情况下，硬件性能足够，但依然无法提供正常服务的问题；<br><code>C10K</code>问题是计算机从PC时代变迁到互联网时代的过程中因并发量剧增而逐渐出现问题；<br><code>C10K问题特点</code>: 并发性能与硬件性能成非线性<br><code>解决C10K问题的关键</code>: 尽可能减少CPU等核心计算资源消耗，防止榨干单台服务器的性能；</p>
+<h3 id="什么是C10K问题，聊聊它的技术变革及演进方向？"><a href="#什么是C10K问题，聊聊它的技术变革及演进方向？" class="headerlink" title="什么是C10K问题，聊聊它的技术变革及演进方向？"></a>什么是C10K问题，聊聊它的技术变革及演进方向？</h3><p><code>C10K</code>即单机1万个并发连接情况下，硬件性能足够，但依然无法提供正常服务的问题；<br><code>C10K</code>问题是计算机从PC时代变迁到互联网时代的过程中因并发量剧增而逐渐出现问题；<br><code>C10K问题特点</code>: 并发性能与硬件性能成非线性<br><code>解决C10K问题的关键</code>: 尽可能减少CPU等核心计算资源消耗，防止榨干单台服务器的性能；</p>
 <h4 id="1-技术变革与演进方向"><a href="#1-技术变革与演进方向" class="headerlink" title="(1) 技术变革与演进方向"></a>(1) 技术变革与演进方向</h4><h5 id="1-每个进程-线程处理一个连接"><a href="#1-每个进程-线程处理一个连接" class="headerlink" title="1. 每个进程/线程处理一个连接"></a>1. 每个进程/线程处理一个连接</h5><h5 id="2-每个进程-线程处理多个连接（即：IO多路复用）"><a href="#2-每个进程-线程处理多个连接（即：IO多路复用）" class="headerlink" title="2. 每个进程/线程处理多个连接（即：IO多路复用）"></a>2. 每个进程/线程处理多个连接（即：IO多路复用）</h5><h6 id="2-1-Select-方案"><a href="#2-1-Select-方案" class="headerlink" title="2.1 Select 方案"></a>2.1 Select 方案</h6><p>同时监控多个文件句柄，逐个排查IO句柄状态，若准备好了就处理<br>缺点：有句柄上限、重复初始化、逐个排查所有文件句柄效率低；</p>
 <h6 id="2-2-Poll-方案"><a href="#2-2-Poll-方案" class="headerlink" title="2.2 Poll 方案"></a>2.2 Poll 方案</h6><p>Poll 方案在 Select 方案基础上解决了<code>句柄上线</code>和<code>重复初始化</code>的问题，效率有所提高；<br>缺点：仍然存在逐个排查所有文件句柄的问题，在句柄变多后，处理效率会变差；</p>
 <h6 id="2-3-Epoll-方案"><a href="#2-3-Epoll-方案" class="headerlink" title="2.3 Epoll 方案"></a>2.3 Epoll 方案</h6><p>Epoll 方案采用仅排查当前发生状态变化的文件句柄的设计，使得排查句柄的效率得到提升；<br>Nginx、libevent、libev、NodeJS的libuv 都是基于Epoll方案；<br>缺点：不能跨平台，Linux 使用 epoll, FreeDSD 使用 kqueue, windows 使用 IOCP;</p>
@@ -422,10 +432,61 @@ module">
 <h5 id="3-采用协程的方式处理"><a href="#3-采用协程的方式处理" class="headerlink" title="3. 采用协程的方式处理"></a>3. 采用协程的方式处理</h5><p>使用进程/线程的方式处理并发请求时，在进行系统调度时切换系统上下文的代价是很高的，且进程/线程作为处理单元太厚重，于是诞生了一种轻量级的处理单元，协程；<br>如 Python、Lua 提供的 coroutine 模型，Go 提供的 goroutine 模型；<br>特点：占用资源少、避免系统调度过程中的上下文切换、用户代码实现无需内核参与；</p>
 <p><a href="https://blog.csdn.net/yeasy/article/details/43152115" target="_blank" rel="external">C10K 问题引发的技术变革</a><br><a href="https://zhuanlan.zhihu.com/p/31410589" target="_blank" rel="external">事件驱动与协程：基本概念介绍</a><br><a href="https://segmentfault.com/a/1190000007240744" target="_blank" rel="external">上一个10年，著名的C10K并发连接问题</a></p>
 <hr>
-<h3 id="03-什么是事件驱动？什么是事件循环？"><a href="#03-什么是事件驱动？什么是事件循环？" class="headerlink" title="03. 什么是事件驱动？什么是事件循环？"></a>03. 什么是事件驱动？什么是事件循环？</h3><h4 id="1-事件驱动"><a href="#1-事件驱动" class="headerlink" title="(1) 事件驱动"></a>(1) 事件驱动</h4><p>事件驱动指持续事务管理过程中决策的一种策略，即跟随当前时间点上出现的事件，调动可用资源，执行相关任务，使不断出现的问题得以解决，防止事务堆积，而不是 Node 特有的一个功能，它是一个概念的引入</p>
+<h3 id="什么是libuv-在NodeJS中的作用是什么？"><a href="#什么是libuv-在NodeJS中的作用是什么？" class="headerlink" title="什么是libuv? 在NodeJS中的作用是什么？"></a>什么是libuv? 在NodeJS中的作用是什么？</h3><p><code>libuv</code>是一个高性能的事件驱动IO库，它封装了比<code>libevent</code>设计简练且性能更好的<code>libev</code>，<br>但是由于<code>libev</code>对于windows平台支持有限，所以libuv又在库中加入了windows的IOCP，以支持跨平台；<br>libuv 提供了非阻塞网络请求、各平台的事件轮询方法等；</p>
+<p>libuv 是 NodeJS 实现事件循环 Event-Loop 的关键；</p>
 <hr>
-<h3 id="04-什么是调用栈？"><a href="#04-什么是调用栈？" class="headerlink" title="04. 什么是调用栈？"></a>04. 什么是调用栈？</h3><hr>
-<h3 id="koa2的中间件原理"><a href="#koa2的中间件原理" class="headerlink" title="koa2的中间件原理"></a>koa2的中间件原理</h3><h3 id="对websocket的理解，及其在NodeJS中的应用"><a href="#对websocket的理解，及其在NodeJS中的应用" class="headerlink" title="对websocket的理解，及其在NodeJS中的应用"></a>对websocket的理解，及其在NodeJS中的应用</h3>
+<h3 id="什么是事件驱动？什么是事件循环？"><a href="#什么是事件驱动？什么是事件循环？" class="headerlink" title="什么是事件驱动？什么是事件循环？"></a>什么是事件驱动？什么是事件循环？</h3><h4 id="1-事件驱动"><a href="#1-事件驱动" class="headerlink" title="(1) 事件驱动"></a>(1) 事件驱动</h4><p>事件驱动指持续事务管理过程中决策的一种策略，即跟随当前时间点上出现的事件，调动可用资源，执行相关任务，使不断出现的问题得以解决，防止事务堆积;</p>
+<p>事件驱动并非NodeJS独有的功能，它是作为一概念引入到NodeJS;</p>
+<p>NodeJS主线程执行时，会启动事件循环（Event Loop）进行轮询监听和捕获事件，当一个IO事件触发时，会将其放入事件循环队列，同时会立即返回主线程而不会阻塞，这样保证了主线程可以处理其他事件而不会等待，此时，事件循环里的事件等待执行处理结果，若得到结果，则会调用相应的回调函数；</p>
+<p>NodeJS的事件循环是有libuv处理的；</p>
+<hr>
+<h3 id="什么是调用栈？"><a href="#什么是调用栈？" class="headerlink" title="什么是调用栈？"></a>什么是调用栈？</h3><p>调用堆栈是JS代码执行的基本机制。</p>
+<p>当调用一个函数时，会将函数参数和返回值地址推送到堆栈。</p>
+<p>这样允许运行时知道函数结束后继续执行代码的位置。</p>
+<p>NodeJS的调用栈有V8处理；</p>
+<p>由于调用栈的栈采用的是<code>后进先出</code>的方式，<br>故在语法解析完毕后，主函数首先被push到栈底，文件头的首个函数被存入栈顶；<br>而在执行过程中，则先执行栈顶的函数，然后依次执行后续函数，直到执行到最后的主函数；</p>
+<hr>
+<h3 id="setImmediate-与-process-nextTick-的关系？"><a href="#setImmediate-与-process-nextTick-的关系？" class="headerlink" title="setImmediate 与 process.nextTick 的关系？"></a>setImmediate 与 process.nextTick 的关系？</h3><p>首先，在NodeJS中事件执行的顺序是，同步任务先于异步任务执行，异步中本轮循环先于次轮循环执行；</p>
+<p>本轮循环的异步任务按先后阶段顺序包括两个队列：</p>
+<ol>
+<li>nextTickQueue (如：process.nexTick())</li>
+<li>microTaskQueue (如：Promise)</li>
+</ol>
+<p>次轮循环的阶段顺序：</p>
+<ol>
+<li>timers (setTimeout() setInterval())</li>
+<li>I/O callback (其他类型的回调)</li>
+<li>idle (libuv内部调用)</li>
+<li>poll (等待没有返回的IO事件)</li>
+<li>check (setImmdiate())</li>
+<li>close callbacks (close关闭事件的回调)</li>
+</ol>
+<p>setImmediate()在此轮循环的check阶段，而process.nextTick()位于本轮循环的nextTickQueue当中；</p>
+<p>process.nextTick()先于setImmediate()执行；</p>
+<hr>
+<h3 id="child-process-模块的-spawn、exec、fork主要区别是什么？"><a href="#child-process-模块的-spawn、exec、fork主要区别是什么？" class="headerlink" title="child_process 模块的 spawn、exec、fork主要区别是什么？"></a>child_process 模块的 spawn、exec、fork主要区别是什么？</h3><p><code>child_process.spawn()</code>: 异步的衍生子进程，不会阻塞NodeJS事件循环；<br><code>child_process.spawnSync()</code>: 同步的衍生子进程，会阻塞事件循环，直到子进程退出终止；<br><code>child_process.exec()</code>: 衍生一个shell并执行命令，完成时会输出stdout和stderr到回调函数；<br><code>child_process.fork()</code>: 衍生一个NodeJS进程，并通过IPC通道实现父子进程通信；</p>
+<hr>
+<h3 id="cluster-模块的工作原理？"><a href="#cluster-模块的工作原理？" class="headerlink" title="cluster 模块的工作原理？"></a>cluster 模块的工作原理？</h3><p>由于NodeJS是单进程的，无法充分利用多核，因此需要启动多个进程满足高负载的处理需求；</p>
+<p>cluster 即可以创建并管理多个子进程并共享端口；</p>
+<p>Cluster 基于<code>child_process.fork()</code>实现工作进程的复制；</p>
+<p>cluster 通过一个主进程接收请求或连接，并通过循环的方式分发请求给创建的多个子进程进行处理，从而做到简单的负载均衡；</p>
+<hr>
+<h3 id="如何查看NodeJS进程占用的内存？"><a href="#如何查看NodeJS进程占用的内存？" class="headerlink" title="如何查看NodeJS进程占用的内存？"></a>如何查看NodeJS进程占用的内存？</h3><p>程序外，通过进程内存查看工具<br>程序内，通过<code>process.memoryUsage()</code>查看</p>
+<hr>
+<h3 id="如何在NodeJS进程退出前做最后的操作，操作是否可以异步执行？"><a href="#如何在NodeJS进程退出前做最后的操作，操作是否可以异步执行？" class="headerlink" title="如何在NodeJS进程退出前做最后的操作，操作是否可以异步执行？"></a>如何在NodeJS进程退出前做最后的操作，操作是否可以异步执行？</h3><p>可以注册一个<code>exit</code>事件监听，通过<code>process.on(&#39;exit&#39;,cb)</code>,该操作不可异步；</p>
+<hr>
+<h3 id="NodeJS依赖有哪些？"><a href="#NodeJS依赖有哪些？" class="headerlink" title="NodeJS依赖有哪些？"></a>NodeJS依赖有哪些？</h3><p>* 库依赖：v8、libuv、http-parser、c-ares、openSSL、zlib</p>
+<ul>
+<li>工具依赖：npm、gyp、gtest</li>
+</ul>
+<hr>
+<h3 id="同样是实现异步操作，回调-callback-与事件-emitter-有什么区别"><a href="#同样是实现异步操作，回调-callback-与事件-emitter-有什么区别" class="headerlink" title="同样是实现异步操作，回调 callback 与事件 emitter 有什么区别?"></a>同样是实现异步操作，回调 callback 与事件 emitter 有什么区别?</h3><p>emitter 更加灵活，可以将执行的过程发送到别的地方，只要有方法监听这个事件就能够收到；<br>callback 则只能在本函数或本文件内执行，相对比较固定；</p>
+<hr>
+<h3 id="koa2的中间件原理"><a href="#koa2的中间件原理" class="headerlink" title="koa2的中间件原理"></a>koa2的中间件原理</h3><p>// todo</p>
+<hr>
+<h3 id="对websocket的理解，及其在NodeJS中的应用"><a href="#对websocket的理解，及其在NodeJS中的应用" class="headerlink" title="对websocket的理解，及其在NodeJS中的应用"></a>对websocket的理解，及其在NodeJS中的应用</h3><p>// todo</p>
+<hr>
+
       
     </div>
 
@@ -632,7 +693,7 @@ module">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#01-node-modules-中，exports-及-module-exports-的区别？"><span class="nav-number">1.</span> <span class="nav-text">01. node modules 中，exports 及 module.exports 的区别？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-两者关系："><span class="nav-number">1.1.</span> <span class="nav-text">(1) 两者关系：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-何时使用-exports-何时使用-module-exports"><span class="nav-number">1.2.</span> <span class="nav-text">(2) 何时使用 exports 何时使用 module.exports:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#02-解释一下-同步和异步-以及-阻塞与非阻塞？"><span class="nav-number">2.</span> <span class="nav-text">02. 解释一下 同步和异步 以及 阻塞与非阻塞？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#03-什么是C10K问题，聊聊它的技术变革及演进方向？"><span class="nav-number">3.</span> <span class="nav-text">03. 什么是C10K问题，聊聊它的技术变革及演进方向？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-技术变革与演进方向"><span class="nav-number">3.1.</span> <span class="nav-text">(1) 技术变革与演进方向</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-每个进程-线程处理一个连接"><span class="nav-number">3.1.1.</span> <span class="nav-text">1. 每个进程/线程处理一个连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-每个进程-线程处理多个连接（即：IO多路复用）"><span class="nav-number">3.1.2.</span> <span class="nav-text">2. 每个进程/线程处理多个连接（即：IO多路复用）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-Select-方案"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">2.1 Select 方案</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-2-Poll-方案"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">2.2 Poll 方案</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-3-Epoll-方案"><span class="nav-number">3.1.2.3.</span> <span class="nav-text">2.3 Epoll 方案</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-4-Libevent库"><span class="nav-number">3.1.2.4.</span> <span class="nav-text">2.4 Libevent库</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-采用协程的方式处理"><span class="nav-number">3.1.3.</span> <span class="nav-text">3. 采用协程的方式处理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#03-什么是事件驱动？什么是事件循环？"><span class="nav-number">4.</span> <span class="nav-text">03. 什么是事件驱动？什么是事件循环？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-事件驱动"><span class="nav-number">4.1.</span> <span class="nav-text">(1) 事件驱动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#04-什么是调用栈？"><span class="nav-number">5.</span> <span class="nav-text">04. 什么是调用栈？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#koa2的中间件原理"><span class="nav-number">6.</span> <span class="nav-text">koa2的中间件原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对websocket的理解，及其在NodeJS中的应用"><span class="nav-number">7.</span> <span class="nav-text">对websocket的理解，及其在NodeJS中的应用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#node-modules-中，exports-及-module-exports-的区别？"><span class="nav-number">1.</span> <span class="nav-text">node modules 中，exports 及 module.exports 的区别？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-两者关系："><span class="nav-number">1.1.</span> <span class="nav-text">(1) 两者关系：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-何时使用-exports-何时使用-module-exports"><span class="nav-number">1.2.</span> <span class="nav-text">(2) 何时使用 exports 何时使用 module.exports:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#描述一下-require-一个-module-的过程？"><span class="nav-number">2.</span> <span class="nav-text">描述一下 require 一个 module 的过程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哪些后缀扩展名的文件会被自动识别并require-？"><span class="nav-number">3.</span> <span class="nav-text">哪些后缀扩展名的文件会被自动识别并require ？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解释一下-同步和异步-以及-阻塞与非阻塞？"><span class="nav-number">4.</span> <span class="nav-text">解释一下 同步和异步 以及 阻塞与非阻塞？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是C10K问题，聊聊它的技术变革及演进方向？"><span class="nav-number">5.</span> <span class="nav-text">什么是C10K问题，聊聊它的技术变革及演进方向？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-技术变革与演进方向"><span class="nav-number">5.1.</span> <span class="nav-text">(1) 技术变革与演进方向</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-每个进程-线程处理一个连接"><span class="nav-number">5.1.1.</span> <span class="nav-text">1. 每个进程/线程处理一个连接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-每个进程-线程处理多个连接（即：IO多路复用）"><span class="nav-number">5.1.2.</span> <span class="nav-text">2. 每个进程/线程处理多个连接（即：IO多路复用）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#2-1-Select-方案"><span class="nav-number">5.1.2.1.</span> <span class="nav-text">2.1 Select 方案</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-2-Poll-方案"><span class="nav-number">5.1.2.2.</span> <span class="nav-text">2.2 Poll 方案</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-3-Epoll-方案"><span class="nav-number">5.1.2.3.</span> <span class="nav-text">2.3 Epoll 方案</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-4-Libevent库"><span class="nav-number">5.1.2.4.</span> <span class="nav-text">2.4 Libevent库</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-采用协程的方式处理"><span class="nav-number">5.1.3.</span> <span class="nav-text">3. 采用协程的方式处理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是libuv-在NodeJS中的作用是什么？"><span class="nav-number">6.</span> <span class="nav-text">什么是libuv? 在NodeJS中的作用是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是事件驱动？什么是事件循环？"><span class="nav-number">7.</span> <span class="nav-text">什么是事件驱动？什么是事件循环？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-事件驱动"><span class="nav-number">7.1.</span> <span class="nav-text">(1) 事件驱动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是调用栈？"><span class="nav-number">8.</span> <span class="nav-text">什么是调用栈？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setImmediate-与-process-nextTick-的关系？"><span class="nav-number">9.</span> <span class="nav-text">setImmediate 与 process.nextTick 的关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#child-process-模块的-spawn、exec、fork主要区别是什么？"><span class="nav-number">10.</span> <span class="nav-text">child_process 模块的 spawn、exec、fork主要区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluster-模块的工作原理？"><span class="nav-number">11.</span> <span class="nav-text">cluster 模块的工作原理？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何查看NodeJS进程占用的内存？"><span class="nav-number">12.</span> <span class="nav-text">如何查看NodeJS进程占用的内存？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在NodeJS进程退出前做最后的操作，操作是否可以异步执行？"><span class="nav-number">13.</span> <span class="nav-text">如何在NodeJS进程退出前做最后的操作，操作是否可以异步执行？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NodeJS依赖有哪些？"><span class="nav-number">14.</span> <span class="nav-text">NodeJS依赖有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同样是实现异步操作，回调-callback-与事件-emitter-有什么区别"><span class="nav-number">15.</span> <span class="nav-text">同样是实现异步操作，回调 callback 与事件 emitter 有什么区别?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#koa2的中间件原理"><span class="nav-number">16.</span> <span class="nav-text">koa2的中间件原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对websocket的理解，及其在NodeJS中的应用"><span class="nav-number">17.</span> <span class="nav-text">对websocket的理解，及其在NodeJS中的应用</span></a></li></ol></div>
             
 
           </div>
