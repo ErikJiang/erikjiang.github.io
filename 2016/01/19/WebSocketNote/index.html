@@ -88,11 +88,13 @@
 
 
 <meta name="description" content="HTTP 协议是一种无状态协议，服务器端本身不具备识别客户端的能力，必须借助外部机制，比如 session 和 cookie 才能与特定客户端保持对话。那么如果我们遇到一种需求，它要求保证服务器端与客户端持续的数据交换，比如网络聊天，那再使用 HTTP 协议就会有不便，这时我们就需要用到 Websocket API了。">
+<meta name="keywords" content="websocket,socket.io">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WebSocket学习笔记">
 <meta property="og:url" content="https://jiangink.github.io/2016/01/19/WebSocketNote/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="HTTP 协议是一种无状态协议，服务器端本身不具备识别客户端的能力，必须借助外部机制，比如 session 和 cookie 才能与特定客户端保持对话。那么如果我们遇到一种需求，它要求保证服务器端与客户端持续的数据交换，比如网络聊天，那再使用 HTTP 协议就会有不便，这时我们就需要用到 Websocket API了。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-04-06T13:28:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WebSocket学习笔记">
@@ -482,7 +484,7 @@ wsServer.on(&apos;request&apos;, function(req){
 <pre><code>connection.on(&apos;close&apos;, function(reasonCode, description) {
     console.log(connection.remoteAddress + &apos; disconnected.&apos;);
 });
-</code></pre><p>使用 <a href="https://github.com/websockets/ws" target="_blank" rel="external">ws</a> 模块，部署一个简单的 WebSocket 服务器非常容易。</p>
+</code></pre><p>使用 <a href="https://github.com/websockets/ws" target="_blank" rel="noopener">ws</a> 模块，部署一个简单的 WebSocket 服务器非常容易。</p>
 <pre><code>var WebSocketServer = require(&apos;ws&apos;).Server;
 var wss = new WebSocketServer({ port: 8080 });
 
@@ -511,7 +513,7 @@ app.get(&apos;/&apos;, function (req, res) {
 <pre><code>&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;
 </code></pre><p>然后，在客户端脚本中，建立 WebSocket 连接。</p>
 <pre><code>var socket = io.connect(&apos;http://localhost&apos;);
-</code></pre><p>由于本例假定 WebSocket 主机与客户端是同一台机器，所以 connect 方法的参数是 <a href="http://localhost。接着，指定" target="_blank" rel="external">http://localhost。接着，指定</a> news 事件（即服务器端发送news）的回调函数。</p>
+</code></pre><p>由于本例假定 WebSocket 主机与客户端是同一台机器，所以 connect 方法的参数是 <a href="http://localhost。接着，指定" target="_blank" rel="noopener">http://localhost。接着，指定</a> news 事件（即服务器端发送news）的回调函数。</p>
 <pre><code>socket.on(&apos;news&apos;, function (data){
        console.log(data);
 });
@@ -538,7 +540,7 @@ io.sockets.on(&apos;connection&apos;, function (socket) {
 <hr>
 <p>参考：</p>
 <ul>
-<li><a href="http://javascript.ruanyifeng.com/htmlapi/websocket.html" title="JavaScript标准参考教程" target="_blank" rel="external">JavaScript标准参考教程</a></li>
+<li><a href="http://javascript.ruanyifeng.com/htmlapi/websocket.html" title="JavaScript标准参考教程" target="_blank" rel="noopener">JavaScript标准参考教程</a></li>
 </ul>
 
       

@@ -88,12 +88,14 @@
 
 
 <meta name="description" content="协程与通道是实现go多任务并发程序的方式；goroutine和channel，其支持“顺序通信进程”(communicating sequential processes)或被简称为CSP。CSP是一种现代的并发编程模型，在这种编程模型中值会在不同的运行实例(goroutine)中传递，尽管大多数情况下仍然是被限制在单一实例中。">
+<meta name="keywords" content="go">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go笔记之协程及通道">
 <meta property="og:url" content="https://jiangink.github.io/2018/09/01/GoGoroutines/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="协程与通道是实现go多任务并发程序的方式；goroutine和channel，其支持“顺序通信进程”(communicating sequential processes)或被简称为CSP。CSP是一种现代的并发编程模型，在这种编程模型中值会在不同的运行实例(goroutine)中传递，尽管大多数情况下仍然是被限制在单一实例中。">
-<meta property="og:updated_time" content="2018-09-09T09:45:54.158Z">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-09T09:45:54.159Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go笔记之协程及通道">
 <meta name="twitter:description" content="协程与通道是实现go多任务并发程序的方式；goroutine和channel，其支持“顺序通信进程”(communicating sequential processes)或被简称为CSP。CSP是一种现代的并发编程模型，在这种编程模型中值会在不同的运行实例(goroutine)中传递，尽管大多数情况下仍然是被限制在单一实例中。">
@@ -380,12 +382,12 @@
 <h3 id="channel-通道"><a href="#channel-通道" class="headerlink" title="channel 通道"></a>channel 通道</h3><p>goroutine是go语言程序的<code>并发体</code>，而channels是并发体之间的<code>通信机制</code>；channel是引用类型，其零值为nil；</p>
 <ul>
 <li><p>通过make函数创建channel<br>channel使用make函数创建将对应一个底层的数据结构引用；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 创建一个无缓存int类型的通道</div><div class="line">ch := make(chan int)</div><div class="line">// 创建一个缓存容量为10的int类型的通道</div><div class="line">ch1 := make(chan int, 10)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 创建一个无缓存int类型的通道</span><br><span class="line">ch := make(chan int)</span><br><span class="line">// 创建一个缓存容量为10的int类型的通道</span><br><span class="line">ch1 := make(chan int, 10)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>channel的运算符比较<br>两个相同类型的channel可以使用==运算符比较；<br>一个channel也可以和nil进行比较。</p>
 </li>
 <li><p>channel主要的两种通信行为<br>channel主要有<code>发送</code>和<code>接收</code>两种通信操作行为;<br>通过<code>&lt;-</code>运算符表示发送与接收操作，当该运算符位于channel标识符右侧表示发送，当该运算符位于channel标识符左侧表示接收</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ch := make(chan in)</div><div class="line">ch &lt;- x // 发送x到通道ch</div><div class="line">&lt;- ch   // 接收通道中的信息</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch := make(chan in)</span><br><span class="line">ch &lt;- x // 发送x到通道ch</span><br><span class="line">&lt;- ch   // 接收通道中的信息</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>channel的关闭Close操作<br>当对一个已经关闭的channel进行接收操作依然可以收到之前已经成功发送的数据；<br>当对一个已经关闭的channel进行接收操作且该channel已经没有数据时将会产生一个零值数据；<br>当试图重复关闭或者关闭一个nil值的channel都会导致panic异常；<br>内置close函数即可关闭channel:<code>close(ch)</code>;<br>不管channel是否被关闭，当它没有被引用时将会被Go语言的垃圾自动回收器回收。</p>
 </li>
@@ -397,7 +399,7 @@
 <li><p>串联的channels即pipeline<br>Channels也可以用于将多个goroutine连接在一起，一个Channel的输出作为下一个Channel的输入。这种串联的Channels就是所谓的管道（pipeline）</p>
 </li>
 <li><p>判断channel是否关闭且无值可接收<br>通道的接收操作可返回两个值，其中ok可以判断当前channel是否已关闭且无值可接收；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x, ok := &lt;- ch</div><div class="line">if !ok &#123;</div><div class="line">    // todo ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x, ok := &lt;- ch</span><br><span class="line">if !ok &#123;</span><br><span class="line">    // todo ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>使用 range channel代替<code>&lt;-</code>接收<br>使用range循环依次从channel接收数据，当channel被关闭并且没有值可接收时将跳出循环。</p>
 </li>
@@ -405,7 +407,7 @@
 </li>
 </ul>
 <p>为了表明这种意图并防止被滥用，Go语言的类型系统提供了单方向的channel类型，分别用于只发送或只接收的channel。</p>
-<p>类型<code>chan&lt;- int</code>表示一个只发送int的channel，只能发送不能接收。相反，类型<code>&lt;-chan int</code>表示一个只接收int的channel，只能接收不能发送。（箭头&lt;-和关键字chan的相对位置表明了channel的方向。）这种限制将在编译期检测;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">func squarer(out chan&lt;- int, in &lt;-chan int) &#123;</div><div class="line">    for v := range in &#123;</div><div class="line">        out &lt;- v * v</div><div class="line">    &#125;</div><div class="line">    close(out)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>类型<code>chan&lt;- int</code>表示一个只发送int的channel，只能发送不能接收。相反，类型<code>&lt;-chan int</code>表示一个只接收int的channel，只能接收不能发送。（箭头&lt;-和关键字chan的相对位置表明了channel的方向。）这种限制将在编译期检测;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func squarer(out chan&lt;- int, in &lt;-chan int) &#123;</span><br><span class="line">    for v := range in &#123;</span><br><span class="line">        out &lt;- v * v</span><br><span class="line">    &#125;</span><br><span class="line">    close(out)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li><p>只有在发送者所在的goroutine才会调用close函数<br>因为关闭操作只用于断言不再向channel发送新的数据，所以只有在发送者所在的goroutine才会调用close函数，因此对一个只接收的channel调用close将是一个编译错误。</p>
 </li>
@@ -417,11 +419,11 @@
 <ul>
 <li>cap()及len()在通道channel中的使用<br>cap()函数用于获取通道的缓存容量；<br>len()函数用于获取通道缓存队列中有效元素个数；</li>
 </ul>
-<h3 id="并发的循环"><a href="#并发的循环" class="headerlink" title="并发的循环"></a>并发的循环</h3><h3 id="基于select多路复用"><a href="#基于select多路复用" class="headerlink" title="基于select多路复用"></a>基于select多路复用</h3><p>当我们希望能够从channel中发送或者接收值，并避免因为发送或者接收导致的阻塞，尤其是当channel没有准备好写或者读时。select语句就可以实现这样的功能。select会有一个default来设置当其它的操作都不能够马上被处理时程序需要执行的逻辑。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> &#123;</div><div class="line"><span class="keyword">case</span> &lt;-ch1:</div><div class="line">    <span class="comment">// ...</span></div><div class="line"><span class="keyword">case</span> x := &lt;-ch2:</div><div class="line">    <span class="comment">// ...use x...</span></div><div class="line"><span class="keyword">case</span> ch3 &lt;- y:</div><div class="line">    <span class="comment">// ...</span></div><div class="line"><span class="keyword">default</span>:</div><div class="line">    <span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="并发的循环"><a href="#并发的循环" class="headerlink" title="并发的循环"></a>并发的循环</h3><h3 id="基于select多路复用"><a href="#基于select多路复用" class="headerlink" title="基于select多路复用"></a>基于select多路复用</h3><p>当我们希望能够从channel中发送或者接收值，并避免因为发送或者接收导致的阻塞，尤其是当channel没有准备好写或者读时。select语句就可以实现这样的功能。select会有一个default来设置当其它的操作都不能够马上被处理时程序需要执行的逻辑。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-ch1:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">case</span> x := &lt;-ch2:</span><br><span class="line">    <span class="comment">// ...use x...</span></span><br><span class="line"><span class="keyword">case</span> ch3 &lt;- y:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>Tick()函数<br>time.Tick函数的表现就像创建了一个在循环中调用time.Sleep的goroutine，每次被唤醒时发送一个事件。当select多路复用结束时，它会停止从tick中接收事件，但是ticker这个goroutine还依然存活，继续徒劳地尝试向channel中发送值，然而这时候已经没有其它的goroutine会从该channel中接收值了，这种情况被称为goroutine泄露；</li>
 </ul>
-<p>Tick()函数只有当程序整个生命周期都需要这个时间时我们使用它才比较合适；否则应该采用如下方式：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ticker := time.NewTicker(<span class="number">1</span> * time.Second)</div><div class="line">&lt;-ticker.C    <span class="comment">// receive from the ticker's channel</span></div><div class="line">ticker.Stop() <span class="comment">// cause the ticker's goroutine to terminate</span></div></pre></td></tr></table></figure></p>
+<p>Tick()函数只有当程序整个生命周期都需要这个时间时我们使用它才比较合适；否则应该采用如下方式：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ticker := time.NewTicker(<span class="number">1</span> * time.Second)</span><br><span class="line">&lt;-ticker.C    <span class="comment">// receive from the ticker's channel</span></span><br><span class="line">ticker.Stop() <span class="comment">// cause the ticker's goroutine to terminate</span></span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>select 多路复用中case激活禁用方式<br>由于当channel为零值nil时，其发送和接收都会被阻塞，而在多路复用中channel如果为nil,将不会被select到；因此在select中可以通过为channel赋nil值，作为开关激活或禁用通道；</li>
 </ul>

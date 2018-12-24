@@ -87,37 +87,18 @@
 
 
 
-<meta name="description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。
-
-node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
-(1) 两者关系：
-exports 是 module.exports 的引用
-
-(2) 何时使用 exports 何时使用 module.exports:
-module.exp">
+<meta name="description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。  node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports (1) 两者关系： exports 是 module.exports 的引用  (2) 何时使用 exports 何时使用 module.exports: module.exp">
+<meta name="keywords" content="node">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NodeJS问题集萃">
 <meta property="og:url" content="https://jiangink.github.io/2018/02/15/NodeQuestion/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
-<meta property="og:description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。
-
-node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
-(1) 两者关系：
-exports 是 module.exports 的引用
-
-(2) 何时使用 exports 何时使用 module.exports:
-module.exp">
+<meta property="og:description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。  node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports (1) 两者关系： exports 是 module.exports 的引用  (2) 何时使用 exports 何时使用 module.exports: module.exp">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-09-18T15:11:38.663Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NodeJS问题集萃">
-<meta name="twitter:description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。
-
-node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports
-(1) 两者关系：
-exports 是 module.exports 的引用
-
-(2) 何时使用 exports 何时使用 module.exports:
-module.exp">
+<meta name="twitter:description" content="这篇放上一些关于Node.JS的问题总结，有助于对NodeJS加深理解。  node modules 中，exports 及 module.exports 的区别？需要注意，模块导出返回的永远是module.exports (1) 两者关系： exports 是 module.exports 的引用  (2) 何时使用 exports 何时使用 module.exports: module.exp">
 
 
 
@@ -420,7 +401,7 @@ module.exp">
 </li>
 <li><p>阻塞与非阻塞关注的是: <code>程序等待调用结果时的状态</code> （当前线程是否被挂起）<br><code>阻塞</code>即指调用结果返回前，当前线程会被挂起，直到得到结果返回；<br><code>非阻塞</code>即指调用结果返回前，该调用不会阻塞挂起当前线程；</p>
 </li>
-<li><p><a href="https://www.zhihu.com/question/19732473/answer/20851256" target="_blank" rel="external">怎样理解阻塞非阻塞与同步异步的区别</a></p>
+<li><p><a href="https://www.zhihu.com/question/19732473/answer/20851256" target="_blank" rel="noopener">怎样理解阻塞非阻塞与同步异步的区别</a></p>
 </li>
 </ul>
 <hr>
@@ -430,7 +411,7 @@ module.exp">
 <h6 id="2-3-Epoll-方案"><a href="#2-3-Epoll-方案" class="headerlink" title="2.3 Epoll 方案"></a>2.3 Epoll 方案</h6><p>Epoll 方案采用仅排查当前发生状态变化的文件句柄的设计，使得排查句柄的效率得到提升；<br>Nginx、libevent、libev、NodeJS的libuv 都是基于Epoll方案；<br>缺点：不能跨平台，Linux 使用 epoll, FreeDSD 使用 kqueue, windows 使用 IOCP;</p>
 <h6 id="2-4-Libevent库"><a href="#2-4-Libevent库" class="headerlink" title="2.4 Libevent库"></a>2.4 Libevent库</h6><p>考虑到跨平台和移植，libevent 库将不同平台的 epoll、kqueue、IOCP 等进行了封装整合；</p>
 <h5 id="3-采用协程的方式处理"><a href="#3-采用协程的方式处理" class="headerlink" title="3. 采用协程的方式处理"></a>3. 采用协程的方式处理</h5><p>使用进程/线程的方式处理并发请求时，在进行系统调度时切换系统上下文的代价是很高的，且进程/线程作为处理单元太厚重，于是诞生了一种轻量级的处理单元，协程；<br>如 Python、Lua 提供的 coroutine 模型，Go 提供的 goroutine 模型；<br>特点：占用资源少、避免系统调度过程中的上下文切换、用户代码实现无需内核参与；</p>
-<p><a href="https://blog.csdn.net/yeasy/article/details/43152115" target="_blank" rel="external">C10K 问题引发的技术变革</a><br><a href="https://zhuanlan.zhihu.com/p/31410589" target="_blank" rel="external">事件驱动与协程：基本概念介绍</a><br><a href="https://segmentfault.com/a/1190000007240744" target="_blank" rel="external">上一个10年，著名的C10K并发连接问题</a></p>
+<p><a href="https://blog.csdn.net/yeasy/article/details/43152115" target="_blank" rel="noopener">C10K 问题引发的技术变革</a><br><a href="https://zhuanlan.zhihu.com/p/31410589" target="_blank" rel="noopener">事件驱动与协程：基本概念介绍</a><br><a href="https://segmentfault.com/a/1190000007240744" target="_blank" rel="noopener">上一个10年，著名的C10K并发连接问题</a></p>
 <hr>
 <h3 id="什么是libuv-在NodeJS中的作用是什么？"><a href="#什么是libuv-在NodeJS中的作用是什么？" class="headerlink" title="什么是libuv? 在NodeJS中的作用是什么？"></a>什么是libuv? 在NodeJS中的作用是什么？</h3><p><code>libuv</code>是一个高性能的事件驱动IO库，它封装了比<code>libevent</code>设计简练且性能更好的<code>libev</code>，<br>但是由于<code>libev</code>对于windows平台支持有限，所以libuv又在库中加入了windows的IOCP，以支持跨平台；<br>libuv 提供了非阻塞网络请求、各平台的事件轮询方法等；</p>
 <p>libuv 是 NodeJS 实现事件循环 Event-Loop 的关键；</p>

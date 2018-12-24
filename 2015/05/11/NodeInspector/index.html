@@ -88,11 +88,13 @@
 
 
 <meta name="description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
+<meta name="keywords" content="node,debug">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Node调试工具的使用">
 <meta property="og:url" content="https://jiangink.github.io/2015/05/11/NodeInspector/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="今天发现一个在浏览器上调试node代码的工具，分享一下.这个工具名叫：Node Inspector感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-04-06T13:26:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node调试工具的使用">
@@ -373,21 +375,21 @@
       
 
       
-        <p>今天发现一个在浏览器上调试node代码的工具，分享一下.<br>这个工具名叫：<a href="https://github.com/node-inspector/node-inspector" target="_blank" rel="external">Node Inspector</a><br>感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；<br><a id="more"></a></p>
-<h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h4><p>安装命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install –g node-inspector</div></pre></td></tr></table></figure></p>
-<h4 id="运行步骤"><a href="#运行步骤" class="headerlink" title="运行步骤"></a>运行步骤</h4><p>1）首先，需要启动node.js应用<br>命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug-brk=[app port] [app name]</div></pre></td></tr></table></figure></p>
-<p>或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug=[app port] [app name]</div></pre></td></tr></table></figure></p>
-<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node --debug-brk=3001 bin/www</div></pre></td></tr></table></figure></p>
-<p>[debug与debug-brk两种配参见<a href="https://github.com/node-inspector/node-inspector#troubleshooting" target="_blank" rel="external">说明</a>]</p>
-<p>2）然后，启动node-inspector调试工具：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-inspector --web-port [web port] --debug-port [app port]</div></pre></td></tr></table></figure></p>
-<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">node-inspector --web-port 8081 --debug-port 3001</div></pre></td></tr></table></figure></p>
+        <p>今天发现一个在浏览器上调试node代码的工具，分享一下.<br>这个工具名叫：<a href="https://github.com/node-inspector/node-inspector" target="_blank" rel="noopener">Node Inspector</a><br>感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；<br><a id="more"></a></p>
+<h4 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h4><p>安装命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install –g node-inspector</span><br></pre></td></tr></table></figure></p>
+<h4 id="运行步骤"><a href="#运行步骤" class="headerlink" title="运行步骤"></a>运行步骤</h4><p>1）首先，需要启动node.js应用<br>命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --debug-brk=[app port] [app name]</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --debug=[app port] [app name]</span><br></pre></td></tr></table></figure></p>
+<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --debug-brk=3001 bin/www</span><br></pre></td></tr></table></figure></p>
+<p>[debug与debug-brk两种配参见<a href="https://github.com/node-inspector/node-inspector#troubleshooting" target="_blank" rel="noopener">说明</a>]</p>
+<p>2）然后，启动node-inspector调试工具：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node-inspector --web-port [web port] --debug-port [app port]</span><br></pre></td></tr></table></figure></p>
+<p>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node-inspector --web-port 8081 --debug-port 3001</span><br></pre></td></tr></table></figure></p>
 <p>[注：8081为web访问端口；3001为应用调试端口]</p>
-<p>3)最后，访问chrome浏览器：<br>具体访问的网址，其实在启动调试工具后会有输出提示，大致如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1:8081/debug?ws=127.0.0.1:8081&amp;port=3001</div></pre></td></tr></table></figure></p>
+<p>3)最后，访问chrome浏览器：<br>具体访问的网址，其实在启动调试工具后会有输出提示，大致如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:8081/debug?ws=127.0.0.1:8081&amp;port=3001</span><br></pre></td></tr></table></figure></p>
 <hr>
 <p>具体也可参考如下：</p>
 <ol>
-<li><a href="http://jingyan.baidu.com/article/dca1fa6fbd580ff1a44052de.html" target="_blank" rel="external">百度经验</a></li>
-<li><a href="http://www.noanylove.com/2011/12/node-the-inspector-debugging-node-js/" target="_blank" rel="external">用node-inspector调试Node.js</a></li>
+<li><a href="http://jingyan.baidu.com/article/dca1fa6fbd580ff1a44052de.html" target="_blank" rel="noopener">百度经验</a></li>
+<li><a href="http://www.noanylove.com/2011/12/node-the-inspector-debugging-node-js/" target="_blank" rel="noopener">用node-inspector调试Node.js</a></li>
 </ol>
 
       

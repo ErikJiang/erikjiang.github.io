@@ -87,19 +87,18 @@
 
 
 
-<meta name="description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替；
-但是，当进行golang开发时，由于golang.org及其他相关开发站点被GFW屏蔽，就不再那么好运了，而这里主要记录了一些方法，希望能让go get安装时显得不那么痛苦；">
+<meta name="description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替； 但是，当进行golang开发时，由于golang.org及其他相关开发站点被GFW屏蔽，就不再那么好运了，而这里主要记录了一些方法，希望能让go get安装时显得不那么痛苦；">
+<meta name="keywords" content="go">
 <meta property="og:type" content="article">
 <meta property="og:title" content="长城下的Go Get, 被安排的明明白白">
 <meta property="og:url" content="https://jiangink.github.io/2018/07/20/GoGetDownload/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
-<meta property="og:description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替；
-但是，当进行golang开发时，由于golang.org及其他相关开发站点被GFW屏蔽，就不再那么好运了，而这里主要记录了一些方法，希望能让go get安装时显得不那么痛苦；">
+<meta property="og:description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替； 但是，当进行golang开发时，由于golang.org及其他相关开发站点被GFW屏蔽，就不再那么好运了，而这里主要记录了一些方法，希望能让go get安装时显得不那么痛苦；">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-08-11T14:25:10.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="长城下的Go Get, 被安排的明明白白">
-<meta name="twitter:description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替；
-但是，当进行golang开发时，由于golang.org及其他相关开发站点被GFW屏蔽，就不再那么好运了，而这里主要记录了一些方法，希望能让go get安装时显得不那么痛苦；">
+<meta name="twitter:description" content="在nodejs开发中，包的安装，习惯了npm install的流畅，再不济也可以用cnpm代替； 但是，当进行golang开发时，由于golang.org及其他相关开发站点被GFW屏蔽，就不再那么好运了，而这里主要记录了一些方法，希望能让go get安装时显得不那么痛苦；">
 
 
 
@@ -384,16 +383,16 @@
 <p>比方说<code>golang.org/x/crypto</code>这个包，当源码下载完成后，需要创建目录<code>$GOPATH/src/golang.org/x/</code>，并将该源码包放入即完成；</p>
 <p>当然有些网站的源码包需要翻墙才能下载，如果有代理或VPN则直接访问下载即可，但当没有这些工具时，该怎么办呢？其实还是有一些办法的，比如，使用第三方网站提供的下载服务，这里列出两个：</p>
 <ul>
-<li><a href="https://gopm.io/download" target="_blank" rel="external">gopm.io package</a></li>
-<li><a href="https://golangtc.com/download/package" target="_blank" rel="external">golangtc package</a></li>
+<li><a href="https://gopm.io/download" target="_blank" rel="noopener">gopm.io package</a></li>
+<li><a href="https://golangtc.com/download/package" target="_blank" rel="noopener">golangtc package</a></li>
 </ul>
 <h3 id="代理安装大法"><a href="#代理安装大法" class="headerlink" title="代理安装大法"></a>代理安装大法</h3><p>首先，需要用到<code>shadowsocks</code>翻墙，但是由于<code>shadowsocks</code>基于<code>socks5</code>协议，而我们的<code>go get</code>基于<code>http</code>协议，故即使开启<code>shadowsocks</code>也依然无法安装下载golang包，所以还需要一个可以将socks5转为http的代理工具；</p>
-<p>这里我们使用的是<a href="https://github.com/cyfdecyf/cow" target="_blank" rel="external"><code>COW</code></a>，即通过它完成socks5转为http；</p>
+<p>这里我们使用的是<a href="https://github.com/cyfdecyf/cow" target="_blank" rel="noopener"><code>COW</code></a>，即通过它完成socks5转为http；</p>
 <p>安装方法见该github中<code>REAMD.md</code>说明；</p>
-<h4 id="安装完成后，需要在其配置-HOME-cow-rc中修改如下："><a href="#安装完成后，需要在其配置-HOME-cow-rc中修改如下：" class="headerlink" title="安装完成后，需要在其配置$HOME/.cow/rc中修改如下："></a>安装完成后，需要在其配置<code>$HOME/.cow/rc</code>中修改如下：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">listen = http://127.0.0.1:7777  <span class="comment">#默认已存在</span></div><div class="line">proxy = socks5://127.0.0.1:1080</div></pre></td></tr></table></figure>
-<h4 id="然后在-profile中添加环境变量："><a href="#然后在-profile中添加环境变量：" class="headerlink" title="然后在~/.profile中添加环境变量："></a>然后在<code>~/.profile</code>中添加环境变量：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> http_proxy=http://127.0.0.1:7777</div><div class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7777</div></pre></td></tr></table></figure>
-<h4 id="再然后启用环境变量："><a href="#再然后启用环境变量：" class="headerlink" title="再然后启用环境变量："></a>再然后启用环境变量：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">source</span> ~/.profile <span class="comment"># 启用环境变量</span></div><div class="line">$ <span class="built_in">echo</span> <span class="variable">$http_proxy</span>  <span class="comment"># 查看是否生效</span></div></pre></td></tr></table></figure>
-<h4 id="最后，后台启动cow："><a href="#最后，后台启动cow：" class="headerlink" title="最后，后台启动cow："></a>最后，后台启动cow：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cow &amp;</div></pre></td></tr></table></figure>
+<h4 id="安装完成后，需要在其配置-HOME-cow-rc中修改如下："><a href="#安装完成后，需要在其配置-HOME-cow-rc中修改如下：" class="headerlink" title="安装完成后，需要在其配置$HOME/.cow/rc中修改如下："></a>安装完成后，需要在其配置<code>$HOME/.cow/rc</code>中修改如下：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listen = http://127.0.0.1:7777  <span class="comment">#默认已存在</span></span><br><span class="line">proxy = socks5://127.0.0.1:1080</span><br></pre></td></tr></table></figure>
+<h4 id="然后在-profile中添加环境变量："><a href="#然后在-profile中添加环境变量：" class="headerlink" title="然后在~/.profile中添加环境变量："></a>然后在<code>~/.profile</code>中添加环境变量：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://127.0.0.1:7777</span><br><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7777</span><br></pre></td></tr></table></figure>
+<h4 id="再然后启用环境变量："><a href="#再然后启用环境变量：" class="headerlink" title="再然后启用环境变量："></a>再然后启用环境变量：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.profile <span class="comment"># 启用环境变量</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$http_proxy</span>  <span class="comment"># 查看是否生效</span></span><br></pre></td></tr></table></figure>
+<h4 id="最后，后台启动cow："><a href="#最后，后台启动cow：" class="headerlink" title="最后，后台启动cow："></a>最后，后台启动cow：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cow &amp;</span><br></pre></td></tr></table></figure>
 <p>一切配置完毕，就可以愉快的使用<code>go get</code>安装下载需要的依赖包了；</p>
 <h3 id="总结最后"><a href="#总结最后" class="headerlink" title="总结最后"></a>总结最后</h3><p>说了这么多，其实还是希望不要这么麻烦，但愿谷歌早日重返中国吧，至于李彦宏能不能赢就不知道了….</p>
 <hr>
