@@ -95,7 +95,7 @@ import (
 	"context"
 	"fmt"
 
-	proto "github.com/JiangInk/coin_exchange/ms-user/proto"
+	proto "github.com/ErikJiang/coin_exchange/ms-user/proto"
 	micro "github.com/micro/go-micro"
 )
 
@@ -129,7 +129,7 @@ import (
 	"context"
 	"fmt"
 
-	proto "github.com/JiangInk/coin_exchange/ms-user/proto"
+	proto "github.com/ErikJiang/coin_exchange/ms-user/proto"
 	micro "github.com/micro/go-micro"
 )
 

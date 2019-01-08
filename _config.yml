@@ -6,13 +6,13 @@
 title: 冒菜略寡味
 subtitle: 我不吃紅油翻騰的火鍋 不代表沒有嗜辣的時刻
 description: 我寫的程序不夠動人 你別皺眉
-author: Ink Jiang
+author: Erik Jiang
 language: zh-Hans
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://jiangink.github.io
+url: https://erikjiang.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -81,7 +81,7 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:JiangInk/JiangInk.github.io.git
+  repo: git@github.com:erikjiang/erikjiang.github.io.git
   branch: master
 
 # Generator json content

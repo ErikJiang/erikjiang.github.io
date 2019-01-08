@@ -3,10 +3,9 @@ title: 關於
 
 ### 個人信息：
 
-- **網絡暱稱**：Ink Jiang .
-- **年齡區間**：二十來歲 .
+- **網絡暱稱**：Erik Jiang .
 - **目前職業**：服務端程序猿 .
-- **技能標籤**：`Node.JS`、 `Python`、 `MySQL`、 `MongoDB`、 `Redis`、 `Linux` ...
+- **技能標籤**：`Node.JS`、 `Go`、 `MySQL`、 `MongoDB`、 `Redis`、 `Linux` ...
 
 ---- 
 

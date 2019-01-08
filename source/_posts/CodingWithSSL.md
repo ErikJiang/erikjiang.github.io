@@ -116,7 +116,7 @@ void SSL_CTX_free(SSL_CTX *ctx);    //释放SSL会话环境
 
 ### 具体源码示范：
 
-- [*SSLSocketDemo*](https://github.com/JiangInk/SSLSocketDemo)
+- [*SSLSocketDemo*](https://github.com/ErikJiang/SSLSocketDemo)
 
 ---
 

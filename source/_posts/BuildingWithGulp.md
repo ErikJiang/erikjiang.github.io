@@ -59,7 +59,7 @@ Gulp 是一个基于 Node.js 的流式构建工具，有别与 Grunt 基于 I/O 
 
 ### Gulp 任务文件的配置 ：
 	
-这里我直接使用本人 Github 上的一个聊天室项目 [node_chat](https://github.com/JiangInk/node_chat "node_chat") 来进行讲解。
+这里我直接使用本人 Github 上的一个聊天室项目 [node_chat](https://github.com/ErikJiang/node_chat "node_chat") 来进行讲解。
 	
 	// 加载插件
 	var del = require('del'),
