@@ -141,11 +141,22 @@ channel: 指通道缓冲区的容量
 
 https://studygolang.com/articles/8519
 
-13. netgo，cgo有什么区别
+13. go build时，tag 中 netgo，netcgo有什么区别？
+netgo 使用 /opt/go/pkg/tool/linux_amd64/compile 进行编译；
+netcgo 使用 gcc 编译；
+
 
 14. 什么是interface？
 
+interface是一种抽象类型，是一组方法(method)的集合，
+是鸭式（duck-type）编程的一种体现;
+
+但凡不相关的对象实现了interface中的所有方法，
+那这些不相关的对象都可以给interface变量赋值，从而完成一些共性的行为操作；
+
 15. 使用go语言，编写并行计算的快速排序算法
+
+// todo
 
 16. 数据竞争（Data Race）问题怎么解决？能不能不加锁解决这个问题？
 
@@ -159,25 +170,43 @@ https://studygolang.com/articles/9701
 
 
 19. Golang 的 GC 触发时机是什么
-阈值触发；主动触发；两分钟定时触发；
+* 内存阈值触发：当前分配内存是否大于上次GC后内存的2倍
+* 每两分钟定时主动触发：没2min触发一次
 
 
 21. golang中的引用类型与值类型分别有哪些？
 
+值类型：int、float、bool、string；
+
+引用类型：slice、map、channel；
+
+两者区别：拷贝操作和函数传参
 
 22. go vet 的用途
 
-23. 关于内存泄漏，使用的库及处理方法，什么时候会存在内存泄漏？
-
-pprof包
+用于检查golang源码中的静态错误；
 
 24. select 的用途
 
-25. go 的 new 与 make 的区别
+select是一种通信开关，用来监听协程通过channel发送的信息
+
+* 每次执行select，都会只执行其中1个case或者执行default语句。
+* 当没有case或者default可以执行时，select则阻塞，等待直到有1个case可以执行。
+* 当有多个case可以执行时，则随机选择1个case执行。
+* case后面跟的必须是读或者写通道的操作，否则编译出错。
+
+25. go 的 new 与 make 的区别？
+
+new 和 make 都是用于分配内存；
+make 仅适用于slice、map、channel引用类型的非零值初始化，且会返回类型本身；
+new 用于类型的零值初始化，且会返回类型的指针；
 
 26. 怎么实现协程完美退出
-
-
+使用 `waitgroup`;
+* 创建一个 waitgroup 实例`wg`
+* 在每个协程启动时调用 `wg.Add(1)`，或者创建n个协程前调用`wg.Add(n)`
+* 当协程任务完成后，调用`wg.Done()`
+* 在等待所有协程的地方调用`wg.Wait()`
 
 
 
@@ -202,8 +231,10 @@ docker run -d -p 8000:80  foo/live /bin/bash
 * `bg`: 将一个在后台暂停的命令，变成继续执行; `fg`: 将后台中的命令调至前台继续运行; `jobs`: 查看当前有多少在后台运行的命令; `ctrl+z`: 将一个正在前台执行的命令放到后台，并且暂停;
 
 2. 孤儿进程，僵尸进程
+孤儿进程指其父进程已经执行完成或已终止，但其子进程依然继续运行；孤儿进程一般会被系统进程init或systemd自动接收为子进程，防止孤儿进程退出无法释放占用的资源僵死；
 
-
+// todo 
+https://blog.csdn.net/morgerton/article/details/69388694
 
 
 
