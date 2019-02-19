@@ -91,11 +91,11 @@
 <meta name="keywords" content="c,ssl">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SSL编程小札">
-<meta property="og:url" content="https://jiangink.github.io/2015/03/09/CodingWithSSL/index.html">
+<meta property="og:url" content="https://erikjiang.github.io/2015/03/09/CodingWithSSL/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="SSL简介： 安全套接层(Secure Socket Layer，SSL)是一种在两台机器之间提供安全通道的协议。它具有保护传输数据以及识别通信机器的功能。安全通道是透明的，意思就是说它对传输的数据不加变更。客户端与服务器之间的数据是经过加密的，一端写入的数据完全是另一端读取的内容。透明性使得几乎所有基于TCP的协议稍加改动就可以在SSL上运行，非常方便。 SSL最初的版本是由网景(Netscap">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-04-06T13:25:29.000Z">
+<meta property="og:updated_time" content="2019-02-19T11:59:51.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SSL编程小札">
 <meta name="twitter:description" content="SSL简介： 安全套接层(Secure Socket Layer，SSL)是一种在两台机器之间提供安全通道的协议。它具有保护传输数据以及识别通信机器的功能。安全通道是透明的，意思就是说它对传输的数据不加变更。客户端与服务器之间的数据是经过加密的，一端写入的数据完全是另一端读取的内容。透明性使得几乎所有基于TCP的协议稍加改动就可以在SSL上运行，非常方便。 SSL最初的版本是由网景(Netscap">
@@ -126,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="https://jiangink.github.io/2015/03/09/CodingWithSSL/"/>
+  <link rel="canonical" href="https://erikjiang.github.io/2015/03/09/CodingWithSSL/"/>
 
 
 
@@ -281,10 +281,10 @@
   
 
   <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2015/03/09/CodingWithSSL/">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2015/03/09/CodingWithSSL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="name" content="Erik Jiang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.jpeg">
     </span>
@@ -399,7 +399,7 @@
 <h4 id="进行数据传输"><a href="#进行数据传输" class="headerlink" title="进行数据传输"></a>进行数据传输</h4><p>经过前面的一系列过程后，就可以进行安全的数据传输了。<br>在数据传输阶段，需要使用SSL_read( )和SSL_write( )来代替普通流套接字所使用的read( )和write( )函数，以此完成对SSL套接字的读写操作,两个新函数的原型分别如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_read</span><span class="params">(SSL *ssl,<span class="keyword">void</span> *buf,<span class="keyword">int</span> num)</span></span>;           <span class="comment">//从SSL套接字读取数据</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_write</span><span class="params">(SSL *ssl,<span class="keyword">const</span> <span class="keyword">void</span> *buf,<span class="keyword">int</span> num)</span></span>;    <span class="comment">//向SSL套接字写入数据</span></span><br></pre></td></tr></table></figure></p>
 <h4 id="会话结束"><a href="#会话结束" class="headerlink" title="会话结束"></a>会话结束</h4><p>当Client和Server之间的通信过程完成后，就使用以下函数来释放前面过程中申请的SSL资源：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SSL_shutdown</span><span class="params">(SSL *ssl)</span></span>;         <span class="comment">//关闭SSL套接字</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SSl_free</span><span class="params">(SSL *ssl)</span></span>;            <span class="comment">//释放SSL套接字</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SSL_CTX_free</span><span class="params">(SSL_CTX *ctx)</span></span>;    <span class="comment">//释放SSL会话环境</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="具体源码示范："><a href="#具体源码示范：" class="headerlink" title="具体源码示范："></a>具体源码示范：</h3><ul>
-<li><a href="https://github.com/JiangInk/SSLSocketDemo" target="_blank" rel="noopener"><em>SSLSocketDemo</em></a></li>
+<li><a href="https://github.com/ErikJiang/SSLSocketDemo" target="_blank" rel="noopener"><em>SSLSocketDemo</em></a></li>
 </ul>
 <hr>
 <p><em>本文参考如下资料整理：</em></p>
@@ -522,8 +522,8 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
-               alt="Ink Jiang" />
-          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
            
               <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
           
@@ -533,7 +533,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -555,7 +555,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -569,7 +569,7 @@
           
             
               <span class="links-of-author-item">
-                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
                   
                     <i class="fa fa-fw fa-github"></i>
                   
@@ -637,11 +637,11 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
 </div>
 
 

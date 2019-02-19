@@ -1,0 +1,787 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="容器的历史进程：第一阶段： AWS、 OpenStack 等虚拟机的 PaaS 用法，需要使用脚本或者手动命令操作的方式，将应用从本地部署到云端； 第一阶段产生的问题：云端虚拟机与本地环境不一致，需要在云端做繁琐且无章可循的操作，比如运行依赖环境的安装、配置的调整等，使得云端能够与本地环境一致，从而运行应用； 第二阶段：Cloud Foundry 的 PaaS 项目兴起，它提供了一套核心组件能够实">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器笔记：容器大事记">
+<meta property="og:url" content="https://erikjiang.github.io/2019/01/03/DockerPreview/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="容器的历史进程：第一阶段： AWS、 OpenStack 等虚拟机的 PaaS 用法，需要使用脚本或者手动命令操作的方式，将应用从本地部署到云端； 第一阶段产生的问题：云端虚拟机与本地环境不一致，需要在云端做繁琐且无章可循的操作，比如运行依赖环境的安装、配置的调整等，使得云端能够与本地环境一致，从而运行应用； 第二阶段：Cloud Foundry 的 PaaS 项目兴起，它提供了一套核心组件能够实">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-19T11:59:51.537Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="容器笔记：容器大事记">
+<meta name="twitter:description" content="容器的历史进程：第一阶段： AWS、 OpenStack 等虚拟机的 PaaS 用法，需要使用脚本或者手动命令操作的方式，将应用从本地部署到云端； 第一阶段产生的问题：云端虚拟机与本地环境不一致，需要在云端做繁琐且无章可循的操作，比如运行依赖环境的安装、配置的调整等，使得云端能够与本地环境一致，从而运行应用； 第二阶段：Cloud Foundry 的 PaaS 项目兴起，它提供了一套核心组件能够实">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://erikjiang.github.io/2019/01/03/DockerPreview/"/>
+
+
+
+
+
+  <title> 容器笔记：容器大事记 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有嗜辣的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2019/01/03/DockerPreview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Erik Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                容器笔记：容器大事记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-03T14:26:05+08:00">
+                2019-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="容器的历史进程："><a href="#容器的历史进程：" class="headerlink" title="容器的历史进程："></a>容器的历史进程：</h3><p>第一阶段： AWS、 OpenStack 等虚拟机的 PaaS 用法，需要使用脚本或者手动命令操作的方式，将应用从本地部署到云端；</p>
+<p>第一阶段产生的问题：云端虚拟机与本地环境不一致，需要在云端做繁琐且无章可循的操作，比如运行依赖环境的安装、配置的调整等，使得云端能够与本地环境一致，从而运行应用；</p>
+<p>第二阶段：Cloud Foundry 的 PaaS 项目兴起，它提供了一套核心组件能够实现应用的打包和分发；由于需要在一个虚拟机上启动很多个来自不同用户的应用，Cloud Foundry 调用了操作系统的 Cgroups 和 Namespace 机制，为每个应用创建了一个单独的沙盒隔离环境，然后应用在沙盒中启动，这使得虚拟机中的应用互不干扰、且能够批量、自动运行；</p>
+<p>而这个过程中，调用系统的 Cgroups 和 Namespace 机制，所创建的沙盒隔离环境，就是所谓的“容器”；</p>
+<p>第二阶段产生的问题：虽然比第一阶段有所改善，但它需为每种环境、框架、应用维护一个包，且部署应用时可能还会有问题，需要做大量修改及调整配置；</p>
+<p>第三阶段：Docker 容器和镜像的兴起，当时的 Docker 项目实际和 Cloud Foundry 类似，同样采用了系统的 Cgroups 和 Namespace 机制实现沙盒；但不同的是，Docker 创新的引入了镜像的概念，并根本性的解决的部署打包的问题；</p>
+<p>Docker 镜像提供了一种非常便利的打包机制。这种机制直接打包了应用运行所需要的整个操作系统，从而保证了本地环境和云端环境的高度一致，避免了用户通过“试错”来匹配两种不同运行环境之间差异的痛苦过程。</p>
+<p>第四阶段: PaaS 领域开源基础设施平台 Kubernetes 的兴起；它主要关注于“容器编排”</p>
+<hr>
+<p>当程序被执行时，它就会从磁盘上的一个二进制文件，变成计算机内存中的数据、寄存器里的值、堆栈中的指令、被打开的文件，以及各种设备的状态信息的一个集合；<br>像这样一个程序运起来后的计算机执行环境的总和，即被称为“进程”；</p>
+<ul>
+<li>程序的静态表现，即磁盘上的二进制文件；</li>
+<li>程序的动态表现，即在运行时计算机中数据和状态的总和；</li>
+</ul>
+<p>容器技术的核心功能，就是通过约束和修改进程的动态表现，从而为其创造一个“边界”；</p>
+<p>对于 Docker 等大多数 Linux 容器来说，Cgroups 技术是用来制造约束的主要手段，而Namespace 技术则是用来修改进程视图的主要方法。</p>
+<h3 id="虚拟机技术与容器技术"><a href="#虚拟机技术与容器技术" class="headerlink" title="虚拟机技术与容器技术"></a>虚拟机技术与容器技术</h3><p>虚拟机技术-优点：虚拟机与宿主机隔离彻底，环境高度独立，安全性高；<br>虚拟机技术-缺点：本身占用内存资源，与宿主机调用时会被虚拟化软件拦截并处理，此过程会对计算、网络、磁盘I/O产生性能消耗；</p>
+<p>容器技术-优点：轻量化、节省资源、与宿主机调用无性能消耗；<br>容器技术-缺点：隔离不彻底，攻击面比虚拟机大，由于容器只是运行在宿主机上的特殊进程，故容器间使用的是同一个宿主机操作系统的内核，意味着低版本宿主机不能运行高版本容器，windows上不能运行linux容器（除非借助Linux虚拟机）；此外，linux内核的很多资源及对象不能 Namespace 化，比如时间；</p>
+<hr>
+<p>Linux Namespace 可以对操作系统中的 PID、Mount、UTS、IPC、Network、User 等的各种不同的进程上下文进行“障眼法”操作；</p>
+<p>操作 Namespace 的方法是调用 linux 创建进程的函数 <code>clone()</code>;</p>
+<p>Linux Cgroups 就是 Linux 内核中用来为进程设置资源限制的一个重要功能，它主要的作用是可以限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等；</p>
+<p>操作 Cgroups 的方法既是在 /sys/fs/cgroup/ 目录下创建一个子系统目录，然后修改对应的资源限制文件；</p>
+<p>容器是一个“单进程”模型。</p>
+<p>容器与应用是同生命周期的，不会存在容器正常运行，但内部应用早已挂掉的情况；</p>
+<p>Mount Namespace 用来隔离文件系统的挂载点，使得进程只能看到自己的 mount namespace 中的文件系统挂载点；<br>它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效，若单单仅开启 Mount Namespace，则新创建的容器会直接继承宿主机的各个挂载点；</p>
+<hr>
+<p><a href="https://time.geekbang.org/column/article/14653" target="_blank" rel="noopener">https://time.geekbang.org/column/article/14653</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/14/MonitorDockerBuild/" rel="next" title="Docker 构建小记">
+                <i class="fa fa-chevron-left"></i> Docker 构建小记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#容器的历史进程："><span class="nav-number">1.</span> <span class="nav-text">容器的历史进程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机技术与容器技术"><span class="nav-number">2.</span> <span class="nav-text">虚拟机技术与容器技术</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

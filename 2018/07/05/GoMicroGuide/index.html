@@ -91,11 +91,11 @@
 <meta name="keywords" content="go,grpc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go Micro 入门指南">
-<meta property="og:url" content="https://jiangink.github.io/2018/07/05/GoMicroGuide/index.html">
+<meta property="og:url" content="https://erikjiang.github.io/2018/07/05/GoMicroGuide/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="go-micro是一种可插拔的RPC分布式系统微服务开发框架，这一章主要介绍一下入门的相关内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-11T14:35:10.854Z">
+<meta property="og:updated_time" content="2019-02-19T11:59:51.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go Micro 入门指南">
 <meta name="twitter:description" content="go-micro是一种可插拔的RPC分布式系统微服务开发框架，这一章主要介绍一下入门的相关内容。">
@@ -126,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="https://jiangink.github.io/2018/07/05/GoMicroGuide/"/>
+  <link rel="canonical" href="https://erikjiang.github.io/2018/07/05/GoMicroGuide/"/>
 
 
 
@@ -281,10 +281,10 @@
   
 
   <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2018/07/05/GoMicroGuide/">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2018/07/05/GoMicroGuide/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="name" content="Erik Jiang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.jpeg">
     </span>
@@ -394,8 +394,8 @@
 <li>user.micro.go</li>
 <li>user.pb.go</li>
 </ul>
-<h4 id="然后，分别编写服务端及客户端代码"><a href="#然后，分别编写服务端及客户端代码" class="headerlink" title="然后，分别编写服务端及客户端代码"></a>然后，分别编写服务端及客户端代码</h4><h5 id="服务端-service-go"><a href="#服务端-service-go" class="headerlink" title="服务端 service.go"></a>服务端 <code>service.go</code></h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"context"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line">	proto <span class="string">"github.com/JiangInk/coin_exchange/ms-user/proto"</span></span><br><span class="line">	micro <span class="string">"github.com/micro/go-micro"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u *User)</span> <span class="title">Hello</span><span class="params">(ctx context.Context, req *proto.Request, res *proto.Response)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	res.Msg = <span class="string">"Hello "</span> + req.Name</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	service := micro.NewService(</span><br><span class="line">		micro.Name(<span class="string">"user"</span>),</span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">	service.Init()</span><br><span class="line"></span><br><span class="line">	proto.RegisterUserHandler(service.Server(), <span class="built_in">new</span>(User))</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err := service.Run(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="客户端-client-go"><a href="#客户端-client-go" class="headerlink" title="客户端 client.go"></a>客户端 <code>client.go</code></h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"context"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line">	proto <span class="string">"github.com/JiangInk/coin_exchange/ms-user/proto"</span></span><br><span class="line">	micro <span class="string">"github.com/micro/go-micro"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	service := micro.NewService(micro.Name(<span class="string">"user.client"</span>))</span><br><span class="line">	service.Init()</span><br><span class="line"></span><br><span class="line">	user := proto.NewUserService(<span class="string">"user"</span>, service.Client())</span><br><span class="line"></span><br><span class="line">	res, err := user.Hello(context.TODO(), &amp;proto.Request&#123;Name: <span class="string">"World ^_^"</span>&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(res.Msg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="然后，分别编写服务端及客户端代码"><a href="#然后，分别编写服务端及客户端代码" class="headerlink" title="然后，分别编写服务端及客户端代码"></a>然后，分别编写服务端及客户端代码</h4><h5 id="服务端-service-go"><a href="#服务端-service-go" class="headerlink" title="服务端 service.go"></a>服务端 <code>service.go</code></h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"context"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line">	proto <span class="string">"github.com/ErikJiang/coin_exchange/ms-user/proto"</span></span><br><span class="line">	micro <span class="string">"github.com/micro/go-micro"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u *User)</span> <span class="title">Hello</span><span class="params">(ctx context.Context, req *proto.Request, res *proto.Response)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	res.Msg = <span class="string">"Hello "</span> + req.Name</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	service := micro.NewService(</span><br><span class="line">		micro.Name(<span class="string">"user"</span>),</span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">	service.Init()</span><br><span class="line"></span><br><span class="line">	proto.RegisterUserHandler(service.Server(), <span class="built_in">new</span>(User))</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err := service.Run(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="客户端-client-go"><a href="#客户端-client-go" class="headerlink" title="客户端 client.go"></a>客户端 <code>client.go</code></h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"context"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line">	proto <span class="string">"github.com/ErikJiang/coin_exchange/ms-user/proto"</span></span><br><span class="line">	micro <span class="string">"github.com/micro/go-micro"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	service := micro.NewService(micro.Name(<span class="string">"user.client"</span>))</span><br><span class="line">	service.Init()</span><br><span class="line"></span><br><span class="line">	user := proto.NewUserService(<span class="string">"user"</span>, service.Client())</span><br><span class="line"></span><br><span class="line">	res, err := user.Hello(context.TODO(), &amp;proto.Request&#123;Name: <span class="string">"World ^_^"</span>&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(res.Msg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="最后，运行起来"><a href="#最后，运行起来" class="headerlink" title="最后，运行起来"></a>最后，运行起来</h4><h5 id="首先启动服务发现"><a href="#首先启动服务发现" class="headerlink" title="首先启动服务发现"></a>首先启动服务发现</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ consul agent -dev</span><br></pre></td></tr></table></figure>
 <p>可通过访问：<a href="http://127.0.0.1:8500/ui/" target="_blank" rel="noopener">http://127.0.0.1:8500/ui/</a> 查看服务；</p>
 <h5 id="启动服务端程序"><a href="#启动服务端程序" class="headerlink" title="启动服务端程序"></a>启动服务端程序</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ go run service.go</span><br></pre></td></tr></table></figure>
@@ -523,8 +523,8 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
-               alt="Ink Jiang" />
-          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
            
               <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
           
@@ -534,7 +534,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -556,7 +556,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -570,7 +570,7 @@
           
             
               <span class="links-of-author-item">
-                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
                   
                     <i class="fa fa-fw fa-github"></i>
                   
@@ -638,11 +638,11 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
 </div>
 
 

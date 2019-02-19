@@ -1,0 +1,987 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="go," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="语言相关 谈谈 进程、线程、协程，以及它们出现所要解决的问题，及相关技术的演进历程？   C10K问题  c10k主要指单机并发连接在1万的情况下，硬件性能足够，但仍然无法正常提供服务的问题c10k是计算机从PC时代到互联网时代过程中由于并发连接量剧增做产生的问题；c10k解决的关键在于，降低cpu等核心资源的消耗 IO多路复用的种类： select: 存在句柄上线、重复初始化、轮询低效问题pol">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go问题集萃">
+<meta property="og:url" content="https://erikjiang.github.io/2018/04/25/GoQuestion/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="语言相关 谈谈 进程、线程、协程，以及它们出现所要解决的问题，及相关技术的演进历程？   C10K问题  c10k主要指单机并发连接在1万的情况下，硬件性能足够，但仍然无法正常提供服务的问题c10k是计算机从PC时代到互联网时代过程中由于并发连接量剧增做产生的问题；c10k解决的关键在于，降低cpu等核心资源的消耗 IO多路复用的种类： select: 存在句柄上线、重复初始化、轮询低效问题pol">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-19T15:17:53.208Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go问题集萃">
+<meta name="twitter:description" content="语言相关 谈谈 进程、线程、协程，以及它们出现所要解决的问题，及相关技术的演进历程？   C10K问题  c10k主要指单机并发连接在1万的情况下，硬件性能足够，但仍然无法正常提供服务的问题c10k是计算机从PC时代到互联网时代过程中由于并发连接量剧增做产生的问题；c10k解决的关键在于，降低cpu等核心资源的消耗 IO多路复用的种类： select: 存在句柄上线、重复初始化、轮询低效问题pol">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://erikjiang.github.io/2018/04/25/GoQuestion/"/>
+
+
+
+
+
+  <title> Go问题集萃 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有嗜辣的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2018/04/25/GoQuestion/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Erik Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Go问题集萃
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T21:15:12+08:00">
+                2018-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="语言相关"><a href="#语言相关" class="headerlink" title="语言相关"></a>语言相关</h3><ol>
+<li>谈谈 进程、线程、协程，以及它们出现所要解决的问题，及相关技术的演进历程？</li>
+</ol>
+<ul>
+<li><a href="http://erikjiang.github.io/2018/02/15/NodeQuestion/">C10K问题</a></li>
+</ul>
+<p>c10k主要指单机并发连接在1万的情况下，硬件性能足够，但仍然无法正常提供服务的问题<br>c10k是计算机从PC时代到互联网时代过程中由于并发连接量剧增做产生的问题；<br>c10k解决的关键在于，降低cpu等核心资源的消耗</p>
+<p>IO多路复用的种类：</p>
+<p>select: 存在句柄上线、重复初始化、轮询低效问题<br>poll：解决了句柄上线、重复初始化问题，但依然需要轮询IO句柄<br>epoll: 采用仅排查当前状态变化的句柄，无需逐个轮询句柄的方式，效率提升, 但不能跨平台，不同平台的库不同 epoll\kqueque\IOCP；<br>nginx, libevent, libev, nodejs底层的libuv都是基于epoll;</p>
+<p>发展三阶段：</p>
+<ol>
+<li>一个进程/线程处理一个连接</li>
+<li>一个进程/线程处理多条连接（IO多路复用）</li>
+<li>用户态异步协程处理连接</li>
+</ol>
+<p>进程：<br>是系统进行资源分配和调度的独立单元，拥有独立的内存空间，不同进程通过IPC进行通信，进程较重，上下文进程间切换（栈、寄存器、虚拟存储、文件句柄）开销大，但稳定性好；</p>
+<p>线程：<br>是进程内部的实体，是CPU调度和分派的基本执行单元，它与同属一个进程内的其他线程共享进程所拥有的资源，线程间通信主要通过共享内存，相比进程资源开销小，上下文切换快，但较不稳定；</p>
+<p>协程：<br>是一种用户态的轻量级线程，调度完全由用户程序控制，没有内核开销，效率快；</p>
+<p>进程与线程：</p>
+<ul>
+<li>地址空间：线程是进程内独立的执行单元，一个进程至少有一个线程，进程有独立的地址空间， 且进程内的线程共享进程的地址空间；</li>
+<li>资源共享：进程内的资源与其内部的线程共享；</li>
+<li>调度处理：线程是处理器CPU调度的基本单位，进程不是；</li>
+<li>都可以并发执行；</li>
+</ul>
+<p>线程与协程：</p>
+<ul>
+<li>一个线程或进程可以拥有多个协程；</li>
+<li>线程进程是同步机制，协程是异步机制；</li>
+</ul>
+<p><a href="https://www.cnblogs.com/lxmhhy/p/6041001.html" target="_blank" rel="noopener">https://www.cnblogs.com/lxmhhy/p/6041001.html</a></p>
+<ol>
+<li>channel 要记得 close，但 close 时候需要注意些什么？</li>
+</ol>
+<ul>
+<li>channel 不能被重复close,否则会panic;</li>
+<li>已经关闭的 channel 不能向其发送数据，否则painc;</li>
+<li>从已关闭的 channel 中读取数据，如果是无缓冲的，读出的是零值，如果有缓冲且有数据，可以继续读；</li>
+<li>通过<code>i, ok := &lt;- ch</code>的 ok 获取channel是否已关闭；</li>
+<li>应该只在唯一或最后唯一剩下的生产者发送端协程中关闭channel；</li>
+</ul>
+<ol>
+<li><p>channel 是通过注册相关 goroutine id 实现消息通知，具体阐述？<br>// todo</p>
+</li>
+<li><p>slice 相关问题， slice 与数组的区别，slice的底层结构？</p>
+</li>
+</ol>
+<p>array 属于值类型，长度固定；<br>slice 属于引用类型，长度不定，slice的底层引用了一个数组对象；</p>
+<p>声明时，array要指明长度，slice则不需要；<br>作为函数参数时，数组传递的时其副本，而slice传递的是指针；</p>
+<ol>
+<li>谈谈 互斥锁，读写锁，死锁，及其数据竞争的概念？</li>
+</ol>
+<p>互斥锁: 是并发程序对共享资源进行唯一性访问控制的主要手段;<br>读写锁: 即是并发时针对于读写操作的互斥锁；多个写操作之间是互斥的；写操作与读操作之间是互斥的；多个读操作之间不存在互斥；<br>死锁: 并发时所有协程都彼此等待的状态（goroutine间存在无缓冲channel只读不写或只写不读的情况、加锁但没解锁的情况）<br>数据竞争：并发情况下存在的多个协程读写相同数据的情况，至少有一个协程是写操作；若多个协程都是读操作，则不存在数据竞争；</p>
+<ol>
+<li>什么是channel，为什么它可以做到线程安全？</li>
+</ol>
+<p>是golang协程间通信的方式，channel本质是通过内存队列，一次只处理一个数据，从而实现了访问的序列化，避免了数据竞争，从而并发安全；</p>
+<ol>
+<li>如何用channel实现一个令牌桶</li>
+</ol>
+<p>// todo</p>
+<ol>
+<li>如何写单元测试和基准测试</li>
+</ol>
+<ul>
+<li>使用 gotest 包，文件名格式 <code>*_test.go</code></li>
+<li>导入 <code>import testing</code>，单元测试函数命名格式：<code>func Test*(t *testing.T){}</code></li>
+<li>导入 <code>import testing</code>，基准测试函数命名格式：<code>func Benchmark*(b *testing.B){}</code></li>
+<li><code>go test</code>执行单元测试，<code>go test -test.bench=.*</code>执行所有基准测试；</li>
+</ul>
+<ol>
+<li>go 及 goroutine 的调度是怎样的（为什么并发性能好），抢占式goroutine调用什么意思？</li>
+</ol>
+<p>1). 线程池的缺陷<br>线程池中的woker线程获取任务队列中的任务并执行，但若任务中发生系统调用，该worker进程将处于阻塞状态，从而任务队列任务堆积，<br>解决方法是增加线程数,但会使得多线程争抢CPU,从而使得处理能力下降；</p>
+<p>2). G-P-M调度模型</p>
+<ul>
+<li>Goroutine: Go协程G</li>
+<li>Machine: 工作线程M</li>
+<li>Processor: 处理器P<br>调度策列：</li>
+<li>队列轮询：P维护着一个G的队列，P周期性将G队列中的G调度到M中执行，执行一会儿，保存上下文放入队尾，再执行队列中下一个G;</li>
+<li>系统调用: 当M在执行G1的过程中遇到系统调用时，M会释放P以及P所维护的G队列，此时空闲的M1获取到P及剩余的G队列继续执行，M1接替M的剩余工作</li>
+<li>工作量窃取：通常当两个P中的G队列不均衡时，空闲的P会从忙碌的P的G队列中窃取部分G来执行；</li>
+</ul>
+<p>抢占式goroutine调用：如果一个goroutine运行时间过长或则长时间阻塞于系统调用，它就会被剥夺运行权；</p>
+<p><a href="https://segmentfault.com/a/1190000015352983" target="_blank" rel="noopener">https://segmentfault.com/a/1190000015352983</a><br><a href="https://my.oschina.net/renhc/blog/2221426" target="_blank" rel="noopener">https://my.oschina.net/renhc/blog/2221426</a></p>
+<ol>
+<li>golang 的内存回收是如何做到的？<br>go 的 GC 采用了mark and sweep 标记清除模式，从根变量扫描遍历所有被引用的对象并进行标记，将没有标记的对象回收；<br>缺点：每次执行垃圾回收时会暂停所有正常运行的代码，系统响应能力降低，但后期加入了三色标记法与写屏障，又使得性能缓解；</li>
+</ol>
+<p>三色标记法：</p>
+<ul>
+<li>起初所有对象都是白色。</li>
+<li>从根出发扫描所有可达对象，标记为灰色，放入待处理队列。</li>
+<li>从队列取出灰色对象，将其引用对象标记为灰色放入队列，自身标记为黑色。</li>
+<li>重复上一步，直到灰色对象队列为空。此时白色对象即为垃圾，进行回收。</li>
+</ul>
+<p><a href="http://legendtkl.com/2017/04/28/golang-gc/" target="_blank" rel="noopener">http://legendtkl.com/2017/04/28/golang-gc/</a></p>
+<ol>
+<li>cap和len分别获取的是什么, cap函数适用的类型有哪些？</li>
+</ol>
+<p>len:<br>array: 指数组成员的数量<br>slice: 指切片成员的数量<br>channel: 指通道缓冲区未读的成员数量</p>
+<p>cap:<br>array: 指数组成员的数量<br>slice: 指切片当前最大容量<br>channel: 指通道缓冲区的容量</p>
+<p><a href="https://studygolang.com/articles/8519" target="_blank" rel="noopener">https://studygolang.com/articles/8519</a></p>
+<ol>
+<li>go build时，tag 中 netgo，netcgo有什么区别？<br>netgo 使用 /opt/go/pkg/tool/linux_amd64/compile 进行编译；<br>netcgo 使用 gcc 编译；</li>
+</ol>
+<ol>
+<li>什么是interface？</li>
+</ol>
+<p>interface是一种抽象类型，是一组方法(method)的集合，<br>是鸭式（duck-type）编程的一种体现;</p>
+<p>但凡不相关的对象实现了interface中的所有方法，<br>那这些不相关的对象都可以给interface变量赋值，从而完成一些共性的行为操作；</p>
+<ol>
+<li>使用go语言，编写并行计算的快速排序算法</li>
+</ol>
+<p>// todo</p>
+<ol>
+<li>数据竞争（Data Race）问题怎么解决？能不能不加锁解决这个问题？</li>
+</ol>
+<p><a href="https://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong" target="_blank" rel="noopener">https://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong</a></p>
+<ol>
+<li><p>常用的 golang 库有哪些？用到其中哪些方法？</p>
+</li>
+<li><p>go for range 的坑？</p>
+</li>
+</ol>
+<p><a href="https://studygolang.com/articles/9701" target="_blank" rel="noopener">https://studygolang.com/articles/9701</a></p>
+<ol>
+<li>Golang 的 GC 触发时机是什么</li>
+</ol>
+<ul>
+<li>内存阈值触发：当前分配内存是否大于上次GC后内存的2倍</li>
+<li>每两分钟定时主动触发：没2min触发一次</li>
+</ul>
+<ol>
+<li>golang中的引用类型与值类型分别有哪些？</li>
+</ol>
+<p>值类型：int、float、bool、string；</p>
+<p>引用类型：slice、map、channel；</p>
+<p>两者区别：拷贝操作和函数传参</p>
+<ol>
+<li>go vet 的用途</li>
+</ol>
+<p>用于检查golang源码中的静态错误；</p>
+<ol>
+<li>select 的用途</li>
+</ol>
+<p>select是一种通信开关，用来监听协程通过channel发送的信息</p>
+<ul>
+<li>每次执行select，都会只执行其中1个case或者执行default语句。</li>
+<li>当没有case或者default可以执行时，select则阻塞，等待直到有1个case可以执行。</li>
+<li>当有多个case可以执行时，则随机选择1个case执行。</li>
+<li>case后面跟的必须是读或者写通道的操作，否则编译出错。</li>
+</ul>
+<ol>
+<li>go 的 new 与 make 的区别？</li>
+</ol>
+<p>new 和 make 都是用于分配内存；<br>make 仅适用于slice、map、channel引用类型的非零值初始化，且会返回类型本身；<br>new 用于类型的零值初始化，且会返回类型的指针；</p>
+<ol>
+<li>怎么实现协程完美退出<br>使用 <code>waitgroup</code>;</li>
+</ol>
+<ul>
+<li>创建一个 waitgroup 实例<code>wg</code></li>
+<li>在每个协程启动时调用 <code>wg.Add(1)</code>，或者创建n个协程前调用<code>wg.Add(n)</code></li>
+<li>当协程任务完成后，调用<code>wg.Done()</code></li>
+<li>在等待所有协程的地方调用<code>wg.Wait()</code></li>
+</ul>
+<h3 id="容器相关问题"><a href="#容器相关问题" class="headerlink" title="容器相关问题"></a>容器相关问题</h3><ol>
+<li>如何给容器添加映射端口?</li>
+</ol>
+<p>提交一个运行中的容器为镜像:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit containerid foo/live</span><br></pre></td></tr></table></figure></p>
+<p>运行镜像并添加端口:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 8000:80  foo/live /bin/bash</span><br></pre></td></tr></table></figure></p>
+<h3 id="Linux-操作相关"><a href="#Linux-操作相关" class="headerlink" title="Linux 操作相关"></a>Linux 操作相关</h3><ol>
+<li>如何后台启动一个服务？</li>
+</ol>
+<ul>
+<li>命令：<code>conmmand &amp;</code>，通过增加一个（&amp;）符号，将应用程序在后台启动，但此操作在关闭终端时服务会停止；</li>
+<li>命令：<code>nohup conmmand &amp;</code>， 该命令可以在你退出帐户之后继续运行相应的进程，nohup( no hang up)；</li>
+<li><code>bg</code>: 将一个在后台暂停的命令，变成继续执行; <code>fg</code>: 将后台中的命令调至前台继续运行; <code>jobs</code>: 查看当前有多少在后台运行的命令; <code>ctrl+z</code>: 将一个正在前台执行的命令放到后台，并且暂停;</li>
+</ul>
+<ol>
+<li>孤儿进程，僵尸进程<br>孤儿进程指其父进程已经执行完成或已终止，但其子进程依然继续运行；孤儿进程一般会被系统进程init或systemd自动接收为子进程，防止孤儿进程退出无法释放占用的资源僵死；</li>
+</ol>
+<p>// todo<br><a href="https://blog.csdn.net/morgerton/article/details/69388694" target="_blank" rel="noopener">https://blog.csdn.net/morgerton/article/details/69388694</a></p>
+<h3 id="数据库相关"><a href="#数据库相关" class="headerlink" title="数据库相关"></a>数据库相关</h3><ol>
+<li>如何做 SQL 优化</li>
+</ol>
+<h3 id="WEB-通信相关"><a href="#WEB-通信相关" class="headerlink" title="WEB 通信相关"></a>WEB 通信相关</h3><ol>
+<li><p>当打开浏览器输入url到打开网页，这当中发生了什么？<br>// DNS 解析、TCP连接、发送HTTP请求、服务器处理请求并返回HTTP报文、浏览器解析渲染页面、连接结束</p>
+</li>
+<li><p>什么是 restful api, 有哪些方法，分别代表什么？</p>
+</li>
+<li><p>TCP 和 UDP 有什么区别? 描述一下 TCP 四次挥手的过程中?</p>
+</li>
+<li><p>cookie/session验证的过程 以及 token 验证过程？</p>
+</li>
+</ol>
+<p>由于http协议是无状态的，服务器需要记录用户的状态，所以cookie和session都是用来保持状态的方案，session又依赖cookie。二者的区别主要是</p>
+<ol>
+<li>session 在服务器端，cookie 在客户端（浏览器）</li>
+<li>session 默认被存在在服务器的一个文件里（不是内存）</li>
+<li>session 的运行依赖 session id，而 session id 是存在 cookie 中的，也就是说，如果浏览器禁用了 cookie ，同时 session 也会失效（但是可以通过其它方式实现，比如在 url 中传递 session_id）</li>
+<li>session 可以放在 文件、数据库、或内存中都可以。</li>
+<li>用户验证这种场合一般会用 session</li>
+</ol>
+<p>// todo 服务端如何获取cookie</p>
+<p>// todo token</p>
+<ol>
+<li><p>使用golang net/http 实现一个简易的http服务</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// w表示response对象，返回给客户端的内容都在对象里处理</span></span><br><span class="line"><span class="comment">// r表示客户端请求对象，包含了请求头，请求参数等等</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">index</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 往w里写入内容，就会在浏览器里输出</span></span><br><span class="line">	fmt.Fprintf(w, <span class="string">"Hello golang http!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 设置路由，如果访问/，则调用index方法</span></span><br><span class="line">	http.HandleFunc(<span class="string">"/"</span>, index)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 启动web服务，监听9090端口</span></span><br><span class="line">	err := http.ListenAndServe(<span class="string">":9090"</span>, <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"ListenAndServe: "</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 golang request/response 常用的方法？</p>
+</li>
+<li><p>HTTPS 和 HTTP 有什么区别? 状态码有哪些？301和302有什么区别？504和500有什么区别， 401,403？</p>
+</li>
+</ol>
+<p>301是永久重定向，302是临时重定向</p>
+<ol>
+<li>如何实现一个URL短链接服务？</li>
+</ol>
+<p>将长短链接映射关系存入数据库，访问短链时，查询获取到对应数据库中的长链，然后转发请求；</p>
+<p><a href="https://www.zhihu.com/question/29270034/answer/46446911" target="_blank" rel="noopener">https://www.zhihu.com/question/29270034/answer/46446911</a></p>
+<hr>
+<ul>
+<li><a href="https://www.kancloud.cn/kancloud/effective/72199" target="_blank" rel="noopener">effective go</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag"># go</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/15/NodeQuestion/" rel="next" title="NodeJS问题集萃">
+                <i class="fa fa-chevron-left"></i> NodeJS问题集萃
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/31/YouAreNotPitiful/" rel="prev" title="不算可怜">
+                不算可怜 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#语言相关"><span class="nav-number">1.</span> <span class="nav-text">语言相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器相关问题"><span class="nav-number">2.</span> <span class="nav-text">容器相关问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-操作相关"><span class="nav-number">3.</span> <span class="nav-text">Linux 操作相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库相关"><span class="nav-number">4.</span> <span class="nav-text">数据库相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WEB-通信相关"><span class="nav-number">5.</span> <span class="nav-text">WEB 通信相关</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

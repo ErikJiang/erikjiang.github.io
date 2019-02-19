@@ -90,7 +90,7 @@
 <meta name="description" content="我寫的程序不夠動人 你別皺眉">
 <meta property="og:type" content="website">
 <meta property="og:title" content="冒菜略寡味">
-<meta property="og:url" content="https://jiangink.github.io/page/5/index.html">
+<meta property="og:url" content="https://erikjiang.github.io/page/5/index.html">
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="我寫的程序不夠動人 你別皺眉">
 <meta property="og:locale" content="zh-Hans">
@@ -124,7 +124,7 @@
 
 
 
-  <link rel="canonical" href="https://jiangink.github.io/page/5/"/>
+  <link rel="canonical" href="https://erikjiang.github.io/page/5/"/>
 
 
 
@@ -281,10 +281,10 @@
   
 
   <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2016/01/19/WebSocketNote/">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2017/06/24/DesignP109/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="name" content="Erik Jiang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.jpeg">
     </span>
@@ -303,8 +303,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/19/WebSocketNote/" itemprop="url">
-                  WebSocket学习笔记
+                <a class="post-title-link" href="/2017/06/24/DesignP109/" itemprop="url">
+                  关于信息过载
                 </a>
               
             
@@ -320,8 +320,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-19T13:54:31+08:00">
-                2016-01-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-24T14:42:15+08:00">
+                2017-06-24
               </time>
             
 
@@ -343,8 +343,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术/" itemprop="url" rel="index">
-                    <span itemprop="name">技术</span>
+                  <a href="/categories/心情/" itemprop="url" rel="index">
+                    <span itemprop="name">心情</span>
                   </a>
                 </span>
 
@@ -379,10 +379,13 @@
 
       
         
-          <p>HTTP 协议是一种无状态协议，服务器端本身不具备识别客户端的能力，必须借助外部机制，比如 session 和 cookie 才能与特定客户端保持对话。那么如果我们遇到一种需求，它要求保证服务器端与客户端持续的数据交换，比如网络聊天，那再使用 HTTP 协议就会有不便，这时我们就需要用到 Websocket API了。</p>
+          
+          
+然后我明白了一些东西。虽然今天的世界据说在一种信息过剩的状态，实际上可能并不富裕。泛滥的只是媒介中零零碎碎的信息，每个碎片中的信息量实际上很小。在这种半生不熟的信息中，大脑怎么会不感到压抑呢？大脑的
+          ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/01/19/WebSocketNote/#more" rel="contents">
+            <a class="btn" href="/2017/06/24/DesignP109/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -428,10 +431,10 @@
   
 
   <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2016/01/13/DeployNodeApp/">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2017/05/12/NodeForkProcess/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="name" content="Erik Jiang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.jpeg">
     </span>
@@ -450,8 +453,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/13/DeployNodeApp/" itemprop="url">
-                  NodeJS应用部署初探
+                <a class="post-title-link" href="/2017/05/12/NodeForkProcess/" itemprop="url">
+                  Node 多进程初探
                 </a>
               
             
@@ -467,8 +470,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-13T21:13:51+08:00">
-                2016-01-13
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-12T22:49:18+08:00">
+                2017-05-12
               </time>
             
 
@@ -526,10 +529,10 @@
 
       
         
-          <p>尝试使用 MongoLab、Redis4You、Heroku 来部署一个 node 应用。</p>
+          <p>前段时间在使用 Node 实现一个系统的定时任务功能，定时任务数量较多，且其中存在一些需要 CPU 计算的任务，一开始这些任务被放置在 Node 单线程中运行，可是随着任务数的增长，单一线程渐渐吃不消，任务运行高发时段，CPU 会飙至百分之九十以上，同时造成 Web 页面查询请求卡顿甚者请求无响应；</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/01/13/DeployNodeApp/#more" rel="contents">
+            <a class="btn" href="/2017/05/12/NodeForkProcess/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -575,10 +578,10 @@
   
 
   <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2016/01/05/RedisNote/">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2017/05/07/NodeCsvToJson/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="name" content="Erik Jiang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.jpeg">
     </span>
@@ -597,8 +600,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/05/RedisNote/" itemprop="url">
-                  Redis学习笔记
+                <a class="post-title-link" href="/2017/05/07/NodeCsvToJson/" itemprop="url">
+                  以 Node 方式, CSV 转 JSON
                 </a>
               
             
@@ -614,8 +617,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-05T14:12:24+08:00">
-                2016-01-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-07T23:09:52+08:00">
+                2017-05-07
               </time>
             
 
@@ -673,16 +676,160 @@
 
       
         
-          <p>Redis是一个开源、支持网络、基于内存、键值对存储数据库，使用ANSI C编写。Redis是时下最流行的键值对存储数据库。</p>
-<p>历史：</p>
-<blockquote>
-<p>2015年6月至今：Redis 的开发由Redis Labs赞助。</p>
-<p>2013年5月至2015年6月期间：其开发由Pivotal赞助。</p>
-<p>2013年5月之前：其开发由VMware赞助。</p>
+          <h2 id="简述需求"><a href="#简述需求" class="headerlink" title="简述需求:"></a>简述需求:</h2><p>有时，我们会在项目中遇到导入文档数据的功能需求，具体的比如可能会需要将 excel 表格数据导入到项目系统的数据库中，通过读取文件内容，解析并转换数据，最终存储至数据库的表中；</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/07/NodeCsvToJson/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2017/04/02/NodeSchedule/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Erik Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/02/NodeSchedule/" itemprop="url">
+                  Node 任务定时器的使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-02T14:12:24+08:00">
+                2017-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="什么是任务定时器："><a href="#什么是任务定时器：" class="headerlink" title="什么是任务定时器："></a>什么是任务定时器：</h2><blockquote>
+<p>能够在指定时间定期地执行命令、脚本或者程序，可以被用于系统的自动化维护及管理的工具；</p>
 </blockquote>
+<p>最常见的任务定时器当属 <code>Cron</code> ，该词源于希腊语 chronos，原意是时间；<br>在类 Unix 系统中，可以通过 <code>crontab</code> 命令设置定时任务执行的时间周期，然后 <code>cron</code> 的守护进程会在后台实时的检测是否有需要执行的任务，通常这些需要执行的任务被称为 <code>cron jobs</code>;</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/01/05/RedisNote/#more" rel="contents">
+            <a class="btn" href="/2017/04/02/NodeSchedule/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -728,10 +875,10 @@
   
 
   <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2015/12/22/ChangeNodeVersion/">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2016/01/29/BuildingWithGulp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ink Jiang">
+      <meta itemprop="name" content="Erik Jiang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.jpeg">
     </span>
@@ -750,8 +897,8 @@
             
               
                 
-                <a class="post-title-link" href="/2015/12/22/ChangeNodeVersion/" itemprop="url">
-                  关于Node版本切换
+                <a class="post-title-link" href="/2016/01/29/BuildingWithGulp/" itemprop="url">
+                  使用 Gulp 构建工程
                 </a>
               
             
@@ -767,8 +914,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-22T12:06:55+08:00">
-                2015-12-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-29T17:00:27+08:00">
+                2016-01-29
               </time>
             
 
@@ -826,157 +973,12 @@
 
       
         
-          <p>今天在安装yeoman时，警告提示node版本过低，那么好吧，咱们就来更新node版本。<br>顺带把整个过程梳理一遍，做一个有节操的程序猿。</p>
+          <p>gulp 是什么？</p>
+<p>如果曾做过 Linux C 相关开发，一定对于编译构建工具 Automake 有一定的了解，我们通过在工程中编写 makefile 脚本文件，实现工程代码的检查、编译以及安装等等。</p>
+<p>而在如今前端工程化的背景下，愈来愈强调前端的工作流程，如果有一种工具，能够如 automake 一般，能够帮助我们处理检测、编译、自动发布以及文件压缩、文件Hash、等等事宜，那一定能简化不少工作，而 gulp 即是这样的一种工具。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015/12/22/ChangeNodeVersion/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://jiangink.github.io/2015/05/11/NodeInspector/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ink Jiang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="冒菜略寡味">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/05/11/NodeInspector/" itemprop="url">
-                  Node调试工具的使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-05-11T22:22:57+08:00">
-                2015-05-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术/" itemprop="url" rel="index">
-                    <span itemprop="name">技术</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>今天发现一个在浏览器上调试node代码的工具，分享一下.<br>这个工具名叫：<a href="https://github.com/node-inspector/node-inspector" target="_blank" rel="noopener">Node Inspector</a><br>感兴趣的话可以点链接到Github看看详细文档说明，这里就简要介绍一二；<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/05/11/NodeInspector/#more" rel="contents">
+            <a class="btn" href="/2016/01/29/BuildingWithGulp/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1017,7 +1019,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1051,8 +1053,8 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpeg"
-               alt="Ink Jiang" />
-          <p class="site-author-name" itemprop="name">Ink Jiang</p>
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
            
               <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
           
@@ -1062,7 +1064,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1084,7 +1086,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1098,7 +1100,7 @@
           
             
               <span class="links-of-author-item">
-                <a href="https://github.com/JiangInk" target="_blank" title="GitHub">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
                   
                     <i class="fa fa-fw fa-github"></i>
                   
@@ -1150,11 +1152,11 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Ink Jiang</span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
 </div>
 
 

@@ -1,0 +1,809 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="go,docker," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="关于在项目 market_monitor 尝试进行 Docker 构建的过程中的一些记录整理；">
+<meta name="keywords" content="go,docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 构建小记">
+<meta property="og:url" content="https://erikjiang.github.io/2018/12/14/MonitorDockerBuild/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="关于在项目 market_monitor 尝试进行 Docker 构建的过程中的一些记录整理；">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-19T11:59:51.539Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker 构建小记">
+<meta name="twitter:description" content="关于在项目 market_monitor 尝试进行 Docker 构建的过程中的一些记录整理；">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://erikjiang.github.io/2018/12/14/MonitorDockerBuild/"/>
+
+
+
+
+
+  <title> Docker 构建小记 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有嗜辣的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2018/12/14/MonitorDockerBuild/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Erik Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Docker 构建小记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-14T19:32:00+08:00">
+                2018-12-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于在项目 market_monitor 尝试进行 Docker 构建的过程中的一些记录整理；</p>
+<a id="more"></a>
+<h3 id="构建应用服务-docker-镜像"><a href="#构建应用服务-docker-镜像" class="headerlink" title="构建应用服务 docker 镜像"></a>构建应用服务 docker 镜像</h3><blockquote>
+<p>本项目见：<a href="https://github.com/ErikJiang/market_monitor" target="_blank" rel="noopener">market_monitor</a></p>
+</blockquote>
+<h4 id="docker-构建操作步骤"><a href="#docker-构建操作步骤" class="headerlink" title="docker 构建操作步骤"></a>docker 构建操作步骤</h4><p>编写镜像构建文件：<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">############################</span></span><br><span class="line"><span class="comment"># STEP 1 构建可执行文件</span></span><br><span class="line"><span class="comment">############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定 GO 版本号</span></span><br><span class="line"><span class="keyword">ARG</span> GO_VERSION=<span class="number">1.11</span>.<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定构建环境</span></span><br><span class="line"><span class="keyword">FROM</span> golang:$&#123;GO_VERSION&#125;-alpine AS builder</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># ca-certificates is required to call HTTPS endpoints.</span></span><br><span class="line"><span class="comment"># tzdata is required to time zone info.</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apk update &amp;&amp; apk upgrade &amp;&amp; apk add --no-cache ca-certificates tzdata &amp;&amp; update-ca-certificates</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 创建用户 appuser</span></span></span><br><span class="line"><span class="bash">RUN adduser -D -g <span class="string">''</span> appuser</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 复制源码并指定工作目录</span></span></span><br><span class="line"><span class="bash">RUN mkdir -p /src/myapp</span></span><br><span class="line"><span class="bash">COPY ./src/ /src/myapp</span></span><br><span class="line"><span class="bash">WORKDIR /src/myapp</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 为 go build 设置环境变量:</span></span></span><br><span class="line"><span class="bash"><span class="comment"># * CGO_ENABLED=0 表示构建一个静态链接的可执行程序</span></span></span><br><span class="line"><span class="bash"><span class="comment"># * GOOS=linux GOARCH=amd64 表示指定linux 64位的运行环境</span></span></span><br><span class="line"><span class="bash"><span class="comment"># * GOPROXY=https://goproxy.io 指定代理地址</span></span></span><br><span class="line"><span class="bash"><span class="comment"># * GOFLAGS=-mod=vendor 在执行 `go build` 强制查看 `/vendor` 目录</span></span></span><br><span class="line"><span class="bash">ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOFLAGS=-mod=vendor</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 构建可执行文件</span></span></span><br><span class="line"><span class="bash">RUN go build -a -installsuffix cgo -ldflags=<span class="string">"-w -s"</span> -o /src/myapp/monitor</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment">############################</span></span></span><br><span class="line"><span class="bash"><span class="comment"># STEP 2 构建镜像</span></span></span><br><span class="line"><span class="bash"><span class="comment">############################</span></span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 指定最小镜像源</span></span></span><br><span class="line"><span class="bash">FROM scratch AS final</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 设置系统语言</span></span></span><br><span class="line"><span class="bash">ENV LANG en_US.UTF-8</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 从 builder 中导入时区信息</span></span></span><br><span class="line"><span class="bash">COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 从 builder 中导入证书</span></span></span><br><span class="line"><span class="bash">COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 从 builder 中导入用户及组相关文件</span></span></span><br><span class="line"><span class="bash">COPY --from=builder /etc/passwd /etc/passwd</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 将构建的可执行文件复制到新镜像中</span></span></span><br><span class="line"><span class="bash">COPY --from=builder /src/myapp/config /config</span></span><br><span class="line"><span class="bash">COPY --from=builder /src/myapp/monitor /monitor</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 端口申明</span></span></span><br><span class="line"><span class="bash">EXPOSE 8000</span></span><br><span class="line"><span class="bash"></span></span><br><span class="line"><span class="bash"><span class="comment"># 运行</span></span></span><br><span class="line"><span class="bash">ENTRYPOINT [ <span class="string">"/monitor"</span> ]</span></span><br></pre></td></tr></table></figure></p>
+<p>在构建镜像前，为了保证效率，我们最好配置一个国内的镜像地址，可以采用阿里云的镜像加速器地址；</p>
+<p>执行构建命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 指定镜像名为 monitor</span><br><span class="line">docker build -t monitor .</span><br></pre></td></tr></table></figure></p>
+<p>构建成功，查看镜像列表：</p>
+<p>发现多了一个<code>monitor</code>镜像<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">monitor             latest              3cce1a5a8514        12 minutes ago      34.6MB</span><br><span class="line">golang              1.11.1-alpine       95ec94706ff6        3 months ago        310MB</span><br></pre></td></tr></table></figure></p>
+<p>运行容器服务：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8000:8000 monitor -d monitor</span><br></pre></td></tr></table></figure></p>
+<h4 id="镜像的构建流程"><a href="#镜像的构建流程" class="headerlink" title="镜像的构建流程"></a>镜像的构建流程</h4><p>这里使用到 Docker 的多阶段构建(multi-stage builds)方式;</p>
+<p>按步骤主要两个阶段：</p>
+<ol>
+<li>源码编译阶段，镜像使用：golang:1.11.1-alpine</li>
+<li>环境构建阶段，镜像使用：scratch</li>
+</ol>
+<p>大致过程，<br>我们会在第一个镜像中安装运行所需的依赖、创建用户、将源码编译为可执行文件等，<br>然后再将运行所需的所有文件拷贝至第二个镜像中，第二个镜像最终会作为容器的运行镜像；</p>
+<h4 id="为什么不直接用一个镜像完成所有操作？"><a href="#为什么不直接用一个镜像完成所有操作？" class="headerlink" title="为什么不直接用一个镜像完成所有操作？"></a>为什么不直接用一个镜像完成所有操作？</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">monitor             latest              3cce1a5a8514        12 minutes ago      34.6MB</span><br><span class="line">golang              1.11.1-alpine       95ec94706ff6        3 months ago        310MB</span><br></pre></td></tr></table></figure>
+<p>如上就可以说明问题，<code>monitor</code>是采用<code>scratch</code>最终生成的镜像，而<code>golang-1.11.1-alpine</code>是用于编译源码的基础镜像，如果采用<code>golang-alpine</code>作为基础镜像，再加上源码及依赖包文件，总大小可能会在500MB左右，这对于运维部署是不能接受的；而<a href="https://hub.docker.com/_/scratch/" target="_blank" rel="noopener"><code>scratch</code></a>能够很好的控制镜像大小，它本身即是一个精简的最小镜像，再加上golang编译过程中的优化，最终镜像尺寸会很小；</p>
+<h4 id="处理构建过程的依赖包问题"><a href="#处理构建过程的依赖包问题" class="headerlink" title="处理构建过程的依赖包问题"></a>处理构建过程的依赖包问题</h4><p>本来一开始是打算采用<code>go mod download</code>的方式，在镜像环境中下载依赖包以满足构建编译，但是没走通，故转而尝试<code>vendor</code>的方式；<br>也就是说我们会首先将所有依赖包存入项目根目录的<code>vendor/</code>下，然后连同项目源码一起拷贝至源码编译镜像环境，再进行编译操作；</p>
+<p>首先，要保证你曾成功执行过<code>go build</code>或<code>go run main.go</code>操作，只有这样，才能迅速将依赖包的缓存文件汇总到<code>vendor/</code>目录下；</p>
+<p>当然，你要去执行<code>go mod vendor</code>，它才会生成<code>vendor/</code>目录；</p>
+<p>然后，需要在<code>dockerfile</code>的golang编译命令前添加环境变量，指定依赖从<code>vendor/</code>目录读取；<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ENV</span> GOFLAGS=-mod=vendor</span><br></pre></td></tr></table></figure></p>
+<p>如此，依赖问题就解决了；</p>
+<h4 id="HTTPS-X509-问题"><a href="#HTTPS-X509-问题" class="headerlink" title="HTTPS X509 问题"></a>HTTPS X509 问题</h4><p>如果项目中有包含对第三方HTTPS接口的请求，那么多少都会遇到如下报错：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x509: certificate signed by unknown authority</span><br></pre></td></tr></table></figure></p>
+<p>这个问题，是没有安装导入CA证书的原因；</p>
+<p>解决方法分两步：</p>
+<ol>
+<li><p>编译源码阶段，需要安装<code>ca-certificates</code></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="bash"> apk update &amp;&amp; apk upgrade &amp;&amp; apk add --no-cache ca-certificates &amp;&amp; update-ca-certificates</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>构建最小环境阶段，需要将证书拷入镜像环境</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span><span class="bash"> --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="关于编排"><a href="#关于编排" class="headerlink" title="关于编排"></a>关于编排</h4><p>ok，经过如上步骤的操作尝试，会发现虽然服务已运行，但是 mysql、redis 无法正常连接，噢，mysql、redis 容器服务还没有跑起来 …</p>
+<p>是不是有些烦躁，因为 mysql、redis 容器服务的构建还会涉及到一些初始化操作、账号权限配置、密码更改等很多自定义设置，对于一介开发，有些凌乱；</p>
+<p>但是，别忘了 <code>docker compose</code> 容器编排，它将为你解决余下的事情，请见：</p>
+<p><a href="https://github.com/ErikJiang/market_monitor/wiki/ComposeDeployTutorials" target="_blank" rel="noopener">Compose 容器编排部署</a></p>
+<hr>
+<ul>
+<li><a href="https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324" target="_blank" rel="noopener">create the smallest and secured golang docker image based on scratch</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag"># go</a>
+          
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/13/InstallDockerCentOS/" rel="next" title="CentOS7 安装 Docker 及 Docker Compose">
+                <i class="fa fa-chevron-left"></i> CentOS7 安装 Docker 及 Docker Compose
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/03/DockerPreview/" rel="prev" title="容器笔记：容器大事记">
+                容器笔记：容器大事记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#构建应用服务-docker-镜像"><span class="nav-number">1.</span> <span class="nav-text">构建应用服务 docker 镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#docker-构建操作步骤"><span class="nav-number">1.1.</span> <span class="nav-text">docker 构建操作步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#镜像的构建流程"><span class="nav-number">1.2.</span> <span class="nav-text">镜像的构建流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么不直接用一个镜像完成所有操作？"><span class="nav-number">1.3.</span> <span class="nav-text">为什么不直接用一个镜像完成所有操作？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理构建过程的依赖包问题"><span class="nav-number">1.4.</span> <span class="nav-text">处理构建过程的依赖包问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS-X509-问题"><span class="nav-number">1.5.</span> <span class="nav-text">HTTPS X509 问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于编排"><span class="nav-number">1.6.</span> <span class="nav-text">关于编排</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
