@@ -11,7 +11,7 @@ type: "tags"
 
 ### 语言相关
 
-1. 谈谈 进程、线程、协程，以及它们出现所要解决的问题，及相关技术的演进历程？
+#### 谈谈 进程、线程、协程，以及它们出现所要解决的问题，及相关技术的演进历程？
 
 * [C10K问题](http://erikjiang.github.io/2018/02/15/NodeQuestion/)
 
@@ -53,17 +53,17 @@ nginx, libevent, libev, nodejs底层的libuv都是基于epoll;
 
 https://www.cnblogs.com/lxmhhy/p/6041001.html
 
-2. channel 要记得 close，但 close 时候需要注意些什么？
+#### channel 要记得 close，但 close 时候需要注意些什么？
 * channel 不能被重复close,否则会panic;
 * 已经关闭的 channel 不能向其发送数据，否则painc;
 * 从已关闭的 channel 中读取数据，如果是无缓冲的，读出的是零值，如果有缓冲且有数据，可以继续读；
 * 通过`i, ok := <- ch`的 ok 获取channel是否已关闭；
 * 应该只在唯一或最后唯一剩下的生产者发送端协程中关闭channel；
 
-3. channel 是通过注册相关 goroutine id 实现消息通知，具体阐述？
+#### channel 是通过注册相关 goroutine id 实现消息通知，具体阐述？
 // todo
 
-4. slice 相关问题， slice 与数组的区别，slice的底层结构？
+#### slice 相关问题， slice 与数组的区别，slice的底层结构？
 
 array 属于值类型，长度固定；
 slice 属于引用类型，长度不定，slice的底层引用了一个数组对象；
@@ -72,29 +72,29 @@ slice 属于引用类型，长度不定，slice的底层引用了一个数组对
 作为函数参数时，数组传递的时其副本，而slice传递的是指针；
 
 
-5. 谈谈 互斥锁，读写锁，死锁，及其数据竞争的概念？
+#### 谈谈 互斥锁，读写锁，死锁，及其数据竞争的概念？
 
 互斥锁: 是并发程序对共享资源进行唯一性访问控制的主要手段;
 读写锁: 即是并发时针对于读写操作的互斥锁；多个写操作之间是互斥的；写操作与读操作之间是互斥的；多个读操作之间不存在互斥；
 死锁: 并发时所有协程都彼此等待的状态（goroutine间存在无缓冲channel只读不写或只写不读的情况、加锁但没解锁的情况）
 数据竞争：并发情况下存在的多个协程读写相同数据的情况，至少有一个协程是写操作；若多个协程都是读操作，则不存在数据竞争；
 
-6. 什么是channel，为什么它可以做到线程安全？
+#### 什么是channel，为什么它可以做到线程安全？
 
 是golang协程间通信的方式，channel本质是通过内存队列，一次只处理一个数据，从而实现了访问的序列化，避免了数据竞争，从而并发安全；
 
-7. 如何用channel实现一个令牌桶
+#### 如何用channel实现一个令牌桶
 
 // todo
 
-8. 如何写单元测试和基准测试
+#### 如何写单元测试和基准测试
 
 * 使用 gotest 包，文件名格式 `*_test.go`
 * 导入 `import testing`，单元测试函数命名格式：`func Test*(t *testing.T){}`
 * 导入 `import testing`，基准测试函数命名格式：`func Benchmark*(b *testing.B){}`
 * `go test`执行单元测试，`go test -test.bench=.*`执行所有基准测试；
 
-9. go 及 goroutine 的调度是怎样的（为什么并发性能好），抢占式goroutine调用什么意思？
+#### go 及 goroutine 的调度是怎样的（为什么并发性能好），抢占式goroutine调用什么意思？
 
 1). 线程池的缺陷
 线程池中的woker线程获取任务队列中的任务并执行，但若任务中发生系统调用，该worker进程将处于阻塞状态，从而任务队列任务堆积，
@@ -115,7 +115,7 @@ slice 属于引用类型，长度不定，slice的底层引用了一个数组对
 https://segmentfault.com/a/1190000015352983
 https://my.oschina.net/renhc/blog/2221426
 
-10. golang 的内存回收是如何做到的？
+#### golang 的内存回收是如何做到的？
 go 的 GC 采用了mark and sweep 标记清除模式，从根变量扫描遍历所有被引用的对象并进行标记，将没有标记的对象回收；
 缺点：每次执行垃圾回收时会暂停所有正常运行的代码，系统响应能力降低，但后期加入了三色标记法与写屏障，又使得性能缓解；
 
@@ -127,7 +127,7 @@ go 的 GC 采用了mark and sweep 标记清除模式，从根变量扫描遍历�
 
 http://legendtkl.com/2017/04/28/golang-gc/
 
-11. cap和len分别获取的是什么, cap函数适用的类型有哪些？
+#### cap和len分别获取的是什么, cap函数适用的类型有哪些？
 
 len:
 array: 指数组成员的数量
@@ -141,12 +141,12 @@ channel: 指通道缓冲区的容量
 
 https://studygolang.com/articles/8519
 
-12. go build时，tag 中 netgo，netcgo有什么区别？
+#### go build时，tag 中 netgo，netcgo有什么区别？
 netgo 使用 /opt/go/pkg/tool/linux_amd64/compile 进行编译；
 netcgo 使用 gcc 编译；
 
 
-13. 什么是interface？
+#### 什么是interface？
 
 interface是一种抽象类型，是一组方法(method)的集合，
 是鸭式（duck-type）编程的一种体现;
@@ -154,11 +154,11 @@ interface是一种抽象类型，是一组方法(method)的集合，
 但凡不相关的对象实现了interface中的所有方法，
 那这些不相关的对象都可以给interface变量赋值，从而完成一些共性的行为操作；
 
-14. 使用go语言，编写并行计算的快速排序算法
+#### 使用go语言，编写并行计算的快速排序算法
 
 // todo
 
-15. 数据竞争（Data Race）问题怎么解决？能不能不加锁解决这个问题？
+#### 数据竞争（Data Race）问题怎么解决？能不能不加锁解决这个问题？
 
 数据竞争指并发多个协程对同一共享资源进行读写操作时，产生的数据错乱问题；
 解决的关键在于同一时间仅允许一个协程对共享资源进行读写操作；
@@ -170,7 +170,7 @@ interface是一种抽象类型，是一组方法(method)的集合，
 
 https://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong
 
-16. 常用的 golang 库有哪些？用到其中哪些方法？
+#### 常用的 golang 库有哪些？用到其中哪些方法？
 
 * viper 配置管理
 * zerolog 可配置日志管理
@@ -187,7 +187,7 @@ https://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-p
 * strings|strconv 字符串处理
 * time 时间相关
 
-17. go for range 的坑？
+#### go for range 的坑？
 
 for range 遍历的出的是slice/array中每个元素的副本，并非引用
 而将这些副本值传给新变量时，我们最终结果的每一项都存的时新变量的指针，
@@ -196,12 +196,12 @@ for range 遍历的出的是slice/array中每个元素的副本，并非引用
 https://studygolang.com/articles/9701
 
 
-18. Golang 的 GC 触发时机是什么
+#### Golang 的 GC 触发时机是什么
 * 内存阈值触发：当前分配内存是否大于上次GC后内存的2倍
 * 每两分钟定时主动触发：没2min触发一次
 
 
-19. golang中的引用类型与值类型分别有哪些？
+#### golang中的引用类型与值类型分别有哪些？
 
 值类型：int、float、bool、string；
 
@@ -209,11 +209,11 @@ https://studygolang.com/articles/9701
 
 两者区别：拷贝操作和函数传参
 
-20. go vet 的用途
+#### go vet 的用途
 
 用于检查golang源码中的静态错误；
 
-21. select 的用途
+#### select 的用途
 
 select是一种通信开关，用来监听协程通过channel发送的信息
 
@@ -222,20 +222,20 @@ select是一种通信开关，用来监听协程通过channel发送的信息
 * 当有多个case可以执行时，则随机选择1个case执行。
 * case后面跟的必须是读或者写通道的操作，否则编译出错。
 
-22. go 的 new 与 make 的区别？
+#### go 的 new 与 make 的区别？
 
 new 和 make 都是用于分配内存；
 make 仅适用于slice、map、channel引用类型的非零值初始化，且会返回类型本身；
 new 用于类型的零值初始化，且会返回类型的指针；
 
-23. 怎么实现协程完美退出
+#### 怎么实现协程完美退出
 使用 `waitgroup`;
 * 创建一个 waitgroup 实例`wg`
 * 在每个协程启动时调用 `wg.Add(1)`，或者创建n个协程前调用`wg.Add(n)`
 * 当协程任务完成后，调用`wg.Done()`
 * 在等待所有协程的地方调用`wg.Wait()`
 
-24. 设计模式：
+#### 设计模式：
 * 单例模式：
 * 工厂模式:
 `定义一个创建对象的接口，让其子类自己决定实例化哪一个工厂类，工厂模式使其创建过程延迟到子类进行`
@@ -248,7 +248,7 @@ new 用于类型的零值初始化，且会返回类型的指针；
 
 ### 容器相关问题
 
-1. 如何给容器添加映射端口?
+#### 如何给容器添加映射端口?
 
 提交一个运行中的容器为镜像:
 ``` bash
@@ -262,12 +262,12 @@ docker run -d -p 8000:80  foo/live /bin/bash
 
 ### Linux 操作相关
 
-1. 如何后台启动一个服务？
+#### 如何后台启动一个服务？
 * 命令：`conmmand &`，通过增加一个（&）符号，将应用程序在后台启动，但此操作在关闭终端时服务会停止；
 * 命令：`nohup conmmand &`， 该命令可以在你退出帐户之后继续运行相应的进程，nohup( no hang up)；
 * `bg`: 将一个在后台暂停的命令，变成继续执行; `fg`: 将后台中的命令调至前台继续运行; `jobs`: 查看当前有多少在后台运行的命令; `ctrl+z`: 将一个正在前台执行的命令放到后台，并且暂停;
 
-2. 说说孤儿进程、僵尸进程
+#### 说说孤儿进程、僵尸进程
 
 孤儿进程与僵尸进程都是指子进程的状态；
 
@@ -290,7 +290,7 @@ https://blog.csdn.net/morgerton/article/details/69388694
 
 
 ### 数据库相关
-1. 如何做 SQL 优化
+#### 如何做 SQL 优化
 
 使用 `explain select ...` 分析：
 id执行顺序、key用到的索引、extra额外改进信息
@@ -306,7 +306,7 @@ id执行顺序、key用到的索引、extra额外改进信息
 
 ### WEB 通信相关
 
-1. 当打开浏览器输入url到打开网页，这当中发生了什么？
+#### 当打开浏览器输入url到打开网页，这当中发生了什么？
 * URL输入
 * DNS解析：浏览器缓存->操作系统缓存->本地host文件->路由器缓存->ISP DNS缓存->顶级DNS服务器/根DNS服务器，获取到IP地址
 * TCP连接：通过ip与服务器进行三次握手建立连接
@@ -318,14 +318,14 @@ id执行顺序、key用到的索引、extra额外改进信息
 
 https://juejin.im/post/5b148a2ce51d4506965908d2
 
-2. 什么是 restful api, 有哪些方法，分别代表什么？
+#### 什么是 restful api, 有哪些方法，分别代表什么？
 REST 是一种接口定义的规范，它要求服务提供标准可见的接口；
 1). 通过 URI 标识资源
 2). 统一使用 POST GET DELTE PATCH PUT 来定义操作资源的方式；
 3). 数据组织形式采用标准通用格式 JSON 或 XML
 4). 使用 HTTP 作为组件间交流协议
 
-3. TCP 和 UDP 有什么区别? 描述一下 TCP 三次握手、四次挥手的过程?
+#### TCP 和 UDP 有什么区别? 描述一下 TCP 三次握手、四次挥手的过程?
 TCP传输控制协议，UDP用户数据报协议
 
 * 基于连接与无连接；
@@ -352,7 +352,7 @@ TCP传输控制协议，UDP用户数据报协议
 
 https://juejin.im/post/5b189ca0f265da6e1e1adcbf
 
-4. HTTPS 和 HTTP 有什么区别? 状态码有哪些？301和302有什么区别? 401和403有什么区别? 502和504有什么区别?
+#### HTTPS 和 HTTP 有什么区别? 状态码有哪些？301和302有什么区别? 401和403有什么区别? 502和504有什么区别?
 
 HTTP 传输过程是明文，HTTPS 在 HTTP 基础上增加了 SSL 安全层，使得传输的数据被加密成密文，保证传输数据安全；
 
@@ -378,29 +378,45 @@ SSL 握手协议：
 
 http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html
 
-5. 如何实现一个URL短链接服务？
+#### 如何实现一个URL短链接服务？
 
 将长短链接映射关系存入数据库，访问短链时，查询获取到对应数据库中的长链，然后转发请求；
 
 https://www.zhihu.com/question/29270034/answer/46446911
 
-6. 简述 cookie/session 验证过程 以及 token 验证过程，token机制能够代替session机制吗？
+#### 简述 cookie/session 验证过程 以及 token 验证过程，token机制能够代替session机制吗？
+
+由于http协议是无状态的，服务器需要记录用户的状态，所以cookie和session都是用来保持状态的方案；
 
 cookie/session 验证过程：
-由于http协议是无状态的，服务器需要记录用户的状态，所以cookie和session都是用来保持状态的方案，session又依赖cookie。二者的区别主要是
-1). session 在服务器端，cookie 在客户端（浏览器）
-2). session 默认被存在在服务器的一个文件里（不是内存）
-3). session 的运行依赖 session id，而 session id 存于 cookie 中，如果浏览器禁用 cookie ，则 session 也会失效（但是可以通过其它方式实现，比如在 url 中传递 session_id）
-4). session 可以放在 文件、数据库、或内存中都可以。
-5). 用户验证这种场合一般会用 session
+1). 用户在登录页面向服务器发起用户名/密码认证请求；
+2). 服务端认证成功，将该认证用户相关信息保存session中(存储于服务端的文件、数据库、redis中任其一)，并为该session生成一个唯一的sessionID；
+3). 在认证请求的响应头中，会将该sessionID及有效期保存于set-cookie键值中；
+4). 客户端收到响应，从set-cookie中获取cookie并保存浏览器本地，而在接下来的每次请求中，都会将cookie带入请求头一并发出;
+5). 服务端从请求头的cookie中获取到sessionID，并查找是否存在相关session，若存在则通过验证；
 
-// todo 服务端如何获取cookie
+如果浏览器禁用cookie，则可以在URL添加querystring参数`?sid=<seesion id>`
 
-// todo token
+token 验证过程：
+1). 用户在登录页面向服务器发起用户名/密码认证请求；
+2). 服务端认证成功，将用户的少量非重要信息生成token，并在响应数据中带入token返回给客户端；
+4). 客户端收到响应，获取token并保存在浏览器本地，之后在每次请求中，都会将token设置到请求头的`Authorization`中;
+5). 服务端从请求头的Authorization中获取到token，通过jwt验证token是否有效，若有效则通过验证；
+
+
+json web token机制不能取代session机制:
+由于jwt的Token只能被动等待过期，不能直接设置失效，不能延续有效期；
+且jwt在服务端无状态存储的特性，使得在像如下场景无法替代session机制：
+* 比如多端登录情况下，只允许最后一个token有效
+* 修改密码后，希望当前token立即失效
+* 页面访问刷新时，token有效期延长
+
 
 https://www.jianshu.com/p/bd1be47a16c1
+https://segmentfault.com/a/1190000016236765
+https://stayhungrystayfoolish.github.io/Token/
 
-7. 使用golang net/http 实现一个简易的http服务
+#### 使用golang net/http 实现一个简易的http服务
 ``` go
 package main
 
@@ -429,9 +445,8 @@ func main() {
 }
 ```
 
-8. 使用 golang request/response 常用的方法？
-
-
+#### 使用 golang request/response 常用的方法？
+// todo
 
 ---
 
