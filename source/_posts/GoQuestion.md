@@ -260,6 +260,11 @@ docker commit containerid foo/live
 docker run -d -p 8000:80  foo/live /bin/bash
 ```
 
+#### 如何查看 docker 镜像的环境变量?
+``` sh
+docker run <image id> env
+```
+
 ### Linux 操作相关
 
 #### 如何后台启动一个服务？
