@@ -329,6 +329,29 @@ id执行顺序、key用到的索引、extra额外改进信息
 * 独占锁 X 锁：一次只能有一个独占锁占用一个资源，阻止添加其他所有锁。有效防止脏读
 
 
+#### SQL查询成绩表的各个科目中成绩最高与最低的学生
+
+##### 首先查询成绩表中各个科目最高与最低分
+
+``` sql
+> select subject, max(score) from grade group by subject;
+> select subject, min(score) from grade group by subject;
+```
+
+##### 然后查询最高及最低分对应学生
+
+``` sql
+> select b.* from (select subject, max(score) m from grade group by subject) t, grade b where t.subject=b.subject and t.m=b.score;
+> select b.* from (select subject, min(score) m from grade group by subject) t, grade b where t.subject=b.subject and t.m=b.score;
+```
+
+#### 最后使用 UNION 合并结果集
+
+``` sql
+> select b.*, "最高分" from (select subject, max(score) m from grade group by subject) t, grade b where t.subject=b.subject and t.m=b.score union
+select b.*, "最低分" from (select subject, min(score) m from grade group by subject) t, grade b where t.subject=b.subject and t.m=b.score;
+```
+
 ### WEB 通信相关
 
 #### 当打开浏览器输入url到打开网页，这当中发生了什么？
@@ -503,11 +526,213 @@ func main() {
 #### 使用 golang request/response 常用的方法？
 // todo
 
+
+---
+
+### 编程题
+
+#### 题目1
+
+有四个线程1、2、3、4。线程1的功能就是输出1，线程2的功能就是输出2，以此类推...
+现在有四个文件ABCD。初始都为空。现要让四个文件呈如下格式：
+A：1 2 3 4 1 2....
+B：2 3 4 1 2 3....
+C：3 4 1 2 3 4....
+D：4 1 2 3 4 1....
+
+``` go
+package main
+
+import (
+	"bytes"
+	"fmt"
+)
+
+func main() {
+	chs := make([]chan int, 4)
+	for i := 0; i < len(chs); i++ {
+		chs[i] = make(chan int)
+		go func(i int) {
+			for {
+				chs[i] <- i + 1
+			}
+		}(i)
+	}
+	f := make([]bytes.Buffer, len(chs))
+
+	for i := 0; i < 10; i++ {
+		for j := 0; j < len(f); j++ {
+			fmt.Fprintf(&f[j], "%d ", <-chs[(i+j)%len(chs)])
+		}
+	}
+	for i := 0; i < len(f); i++ {
+		fmt.Printf("%d: %s\n", i, f[i].String())
+	}
+}
+
+```
+
+#### 题目2
+实现strconv库中的atoi与itoa方法
+
+1). golang版本 atoi 实现
+``` go
+func MyAtoi(s string) int {
+	s0 := s
+	if s[0] == '-' || s[0] == '+' {
+		s = s[1:]
+		fmt.Printf("string: %s\n", s)
+		if len(s) < 1 {
+			fmt.Printf("err: param isn't number format")
+		}
+	}
+	n := 0
+	for _, ch := range []byte(s) {
+		ch -= '0'
+		if ch > 9 {
+			fmt.Printf("err: param isn't number format")
+		}
+		fmt.Printf("ch item: %d\n", ch)
+		n = n*10 + int(ch)
+	}
+	if s0[0] == '-' {
+		n = -n
+	}
+	return n
+}
+```
+
+2). c 版本 atoi 实现
+``` c
+
+#include <stdio.h>
+#include <ctype.h>
+ 
+/* atoi : convert s to integer; version 2*/
+int atoi(char s[]){
+	int i, n, sign;
+ 
+	for (i = 0; isspace(s[i]); i ++) {
+		// do nothing
+	}
+ 
+	sign = (s[i] == '-') ? -1 : 1;
+	if (s[i] == '-' || s[i] == '+') {
+		i ++;
+	}
+	for ( n = 0; isdigit(s[i]); i ++) {
+		n = 10 * n + (s[i] - '0');
+	}
+ 
+	return sign * n;
+}
+
+int main(){
+	char a[] = "1132";
+	printf("%d\n", atoi(a));
+	return 0;
+}
+
+```
+
+3). golang 版本 atoi 实现
+``` go
+func MyItoa(n int) string {
+	b := []byte{}
+	for {
+		b = append(b, uint8(n%10)+'0')
+		n = int(n / 10)
+		if n == 0 {
+			break
+		}
+	}
+	reverse(b)
+	return string(b)
+}
+
+func reverse(b []byte) {
+	for i, j := 0, len(b)-1; i<j; i, j = i+1, j-1 {
+		b[i], b[j] = b[j], b[i]
+	}
+} 
+```
+
+4). c 语言版本 itoa 实现
+``` c
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+ 
+void reverse(char s[]);
+/*itoa : convert n to characters in s*/
+void itoa(int n, char s[]){
+	int i, sign;
+ 
+	if((sign = n) < 0){//记录符号
+		n = -n; //使n变为正数
+	}
+ 
+	i = 0;
+	do {//生成的字符是反序的
+		s[i ++] = n % 10 + '0';
+	} while((n /= 10) > 0);
+	if (sign < 0) {
+		s[i ++] = '-';
+	}
+	s[i] = '\0';
+	
+	reverse(s);
+}
+ 
+void reverse(char s[]){
+	int c, i, j;
+ 
+	for (i = 0, j = strlen(s) - 1; i < j ;i ++, j --) {
+		c = s[i];
+		s[i] = s[j];
+		s[j] = c;
+	}
+}
+ 
+int main(){
+	int n = 235;
+	char s[] = "000";
+	itoa(n, s);
+	printf("%s\n", s);
+	
+	return 0;
+}
+```
+
+#### 题目3: 两数之和算法
+
+[题目一](https://blog.csdn.net/heart66_A/article/details/83421687)
+
+[题目二](https://blog.csdn.net/heart66_A/article/details/83421790)
+
+#### 题目4: 无重复字符的最长子串
+
+https://blog.csdn.net/heart66_A/article/details/83714168
+
+#### 题目5：如何用channel实现一个令牌桶
+
+
+#### 题目6：编写并行计算的快速排序算法
+
+https://studygolang.com/articles/5618
+
+#### 题目5
+SQL: 查出用户表中每个省区钱最多的用户
+
+#### 说说对分布式系统原理的理解、容器技术的原理、网络相关知识、kubernetes用途、CI/CD相关工具
+
+
 ---
 
 * [effective go](https://www.kancloud.cn/kancloud/effective/72199)
-
-
+* [常规性Golang面试题解析](https://zhuanlan.zhihu.com/p/47616970)
+* [Golang面试题解析（二）](https://blog.51cto.com/qiangmzsx/1957477)
+* [Golang面试题总结](https://blog.csdn.net/yuanqwe123/article/details/81737180)
 
 
 
