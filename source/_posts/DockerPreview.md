@@ -68,7 +68,14 @@ Linux Cgroups 就是 Linux 内核中用来为进程设置资源限制的一个�
 Mount Namespace 用来隔离文件系统的挂载点，使得进程只能看到自己的 mount namespace 中的文件系统挂载点；
 它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效，若单单仅开启 Mount Namespace，则新创建的容器会直接继承宿主机的各个挂载点；
 
-
+ROOTFS:
+rootfs只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。
+由于rootfs里打包的并不只是应用，而是整个操作系统的文件和目录，这就意味着，应用及它运行所需的所有依赖都被封装在了一起；
+对一个应用来说，操作系统本身才是它运行所有需要的完整“依赖库”；
 ---
+
+Dockerfile
+
+Dockerfile 中的每个原语执行后，都会生成一个对应的的镜像层；
 
 https://time.geekbang.org/column/article/14653
