@@ -60,22 +60,22 @@ $ minikube start --vm-driver=hyperkit \
 
 那么问题来了，如何才能拥有一个可访问的 http 代理服务呢？
 考虑到有 shadowsocks，但是基于 socks 又不能直接使用，于是问题又变成如何将 socks 转为 http proxy 呢？
-OK，找到了一个转换工具，喔嘈，这配置工作能不能简单点？MMP...
+OK，找到了一个转换工具，喔嘈，这配置工作能不能简单点？MMP ...
 
-在经过一番挣扎之后，终于发现，原来[shadowsocks客户端](https://github.com/shadowsocks/ShadowsocksX-NG)提供了HTTP代理功能，晕~
+在经过一番挣扎之后，终于发现，原来[ shadowsocks 客户端](https://github.com/shadowsocks/ShadowsocksX-NG)提供了 HTTP 代理功能，晕~
 
-在这个客户端的`偏好设置`-`HTTP`里面可以直接配置HTTP代理监听地址及端口，爽~
+在这个客户端的 `偏好设置` -> `HTTP` 里面可以直接配置HTTP代理监听地址及端口，爽~
 
-这里需要注意的是，由于上述 `minikube start` 是在虚拟机上进行依赖项下载的，故代理监听地址不能使用127.0.0.1，而应该是宿主机的IP地址，否则无论如何虚拟机上都无法访问到代理服务的。
+这里需要注意的是，由于上述 `minikube start` 是在虚拟机上进行依赖项下载的，故在命令中的代理监听地址不能使用127.0.0.1，而应该是宿主机的IP地址，否则无论如何虚拟机上都无法访问到宿主机的代理服务的。
 
-比方说，宿主机IP是：192.168.1.101，HTTP代理的监听端口设置为1087，那么 `minikube start` 的实际执行命令应该是：
+比方说，宿主机IP是：192.168.1.101，shadowsocks 上设置的 HTTP 代理监听端口设置为1087，那么 `minikube start` 的实际执行命令应该是：
 ``` sh
 $ minikube start --vm-driver=hyperkit \
     --docker-env HTTP_PROXY=http://192.168.1.101:1087 \
     --docker-env HTTPS_PROXY=http://192.168.1.101:1087
 ```
 
-此外，在设置HTTP代理的监听地址时，由于我们上述命令使用的是宿主机的IP地址，所以如果这里 HTTP 代理的监听地址还是使用 127.0.0.1 这个默认的回环地址的话，上述命令的宿主机IP地址将无法访问到代理服务，于是需要将 127.0.0.1 改为 0.0.0.0，这样代理服务就可以接收任何IP地址的请求了；
+此外，在 shadowsocks 上设置 HTTP 代理的监听地址时，由于我们上述命令使用的是宿主机的 IP 地址，所以如果这里 HTTP 代理监听地址还是使用 127.0.0.1 这个默认的回环地址的话，上述命令的宿主机IP地址将无法访问到代理服务，于是需要将 shadowsocks 上的代理地址由 127.0.0.1 改为 0.0.0.0，这样代理服务就可以接收任何IP地址的请求了；
 
 HTTP 代理设置完成并执行 `minikube start` 之后，OK，集群启动成功；
 
