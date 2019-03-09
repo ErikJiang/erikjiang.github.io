@@ -1,0 +1,792 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kube," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="要完成 minikube 环境的整体安装搭建，我们需要：  docker hyperkit minikube kubectl  安装 dockerdocker 有针对 mac 系统的安装包，只需要下载并安装即可，Get started with Docker Desktop for Mac ; 当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了； 安装 hyperkitMa">
+<meta name="keywords" content="kube">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Minikube MacOS 安装搭建">
+<meta property="og:url" content="https://erikjiang.github.io/2019/03/09/MinikubeInstall/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="要完成 minikube 环境的整体安装搭建，我们需要：  docker hyperkit minikube kubectl  安装 dockerdocker 有针对 mac 系统的安装包，只需要下载并安装即可，Get started with Docker Desktop for Mac ; 当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了； 安装 hyperkitMa">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-09T16:12:24.194Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Minikube MacOS 安装搭建">
+<meta name="twitter:description" content="要完成 minikube 环境的整体安装搭建，我们需要：  docker hyperkit minikube kubectl  安装 dockerdocker 有针对 mac 系统的安装包，只需要下载并安装即可，Get started with Docker Desktop for Mac ; 当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了； 安装 hyperkitMa">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://erikjiang.github.io/2019/03/09/MinikubeInstall/"/>
+
+
+
+
+
+  <title> Minikube MacOS 安装搭建 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有嗜辣的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2019/03/09/MinikubeInstall/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Erik Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Minikube MacOS 安装搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-09T20:53:18+08:00">
+                2019-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>要完成 minikube 环境的整体安装搭建，我们需要：</p>
+<ol>
+<li>docker</li>
+<li>hyperkit</li>
+<li>minikube</li>
+<li>kubectl</li>
+</ol>
+<h2 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h2><p>docker 有针对 mac 系统的安装包，只需要下载并安装即可，<a href="https://docs.docker.com/docker-for-mac/install/" target="_blank" rel="noopener">Get started with Docker Desktop for Mac</a> ;</p>
+<p>当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了；</p>
+<h2 id="安装-hyperkit"><a href="#安装-hyperkit" class="headerlink" title="安装 hyperkit"></a>安装 hyperkit</h2><p>Mac 系统下支持 VirtualBox、 VMware Fusion、 Hyperkit 三种虚拟机管理程序，这里虚拟机的作用是为 kubenetes 提供基本环境，由于官方推荐了 Hyperkit，于是选择 Hyperkit 的驱动程序来进行安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ brew install docker-machine-driver-hyperkit</span><br><span class="line"></span><br><span class="line"><span class="comment"># docker-machine-driver-hyperkit need root owner and uid </span></span><br><span class="line">$ sudo chown root:wheel /usr/<span class="built_in">local</span>/opt/docker-machine-driver-hyperkit/bin/docker-machine-driver-hyperkit</span><br><span class="line">$ sudo chmod u+s /usr/<span class="built_in">local</span>/opt/docker-machine-driver-hyperkit/bin/docker-machine-driver-hyperkit</span><br></pre></td></tr></table></figure>
+<h2 id="安装-kubectl"><a href="#安装-kubectl" class="headerlink" title="安装 kubectl"></a>安装 kubectl</h2><p>使用 homebrew 直接安装即可：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install kubectl</span><br></pre></td></tr></table></figure></p>
+<h2 id="安装-minikube"><a href="#安装-minikube" class="headerlink" title="安装 minikube"></a>安装 minikube</h2><p>采用手动方式安装 minikube：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64 &amp;&amp; sudo install minikube-darwin-amd64 /usr/<span class="built_in">local</span>/bin/minikube</span><br></pre></td></tr></table></figure></p>
+<p>以上执行完成后，就到了较为关键的部分，即使用 <code>minikube start</code> 开启并运行一个集群；</p>
+<p>首先，如果直接运行 <code>minikube start</code> 会因为执行过程中，在下载相应依赖时报错；</p>
+<p>原因是这些相关的下载项被 GFW 封阻，如果要做到正常下载访问，就需要使用<a href="https://kubernetes.io/docs/setup/minikube/#using-minikube-with-an-http-proxy" target="_blank" rel="noopener">http代理</a>；</p>
+<p>具体操作命令如下：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ minikube start --vm-driver=hyperkit \</span><br><span class="line">    --docker-env http_proxy=http://<span class="variable">$YOURPROXY</span>:PORT \</span><br><span class="line">    --docker-env https_proxy=https://<span class="variable">$YOURPROXY</span>:PORT</span><br></pre></td></tr></table></figure></p>
+<p>那么问题来了，如何才能拥有一个可访问的 http 代理服务呢？<br>考虑到有 shadowsocks，但是基于 socks 又不能直接使用，于是问题又变成如何将 socks 转为 http proxy 呢？<br>OK，找到了一个转换工具，喔嘈，这配置工作能不能简单点？MMP…</p>
+<p>在经过一番挣扎之后，终于发现，原来<a href="https://github.com/shadowsocks/ShadowsocksX-NG" target="_blank" rel="noopener">shadowsocks客户端</a>提供了HTTP代理功能，晕~</p>
+<p>在这个客户端的<code>偏好设置</code>-<code>HTTP</code>里面可以直接配置HTTP代理监听地址及端口，爽~</p>
+<p>这里需要注意的是，由于上述 <code>minikube start</code> 是在虚拟机上进行依赖项下载的，故代理监听地址不能使用127.0.0.1，而应该是宿主机的IP地址，否则无论如何虚拟机上都无法访问到代理服务的。</p>
+<p>比方说，宿主机IP是：192.168.1.101，HTTP代理的监听端口设置为1087，那么 <code>minikube start</code> 的实际执行命令应该是：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ minikube start --vm-driver=hyperkit \</span><br><span class="line">    --docker-env HTTP_PROXY=http://192.168.1.101:1087 \</span><br><span class="line">    --docker-env HTTPS_PROXY=http://192.168.1.101:1087</span><br></pre></td></tr></table></figure></p>
+<p>此外，在设置HTTP代理的监听地址时，由于我们上述命令使用的是宿主机的IP地址，所以如果这里 HTTP 代理的监听地址还是使用 127.0.0.1 这个默认的回环地址的话，上述命令的宿主机IP地址将无法访问到代理服务，于是需要将 127.0.0.1 改为 0.0.0.0，这样代理服务就可以接收任何IP地址的请求了；</p>
+<p>HTTP 代理设置完成并执行 <code>minikube start</code> 之后，OK，集群启动成功；</p>
+<p>此时，可以使用 <code>kubectl</code> 与 k8s 集群交互，并启动一个服务：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.4 --port=8080</span><br></pre></td></tr></table></figure></p>
+<p>公开该服务为 NodePort：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl expose deployment hello-minikube --<span class="built_in">type</span>=NodePort</span><br></pre></td></tr></table></figure></p>
+<p>minikube 可以轻松的使用你的浏览器打开这个公开的端点（endpoint）：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube service hello-minikube</span><br></pre></td></tr></table></figure></p>
+<p>开启第二个本地集群：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube start -p cluster2</span><br></pre></td></tr></table></figure></p>
+<p>停止你的本地集群：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube stop</span><br></pre></td></tr></table></figure></p>
+<p>删除你的本地集群：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube delete</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>参考：</p>
+<p><a href="http://blog.samemoment.com/articles/kubernetes/" target="_blank" rel="noopener">http://blog.samemoment.com/articles/kubernetes/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kube/" rel="tag"># kube</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/03/DockerPreview/" rel="next" title="容器笔记：容器大事记">
+                <i class="fa fa-chevron-left"></i> 容器笔记：容器大事记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-docker"><span class="nav-number">1.</span> <span class="nav-text">安装 docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-hyperkit"><span class="nav-number">2.</span> <span class="nav-text">安装 hyperkit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-kubectl"><span class="nav-number">3.</span> <span class="nav-text">安装 kubectl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-minikube"><span class="nav-number">4.</span> <span class="nav-text">安装 minikube</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

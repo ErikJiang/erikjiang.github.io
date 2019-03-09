@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="容器的历史进程：第一阶段： AWS、 OpenStack 等虚拟机的 PaaS 用法，需要使用脚本或者手动命令操作的方式，将应用从本地部署到云端； 第一阶段产生的问题：云端虚拟机与本地环境不一致，需要在云端做繁琐且无章可循的操作，比如运行依赖环境的安装、配置的调整等，使得云端能够与本地环境一致，从而运行应用； 第二阶段：Cloud Foundry 的 PaaS 项目兴起，它提供了一套核心组件能够实">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-19T11:59:51.537Z">
+<meta property="og:updated_time" content="2019-03-09T15:14:13.502Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="容器笔记：容器大事记">
 <meta name="twitter:description" content="容器的历史进程：第一阶段： AWS、 OpenStack 等虚拟机的 PaaS 用法，需要使用脚本或者手动命令操作的方式，将应用从本地部署到云端； 第一阶段产生的问题：云端虚拟机与本地环境不一致，需要在云端做繁琐且无章可循的操作，比如运行依赖环境的安装、配置的调整等，使得云端能够与本地环境一致，从而运行应用； 第二阶段：Cloud Foundry 的 PaaS 项目兴起，它提供了一套核心组件能够实">
@@ -401,7 +401,9 @@
 <p>容器是一个“单进程”模型。</p>
 <p>容器与应用是同生命周期的，不会存在容器正常运行，但内部应用早已挂掉的情况；</p>
 <p>Mount Namespace 用来隔离文件系统的挂载点，使得进程只能看到自己的 mount namespace 中的文件系统挂载点；<br>它对容器进程视图的改变，一定是伴随着挂载操作（mount）才能生效，若单单仅开启 Mount Namespace，则新创建的容器会直接继承宿主机的各个挂载点；</p>
-<hr>
+<p>ROOTFS:<br>rootfs只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。<br>由于rootfs里打包的并不只是应用，而是整个操作系统的文件和目录，这就意味着，应用及它运行所需的所有依赖都被封装在了一起；</p>
+<h2 id="对一个应用来说，操作系统本身才是它运行所有需要的完整“依赖库”；"><a href="#对一个应用来说，操作系统本身才是它运行所有需要的完整“依赖库”；" class="headerlink" title="对一个应用来说，操作系统本身才是它运行所有需要的完整“依赖库”；"></a>对一个应用来说，操作系统本身才是它运行所有需要的完整“依赖库”；</h2><p>Dockerfile</p>
+<p>Dockerfile 中的每个原语执行后，都会生成一个对应的的镜像层；</p>
 <p><a href="https://time.geekbang.org/column/article/14653" target="_blank" rel="noopener">https://time.geekbang.org/column/article/14653</a></p>
 
       
@@ -454,6 +456,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/09/MinikubeInstall/" rel="prev" title="Minikube MacOS 安装搭建">
+                Minikube MacOS 安装搭建 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -525,7 +531,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -547,7 +553,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -606,7 +612,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#容器的历史进程："><span class="nav-number">1.</span> <span class="nav-text">容器的历史进程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机技术与容器技术"><span class="nav-number">2.</span> <span class="nav-text">虚拟机技术与容器技术</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#容器的历史进程："><span class="nav-number">1.</span> <span class="nav-text">容器的历史进程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机技术与容器技术"><span class="nav-number">2.</span> <span class="nav-text">虚拟机技术与容器技术</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对一个应用来说，操作系统本身才是它运行所有需要的完整“依赖库”；"><span class="nav-number"></span> <span class="nav-text">对一个应用来说，操作系统本身才是它运行所有需要的完整“依赖库”；</span></a></div>
             
 
           </div>
