@@ -68,6 +68,7 @@ $ kubectl logs <pod-name> -f
 ```
 
 
+# 命令式配置文件操作
 
 ## 基于文件创建集群资源
 
@@ -86,3 +87,13 @@ $ kubectl replace -f xxx.yaml
 $ kubectl delete -f xxx.yaml
 ```
 
+# 声明式API操作
+
+## 创建及更新资源
+
+创建以及修改更新对应资源都可以执行同样的命令：
+``` sh
+$ kubectl apply -f xxx.yaml
+```
+`kubectl replace` 操作相当于新建一个 API 对象来替换原有 API 对象；
+`kubectl apply` 操作则是对原有的 API 对象进行了 Patch 操作；
