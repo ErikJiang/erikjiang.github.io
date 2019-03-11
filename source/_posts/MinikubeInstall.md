@@ -79,6 +79,16 @@ $ minikube start --vm-driver=hyperkit \
 
 HTTP 代理设置完成并执行 `minikube start` 之后，OK，集群启动成功；
 
+此时，配置 kubectl 使用 minikube 上下文，这样使得 bubectl 能够与 minikube 集群进行交互：
+``` sh
+$ kubectl config use-context minikube
+```
+
+验证查看 bubectl 已配置的集群信息：
+``` sh
+$ kubectl cluster-info
+```
+
 此时，可以使用 `kubectl` 与 k8s 集群交互，并启动一个服务：
 ``` sh
 $ kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.4 --port=8080
@@ -113,4 +123,6 @@ $ minikube delete
 
 参考：
 
-http://blog.samemoment.com/articles/kubernetes/
+* http://blog.samemoment.com/articles/kubernetes/
+
+* https://k8smeetup.github.io/docs/tutorials/stateless-application/hello-minikube/
