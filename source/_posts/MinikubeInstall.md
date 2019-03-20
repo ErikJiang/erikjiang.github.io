@@ -109,6 +109,21 @@ $ minikube stop
 $ minikube delete
 ```
 
+## 重启系统后的问题
+
+minikube 正常安装完了之后，以为一切归于平静，没想到系统重启后，又出了幺蛾子：
+``` sh
+$ kubectl get node
+The connection to the server xx.xx.xx.xx:8443 was refused - did you specify the right host or port?
+```
+关于这个问题，minikube 的 github issue 中有提及，但作者并没有很好的解决，最终给出的意见是建议使用 docker for mac 中提供的 K8S 功能；
+
+感觉是绕了一圈，最终又回到了原点，人生有时就是如此之骚~
+
+好吧，于是我放弃了minikube，转向 docker for mac 提供的 kubenetes 功能；
+
+由于这其中下载安装仍然困难重重，这里提供一个安装方法，见：[k8s-for-docker-desktop](https://github.com/AliyunContainerService/k8s-for-docker-desktop)
+
 ---
 
 参考：
