@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="要完成 minikube 环境的整体安装搭建，我们需要：  docker hyperkit minikube kubectl  安装 dockerdocker 有针对 mac 系统的安装包，只需要下载并安装即可，Get started with Docker Desktop for Mac ; 当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了； 安装 hyperkitMa">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-20T14:37:12.533Z">
+<meta property="og:updated_time" content="2019-03-20T14:46:59.776Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Minikube MacOS 安装搭建">
 <meta name="twitter:description" content="要完成 minikube 环境的整体安装搭建，我们需要：  docker hyperkit minikube kubectl  安装 dockerdocker 有针对 mac 系统的安装包，只需要下载并安装即可，Get started with Docker Desktop for Mac ; 当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了； 安装 hyperkitMa">
@@ -399,6 +399,8 @@
 <p>比方说，宿主机IP是：192.168.1.101，shadowsocks 上设置的 HTTP 代理监听端口设置为1087，那么 <code>minikube start</code> 的实际执行命令应该是：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ minikube start --vm-driver=hyperkit \</span><br><span class="line">    --docker-env HTTP_PROXY=http://192.168.1.101:1087 \</span><br><span class="line">    --docker-env HTTPS_PROXY=http://192.168.1.101:1087</span><br></pre></td></tr></table></figure></p>
 <p>此外，在 shadowsocks 上设置 HTTP 代理的监听地址时，由于我们上述命令使用的是宿主机的 IP 地址，所以如果这里 HTTP 代理监听地址还是使用 127.0.0.1 这个默认的回环地址的话，上述命令的宿主机IP地址将无法访问到代理服务，于是需要将 shadowsocks 上的代理地址由 127.0.0.1 改为 0.0.0.0，这样代理服务就可以接收任何IP地址的请求了；</p>
 <p>HTTP 代理设置完成并执行 <code>minikube start</code> 之后，OK，集群启动成功；</p>
+<p>此时，配置 kubectl 使用 minikube 上下文，这样使得 bubectl 能够与 minikube 集群进行交互：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl config use-context minikube</span><br></pre></td></tr></table></figure></p>
+<p>验证查看 bubectl 已配置的集群信息：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl cluster-info</span><br></pre></td></tr></table></figure></p>
 <p>此时，可以使用 <code>kubectl</code> 与 k8s 集群交互，并启动一个服务：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.4 --port=8080</span><br></pre></td></tr></table></figure></p>
 <p>公开该服务为 NodePort：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl expose deployment hello-minikube --<span class="built_in">type</span>=NodePort</span><br></pre></td></tr></table></figure></p>
 <p>minikube 可以轻松的使用你的浏览器打开这个公开的端点（endpoint）：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube service hello-minikube</span><br></pre></td></tr></table></figure></p>
@@ -412,7 +414,12 @@
 <p>由于这其中下载安装仍然困难重重，这里提供一个安装方法，见：<a href="https://github.com/AliyunContainerService/k8s-for-docker-desktop" target="_blank" rel="noopener">k8s-for-docker-desktop</a></p>
 <hr>
 <p>参考：</p>
-<p><a href="http://blog.samemoment.com/articles/kubernetes/" target="_blank" rel="noopener">http://blog.samemoment.com/articles/kubernetes/</a></p>
+<ul>
+<li><p><a href="http://blog.samemoment.com/articles/kubernetes/" target="_blank" rel="noopener">http://blog.samemoment.com/articles/kubernetes/</a></p>
+</li>
+<li><p><a href="https://k8smeetup.github.io/docs/tutorials/stateless-application/hello-minikube/" target="_blank" rel="noopener">https://k8smeetup.github.io/docs/tutorials/stateless-application/hello-minikube/</a></p>
+</li>
+</ul>
 
       
     </div>
@@ -464,6 +471,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/10/KubeCommand/" rel="prev" title="Kubenetes 常用命令">
+                Kubenetes 常用命令 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -535,7 +546,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -693,9 +704,10 @@
   
 
 
+
+
   
-
-
+  
 
 
 
@@ -718,7 +730,10 @@
   <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
   
-  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
 
 
   
