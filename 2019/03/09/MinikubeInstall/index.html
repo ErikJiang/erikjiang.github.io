@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="要完成 minikube 环境的整体安装搭建，我们需要：  docker hyperkit minikube kubectl  安装 dockerdocker 有针对 mac 系统的安装包，只需要下载并安装即可，Get started with Docker Desktop for Mac ; 当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了； 安装 hyperkitMa">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-09T16:21:53.025Z">
+<meta property="og:updated_time" content="2019-03-20T14:37:12.533Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Minikube MacOS 安装搭建">
 <meta name="twitter:description" content="要完成 minikube 环境的整体安装搭建，我们需要：  docker hyperkit minikube kubectl  安装 dockerdocker 有针对 mac 系统的安装包，只需要下载并安装即可，Get started with Docker Desktop for Mac ; 当然安装运行好后，需要查看一下运行状态是否良好，这个官方文档上也写的很明了； 安装 hyperkitMa">
@@ -405,6 +405,11 @@
 <p>开启第二个本地集群：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube start -p cluster2</span><br></pre></td></tr></table></figure></p>
 <p>停止你的本地集群：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube stop</span><br></pre></td></tr></table></figure></p>
 <p>删除你的本地集群：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ minikube delete</span><br></pre></td></tr></table></figure></p>
+<h2 id="重启系统后的问题"><a href="#重启系统后的问题" class="headerlink" title="重启系统后的问题"></a>重启系统后的问题</h2><p>minikube 正常安装完了之后，以为一切归于平静，没想到系统重启后，又出了幺蛾子：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get node</span><br><span class="line">The connection to the server xx.xx.xx.xx:8443 was refused - did you specify the right host or port?</span><br></pre></td></tr></table></figure></p>
+<p>关于这个问题，minikube 的 github issue 中有提及，但作者并没有很好的解决，最终给出的意见是建议使用 docker for mac 中提供的 K8S 功能；</p>
+<p>感觉是绕了一圈，最终又回到了原点，人生有时就是如此之骚~</p>
+<p>好吧，于是我放弃了minikube，转向 docker for mac 提供的 kubenetes 功能；</p>
+<p>由于这其中下载安装仍然困难重重，这里提供一个安装方法，见：<a href="https://github.com/AliyunContainerService/k8s-for-docker-desktop" target="_blank" rel="noopener">k8s-for-docker-desktop</a></p>
 <hr>
 <p>参考：</p>
 <p><a href="http://blog.samemoment.com/articles/kubernetes/" target="_blank" rel="noopener">http://blog.samemoment.com/articles/kubernetes/</a></p>
@@ -611,7 +616,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-docker"><span class="nav-number">1.</span> <span class="nav-text">安装 docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-hyperkit"><span class="nav-number">2.</span> <span class="nav-text">安装 hyperkit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-kubectl"><span class="nav-number">3.</span> <span class="nav-text">安装 kubectl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-minikube"><span class="nav-number">4.</span> <span class="nav-text">安装 minikube</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-docker"><span class="nav-number">1.</span> <span class="nav-text">安装 docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-hyperkit"><span class="nav-number">2.</span> <span class="nav-text">安装 hyperkit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-kubectl"><span class="nav-number">3.</span> <span class="nav-text">安装 kubectl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-minikube"><span class="nav-number">4.</span> <span class="nav-text">安装 minikube</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重启系统后的问题"><span class="nav-number">5.</span> <span class="nav-text">重启系统后的问题</span></a></li></ol></div>
             
 
           </div>
