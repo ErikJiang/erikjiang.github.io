@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="冒菜略寡味">
 <meta property="og:description" content="我们日常开发中会不可避免的使用到多个 Kubernetes 集群，一般比较传统的做法，我们会使用 ssh 远程到集群节点主机上，然后再进行 kubectl 相关命令的操作，这样做也没什么问题，但是当集群数增多以后，就会发现切换集群的操作略显麻烦，且无法管理，于是就有了一个需求，怎样能够更加优雅的组织管理这些不同的集群接入场景？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-11T09:40:01.288Z">
+<meta property="og:updated_time" content="2019-06-11T09:44:35.441Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubectl config 管理多集群">
 <meta name="twitter:description" content="我们日常开发中会不可避免的使用到多个 Kubernetes 集群，一般比较传统的做法，我们会使用 ssh 远程到集群节点主机上，然后再进行 kubectl 相关命令的操作，这样做也没什么问题，但是当集群数增多以后，就会发现切换集群的操作略显麻烦，且无法管理，于是就有了一个需求，怎样能够更加优雅的组织管理这些不同的集群接入场景？">
@@ -399,7 +399,7 @@
 <p>通常 Kubernetes 集群在安装时会生成一个管理配置文件，该配置文件位于每个集群的主节点上，具体目录：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/kubernetes/admin.conf</span><br></pre></td></tr></table></figure>
 <p>了解到了这一点，我们就可以使用 scp 命令将各个集群主节点中的配置拷贝到本地 .kube 目录中了：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># copy the Kubernetes admin config for work test</span></span><br><span class="line">scp root@SERV_MASTER_TEST:/etc/kubernetes/admin.conf ~/.kube/config-work-test`</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy the Kubernetes admin config for work dev</span></span><br><span class="line">scp root@SERV_MASTER_DEV:/etc/kubernetes/admin.conf ~/.kube/config-work-dev`</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy the Kubernetes admin config for work prod</span></span><br><span class="line">scp root@SERV_MASTER_PROD:/etc/kubernetes/admin.conf ~/.kube/config-work-prod`</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># copy the Kubernetes admin config for work test</span></span><br><span class="line">scp root@SERV_MASTER_TEST:/etc/kubernetes/admin.conf ~/.kube/config-work-test</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy the Kubernetes admin config for work dev</span></span><br><span class="line">scp root@SERV_MASTER_DEV:/etc/kubernetes/admin.conf ~/.kube/config-work-dev</span><br><span class="line"></span><br><span class="line"><span class="comment"># copy the Kubernetes admin config for work prod</span></span><br><span class="line">scp root@SERV_MASTER_PROD:/etc/kubernetes/admin.conf ~/.kube/config-work-prod</span><br></pre></td></tr></table></figure>
 <p>将如上命令中 <code>SERV_MASTER_TEST</code>、<code>SERV_MASTER_DEV</code>、<code>SERV_MASTER_PROD</code> 分别替换为对应集群主节点 IP;</p>
 <p>注：配置文件中包含敏感信息，请妥善保管！</p>
 <p>现在，我们已经完成了配置的拷贝，但是为了便于管理，我们需要对这些配置中的命名进行修改规范；</p>
