@@ -269,7 +269,7 @@ custom_logo:
 # Available value:
 #    normal | night | night eighties | night blue | night bright
 # https://github.com/chriskempson/tomorrow-theme
-highlight_theme: night eighties
+highlight_theme: night blue
 
 
 # ---------------------------------------------------------------
@@ -478,7 +478,7 @@ fancybox: true
 canvas_nest: false
 
 #three_waves
-three_waves: true
+three_waves: false
 
 # Script Vendors.
 # Set a CDN address for the vendor you want to customize.
