@@ -69,13 +69,13 @@ users:
 
 ``` sh
 # copy the Kubernetes admin config for work test
-scp root@SERV_MASTER_TEST:/etc/kubernetes/admin.conf ~/.kube/config-work-test`
+scp root@SERV_MASTER_TEST:/etc/kubernetes/admin.conf ~/.kube/config-work-test
 
 # copy the Kubernetes admin config for work dev
-scp root@SERV_MASTER_DEV:/etc/kubernetes/admin.conf ~/.kube/config-work-dev`
+scp root@SERV_MASTER_DEV:/etc/kubernetes/admin.conf ~/.kube/config-work-dev
 
 # copy the Kubernetes admin config for work prod
-scp root@SERV_MASTER_PROD:/etc/kubernetes/admin.conf ~/.kube/config-work-prod`
+scp root@SERV_MASTER_PROD:/etc/kubernetes/admin.conf ~/.kube/config-work-prod
 ```
 
 将如上命令中 `SERV_MASTER_TEST`、`SERV_MASTER_DEV`、`SERV_MASTER_PROD` 分别替换为对应集群主节点 IP;
