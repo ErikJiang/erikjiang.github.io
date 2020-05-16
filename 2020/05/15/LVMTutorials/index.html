@@ -1,0 +1,815 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kube,lvm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="逻辑卷管理器 LVM (Logical Volume Manager), 又称为逻辑卷宗管理器、逻辑磁盘管理器，是Linux核心所提供的逻辑卷管理功能。它在硬盘分区之上，又创建一个逻辑层，以便系统管理硬盘分割系统。 最早由IBM开发，在AIX系统上实现，OS/2 操作系统与 HP-UX也支持这个功能。在1998年，Heinz Mauelshagen 根据在 HP-UX 上的逻辑卷管理器，编写出第一">
+<meta name="keywords" content="kube,lvm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVM 逻辑卷管理器的使用">
+<meta property="og:url" content="https://erikjiang.github.io/2020/05/15/LVMTutorials/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="逻辑卷管理器 LVM (Logical Volume Manager), 又称为逻辑卷宗管理器、逻辑磁盘管理器，是Linux核心所提供的逻辑卷管理功能。它在硬盘分区之上，又创建一个逻辑层，以便系统管理硬盘分割系统。 最早由IBM开发，在AIX系统上实现，OS/2 操作系统与 HP-UX也支持这个功能。在1998年，Heinz Mauelshagen 根据在 HP-UX 上的逻辑卷管理器，编写出第一">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-05-16T06:57:07.892Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LVM 逻辑卷管理器的使用">
+<meta name="twitter:description" content="逻辑卷管理器 LVM (Logical Volume Manager), 又称为逻辑卷宗管理器、逻辑磁盘管理器，是Linux核心所提供的逻辑卷管理功能。它在硬盘分区之上，又创建一个逻辑层，以便系统管理硬盘分割系统。 最早由IBM开发，在AIX系统上实现，OS/2 操作系统与 HP-UX也支持这个功能。在1998年，Heinz Mauelshagen 根据在 HP-UX 上的逻辑卷管理器，编写出第一">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://erikjiang.github.io/2020/05/15/LVMTutorials/"/>
+
+
+
+
+
+  <title> LVM 逻辑卷管理器的使用 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有嗜辣的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2020/05/15/LVMTutorials/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Erik Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                LVM 逻辑卷管理器的使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-15T19:37:03+08:00">
+                2020-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>逻辑卷管理器 LVM (Logical Volume Manager), 又称为逻辑卷宗管理器、逻辑磁盘管理器，是Linux核心所提供的逻辑卷管理功能。它在硬盘分区之上，又创建一个逻辑层，以便系统管理硬盘分割系统。</p>
+<p>最早由IBM开发，在AIX系统上实现，OS/2 操作系统与 HP-UX也支持这个功能。在1998年，Heinz Mauelshagen 根据在 HP-UX 上的逻辑卷管理器，编写出第一个 Linux 版本的逻辑卷管理器。</p>
+<a id="more"></a>
+<h3 id="LVM-的基本概念术语："><a href="#LVM-的基本概念术语：" class="headerlink" title="LVM 的基本概念术语："></a>LVM 的基本概念术语：</h3><ul>
+<li>PV(Physical volume): 物理卷, PV处于LVM系统最低层, 它可以是整个硬盘, 或者与磁盘分区具有相同功能的设备(如RAID)</li>
+<li>VG(Volume Group): 卷组, 创建在PV之上, 由一个或多个PV组成,可以在VG上创建一个或多个“LVM分区”(逻辑卷),功能类似非LVM系统的物理硬盘</li>
+<li>LV(Logical Volume): 逻辑卷, 从VG中分割出的一块空间, 创建之后其大小可以伸缩，在LV上可以创建文件系统(如/var,/home)</li>
+<li>PE(Physical extent): 物理块, 每一个PV被划分为基本单元(也被称为PE), 具有唯一编号的PE是可以被LVM寻址的最小存储单元, 默认为4MB</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">                         Disk A                                                                  Disk B</span><br><span class="line">+-------------------------------------------------------------+               +---------------------------------------+</span><br><span class="line">|                                                             |               |                                       |</span><br><span class="line">|                                                             |               |                                       |</span><br><span class="line">|       PV1                   PV2                  PV3        |               |       PV1                  PV2        |</span><br><span class="line">+------------------+  +------------------+ +------------------+               +------------------+ +------------------+</span><br><span class="line">|------------------|  |------------------| |------------------|               |------------------| |------------------|</span><br><span class="line">|| PE || PE || PE ||  || PE || PE || PE || || PE || PE || PE ||               || PE || PE || PE || || PE || PE || PE ||</span><br><span class="line">|------------------|  |------------------| |------------------|               |------------------| |------------------|</span><br><span class="line">+-------------------------------------------------------------+               +---------------------------------------+</span><br><span class="line">         |                      |                   |                                   |                    |</span><br><span class="line">         |                      |                   |                             +-----+                    |</span><br><span class="line">         |                      |                   |                             |                          |</span><br><span class="line">         |   +-----------+      |                   |                       +-----v-----+                    |</span><br><span class="line">         +--&gt;+    VG1    +&lt;-----+                   +----------------------&gt;+    VG2    +&lt;-------------------+</span><br><span class="line">             +-----+-----+                                                  +-----+-----+</span><br><span class="line">                   |                                                              |</span><br><span class="line">                   |                                                +-------------+------------+</span><br><span class="line">                   |                                                |                          |</span><br><span class="line">              +----v-----+                                     +----v-----+               +----v-----+</span><br><span class="line">              |   LV1    |                                     |   LV2    |               |   LV3    |</span><br><span class="line">              | (/home)  |                                     | (/usr)   |               | (/data)  |</span><br><span class="line">              +----------+                                     +----------+               +----------+</span><br></pre></td></tr></table></figure>
+<h3 id="安装-LVM-工具"><a href="#安装-LVM-工具" class="headerlink" title="安装 LVM 工具"></a>安装 LVM 工具</h3><p>CentOS 中通过 yum 包管理工具安装:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install lvm2* -y</span><br></pre></td></tr></table></figure></p>
+<h3 id="物理磁盘分区"><a href="#物理磁盘分区" class="headerlink" title="物理磁盘分区"></a>物理磁盘分区</h3><p>首先对新挂载磁盘进行分区, 这里将整个磁盘作为一个分区配置:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># fdisk /dev/vdd # 对 /dev/vdd 进行分区</span></span><br><span class="line">Welcome to fdisk (util-linux 2.23.2).</span><br><span class="line"></span><br><span class="line">Changes will remain <span class="keyword">in</span> memory only, until you decide to write them.</span><br><span class="line">Be careful before using the write <span class="built_in">command</span>.</span><br><span class="line"></span><br><span class="line">Device does not contain a recognized partition table</span><br><span class="line">Building a new DOS disklabel with disk identifier 0xfb5eb0bf.</span><br><span class="line"></span><br><span class="line">Command (m <span class="keyword">for</span> <span class="built_in">help</span>): n <span class="comment"># 新建分区</span></span><br><span class="line">Partition <span class="built_in">type</span>:</span><br><span class="line">   p   primary (0 primary, 0 extended, 4 free)</span><br><span class="line">   e   extended</span><br><span class="line">Select (default p): p <span class="comment"># 主分区</span></span><br><span class="line">Partition number (1-4, default 1): 1 <span class="comment"># 分区号</span></span><br><span class="line">First sector (2048-209715199, default 2048): <span class="comment"># 默认: 首扇区号</span></span><br><span class="line">Using default value 2048</span><br><span class="line">Last sector, +sectors or +size&#123;K,M,G&#125; (2048-209715199, default 209715199): <span class="comment"># 默认: 尾扇区号</span></span><br><span class="line">Using default value 209715199</span><br><span class="line">Partition 1 of <span class="built_in">type</span> Linux and of size 100 GiB is <span class="built_in">set</span></span><br><span class="line"><span class="comment"># 下面分区类型设置很重要!</span></span><br><span class="line">Command (m <span class="keyword">for</span> <span class="built_in">help</span>): t <span class="comment"># 改变类型(分区系统ID)</span></span><br><span class="line">Selected partition 1</span><br><span class="line">Hex code (<span class="built_in">type</span> L to list all codes): 8e <span class="comment"># 8e 表示 LVM 的分区编号</span></span><br><span class="line">Changed <span class="built_in">type</span> of partition <span class="string">'Linux'</span> to <span class="string">'Linux LVM'</span></span><br><span class="line">Command (m <span class="keyword">for</span> <span class="built_in">help</span>): w <span class="comment"># 保存配置</span></span><br><span class="line">The partition table has been altered!</span><br><span class="line"></span><br><span class="line">Calling ioctl() to re-read partition table.</span><br><span class="line">Syncing disks.</span><br></pre></td></tr></table></figure></p>
+<p>注意, 如果是要对一个磁盘做多个分区, 则需要根据分区规划的大小, 多次对<code>Partition number</code>, <code>First sector</code>, <code>Last sector</code>进行调整划分;</p>
+<p>磁盘分区设置完成, 查看分区表, 会有看到如下<code>Linux LVM</code> 分区信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># fdisk -l</span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vdd1            2048   209715199   104856576   8e  Linux LVM</span><br></pre></td></tr></table></figure></p>
+<h3 id="准备物理卷-PV"><a href="#准备物理卷-PV" class="headerlink" title="准备物理卷(PV)"></a>准备物理卷(PV)</h3><p>依赖于磁盘分区<code>/dev/vdd1</code> 创建物理卷:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># pvcreate /dev/vdd1</span></span><br><span class="line">  Physical volume <span class="string">"/dev/vdd1"</span> successfully created.</span><br></pre></td></tr></table></figure></p>
+<p>展示已创建的物理卷:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># pvdisplay </span></span><br><span class="line">  <span class="string">"/dev/vdd1"</span> is a new physical volume of <span class="string">"&lt;100.00 GiB"</span></span><br><span class="line">  --- NEW Physical volume ---</span><br><span class="line">  PV Name               /dev/vdd1</span><br><span class="line">  VG Name</span><br><span class="line">  PV Size               &lt;100.00 GiB</span><br><span class="line">  Allocatable           NO</span><br><span class="line">  PE Size               0</span><br><span class="line">  Total PE              0</span><br><span class="line">  Free PE               0</span><br><span class="line">  Allocated PE          0</span><br><span class="line">  PV UUID               n0tSls-bw30-tNpv-ogjB-ILOW-vvxq-xgp2Oq</span><br></pre></td></tr></table></figure></p>
+<p>删除物理卷命令:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pvremove $&#123;pv_name&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="准备卷组-VG"><a href="#准备卷组-VG" class="headerlink" title="准备卷组(VG)"></a>准备卷组(VG)</h3><p>创建新卷组, 使用物理卷<code>/dev/vdd1</code>创建卷组<code>volume-group1</code>:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># vgcreate volume-group1 /dev/vdd1</span></span><br><span class="line">  Volume group <span class="string">"volume-group1"</span> successfully created</span><br></pre></td></tr></table></figure></p>
+<p>展示已创建的卷组:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># vgdisplay</span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               volume-group1</span><br><span class="line">  System ID</span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  1</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                0</span><br><span class="line">  Open LV               0</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               &lt;100.00 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              25599</span><br><span class="line">  Alloc PE / Size       0 / 0</span><br><span class="line">  Free  PE / Size       25599 / &lt;100.00 GiB</span><br><span class="line">  VG UUID               F3T1Ix-5t4S-tcfI-OZEE-wrAE-wyNc-qDIeNX</span><br></pre></td></tr></table></figure></p>
+<p>删除卷组命令:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vgremove $&#123;vg_name&#125;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>若卷组容量已满, 需要扩展卷组大小:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># vgextend volume-group1 /dev/vdc1</span></span><br><span class="line">  Volume group <span class="string">"volume-group1"</span> successfully extended</span><br><span class="line">[root@node01 ~]<span class="comment"># vgdisplay</span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               volume-group1</span><br><span class="line">  System ID</span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        2</span><br><span class="line">  Metadata Sequence No  3</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                1</span><br><span class="line">  Open LV               1</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                2</span><br><span class="line">  Act PV                2</span><br><span class="line">  VG Size               199.99 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51198</span><br><span class="line">  Alloc PE / Size       25575 / 99.90 GiB</span><br><span class="line">  Free  PE / Size       25623 / &lt;100.09 GiB</span><br><span class="line">  VG UUID               F3T1Ix-5t4S-tcfI-OZEE-wrAE-wyNc-qDIeNX</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h3 id="准备逻辑卷-LV"><a href="#准备逻辑卷-LV" class="headerlink" title="准备逻辑卷(LV)"></a>准备逻辑卷(LV)</h3><p>使用卷组<code>volume-group1</code>来创建逻辑卷(名字:lv1, 大小:99.9G):<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># lvcreate -L 99.9G -n lv1 volume-group1</span></span><br><span class="line">  Rounding up size to full physical extent 99.90 GiB</span><br><span class="line">  Logical volume <span class="string">"lv1"</span> created.</span><br></pre></td></tr></table></figure></p>
+<p>展示已创建的逻辑卷:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># lvdisplay</span></span><br><span class="line">  --- Logical volume ---</span><br><span class="line">  LV Path                /dev/volume-group1/lv1</span><br><span class="line">  LV Name                lv1</span><br><span class="line">  VG Name                volume-group1</span><br><span class="line">  LV UUID                iRlrj0-PvcQ-wKFk-IR1M-LysP-q2CK-Yy7xUi</span><br><span class="line">  LV Write Access        <span class="built_in">read</span>/write</span><br><span class="line">  LV Creation host, time node01, 2020-05-14 15:37:17 +0800</span><br><span class="line">  LV Status              available</span><br><span class="line">  <span class="comment"># open                 0</span></span><br><span class="line">  LV Size                99.90 GiB</span><br><span class="line">  Current LE             25575</span><br><span class="line">  Segments               1</span><br><span class="line">  Allocation             inherit</span><br><span class="line">  Read ahead sectors     auto</span><br><span class="line">  - currently <span class="built_in">set</span> to     8192</span><br><span class="line">  Block device           252:0</span><br></pre></td></tr></table></figure></p>
+<p>将创建好的逻辑卷格式化为 ext4 分区:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># mkfs.ext4 /dev/volume-group1/lv1</span></span><br><span class="line">mke2fs 1.42.9 (28-Dec-2013)</span><br><span class="line">Filesystem label=</span><br><span class="line">OS <span class="built_in">type</span>: Linux</span><br><span class="line">Block size=4096 (<span class="built_in">log</span>=2)</span><br><span class="line">Fragment size=4096 (<span class="built_in">log</span>=2)</span><br><span class="line">Stride=0 blocks, Stripe width=0 blocks</span><br><span class="line">6553600 inodes, 26188800 blocks</span><br><span class="line">1309440 blocks (5.00%) reserved <span class="keyword">for</span> the super user</span><br><span class="line">First data block=0</span><br><span class="line">Maximum filesystem blocks=2174746624</span><br><span class="line">800 block groups</span><br><span class="line">32768 blocks per group, 32768 fragments per group</span><br><span class="line">8192 inodes per group</span><br><span class="line">Superblock backups stored on blocks:</span><br><span class="line">	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,</span><br><span class="line">	4096000, 7962624, 11239424, 20480000, 23887872</span><br><span class="line"></span><br><span class="line">Allocating group tables: <span class="keyword">done</span></span><br><span class="line">Writing inode tables: <span class="keyword">done</span></span><br><span class="line">Creating journal (32768 blocks): <span class="keyword">done</span></span><br><span class="line">Writing superblocks and filesystem accounting information: <span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<p>注: <code>mkfs.ext4</code> 格式化逻辑卷为不可逆操作, 若逻辑卷中有重要数据, 则请备份后再格式化, 否则无法复原;</p>
+<p>挂载逻辑卷, 比如挂载到<code>/data</code>:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]<span class="comment"># mount /dev/volume-group1/lv1 /data/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看挂载情况</span></span><br><span class="line">[root@node01 ~]<span class="comment"># df -h -t ext4</span></span><br><span class="line">Filesystem                      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/volume--group1-lv1   99G   61M   94G   1% /data</span><br></pre></td></tr></table></figure></p>
+<p>开机时自动挂载逻辑卷, 需要在 <code>/etc/fstab</code> 文件中配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line"># /etc/fstab</span><br><span class="line"># Created by anaconda on Mon Aug 13 11:29:03 2018</span><br><span class="line">#</span><br><span class="line"># Accessible filesystems, by reference, are maintained under &apos;/dev/disk&apos;</span><br><span class="line"># See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</span><br><span class="line">#</span><br><span class="line">UUID=db6c825d-c763-42ae-8ccb-e8f5eaead61a /                       ext4    defaults        1 1</span><br><span class="line">LABEL=YUNIFYSWAP none    swap    sw      0 0</span><br><span class="line">/dev/volume-group1/lv2       /var/lib/docker         ext4            defaults        1 1</span><br><span class="line">/dev/volume-group1/lv1       /data                   ext4            defaults        1 1</span><br></pre></td></tr></table></figure></p>
+<p>这里将逻辑卷<code>lv1</code> 与 <code>lv2</code>, 分别与 <code>/data</code> 和 <code>/var/lib/docker</code> 目录进行关联挂载;</p>
+<p>检测 <code>/etc/fstab</code> 挂载配置是否可用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mount -a</span><br></pre></td></tr></table></figure></p>
+<p>注: 在重启系统前, 一定要做 <code>mount -a</code> 检测, 否则可能会有系统无法正常启动的风险!!!</p>
+<hr>
+<h3 id="关于磁盘数据的备份与还原"><a href="#关于磁盘数据的备份与还原" class="headerlink" title="关于磁盘数据的备份与还原"></a>关于磁盘数据的备份与还原</h3><ol>
+<li><p>数据备份前, 先对 k8s 节点进行安全移除, 以便当前 pods 可以转移到其他节点主机:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubectl drain &lt;node name&gt; --ignore-daemonsets</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若涉及到 docker 数据备份, 先停用 docker 服务:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># systemctl stop docker</span><br><span class="line"># systemctl stop kubelet</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>考虑到磁盘数据备份还原迁移耗时, 可使用 <a href="http://www.gnu.org/software/screen/" target="_blank" rel="noopener">screen</a> 建立会话, 防止数据迁移任务中断:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 备份 /data/ 数据</span><br><span class="line">$ screen -S backup-data</span><br><span class="line">$ cp /data/* /backup/ -avr</span><br><span class="line">$ &lt; ctrl + a + d &gt;</span><br><span class="line"></span><br><span class="line"># 还原 /data/ 数据</span><br><span class="line">$ screen -S restore-data</span><br><span class="line">$ cp /backup/* /data/ -avr</span><br><span class="line">$ &lt; ctrl + a + d &gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据还原后, 启用 docker 服务:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># systemctl start docker</span><br><span class="line"># systemctl start kubelet</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>还原集群节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># kubectl uncordon &lt;node name&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p>若通过 uncordon 还原后, node 状态为 NotReady<br>可查看 kubelet log:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># journalctl -u kubelet</span><br></pre></td></tr></table></figure></p>
+<p>若错误信息如下, 表明 swap 被开启, 影响到 kubelet 启动, 需要关闭:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">failed to run Kubelet: Running with swap on is not supported, please disable swap!</span><br></pre></td></tr></table></figure></p>
+<p>关闭 swap 处理方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># swapoff -a</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<ul>
+<li><a href="https://linux.cn/article-3218-1.html" target="_blank" rel="noopener">LVM简明教程</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kube/" rel="tag"># kube</a>
+          
+            <a href="/tags/lvm/" rel="tag"># lvm</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/11/GoVendorUpgrade/" rel="next" title="govendor 升级小记">
+                <i class="fa fa-chevron-left"></i> govendor 升级小记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#LVM-的基本概念术语："><span class="nav-number">1.</span> <span class="nav-text">LVM 的基本概念术语：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-LVM-工具"><span class="nav-number">2.</span> <span class="nav-text">安装 LVM 工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#物理磁盘分区"><span class="nav-number">3.</span> <span class="nav-text">物理磁盘分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备物理卷-PV"><span class="nav-number">4.</span> <span class="nav-text">准备物理卷(PV)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备卷组-VG"><span class="nav-number">5.</span> <span class="nav-text">准备卷组(VG)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备逻辑卷-LV"><span class="nav-number">6.</span> <span class="nav-text">准备逻辑卷(LV)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于磁盘数据的备份与还原"><span class="nav-number">7.</span> <span class="nav-text">关于磁盘数据的备份与还原</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
