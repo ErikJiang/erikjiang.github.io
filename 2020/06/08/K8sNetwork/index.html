@@ -1,0 +1,869 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kube," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="K8s 四层网络模型 第0层 Node节点网络 (Node IP + Port): 保障节点主机互联互通 第1层 Pod网络 (Pod IP + Port): 保证Pod容器互联互通 第2层 Service网络 (Cluster IP + Port): 保证服务发现和负载均衡 第3层 外部接入网络 (NodePort / LoadBalancer / Ingress): 提供外部流量接入">
+<meta name="keywords" content="kube">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有关 Kubenetes 网络">
+<meta property="og:url" content="https://erikjiang.github.io/2020/06/08/K8sNetwork/index.html">
+<meta property="og:site_name" content="冒菜略寡味">
+<meta property="og:description" content="K8s 四层网络模型 第0层 Node节点网络 (Node IP + Port): 保障节点主机互联互通 第1层 Pod网络 (Pod IP + Port): 保证Pod容器互联互通 第2层 Service网络 (Cluster IP + Port): 保证服务发现和负载均衡 第3层 外部接入网络 (NodePort / LoadBalancer / Ingress): 提供外部流量接入">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-12-08T08:32:59.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="有关 Kubenetes 网络">
+<meta name="twitter:description" content="K8s 四层网络模型 第0层 Node节点网络 (Node IP + Port): 保障节点主机互联互通 第1层 Pod网络 (Pod IP + Port): 保证Pod容器互联互通 第2层 Service网络 (Cluster IP + Port): 保证服务发现和负载均衡 第3层 外部接入网络 (NodePort / LoadBalancer / Ingress): 提供外部流量接入">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://erikjiang.github.io/2020/06/08/K8sNetwork/"/>
+
+
+
+
+
+  <title> 有关 Kubenetes 网络 | 冒菜略寡味 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?c1e8e629fca00afe5cde701abc4f1537";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒菜略寡味</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我不吃紅油翻騰的火鍋 不代表沒有嗜辣的時刻</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-tags " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://erikjiang.github.io/2020/06/08/K8sNetwork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Erik Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒菜略寡味">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                有关 Kubenetes 网络
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-08T11:17:31+08:00">
+                2020-06-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="K8s-四层网络模型"><a href="#K8s-四层网络模型" class="headerlink" title="K8s 四层网络模型"></a>K8s 四层网络模型</h3><ul>
+<li>第0层 Node节点网络 (Node IP + Port): 保障节点主机互联互通</li>
+<li>第1层 Pod网络 (Pod IP + Port): 保证Pod容器互联互通</li>
+<li>第2层 Service网络 (Cluster IP + Port): 保证服务发现和负载均衡</li>
+<li>第3层 外部接入网络 (NodePort / LoadBalancer / Ingress): 提供外部流量接入</li>
+</ul>
+<a id="more"></a>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align:left">作用</th>
+<th style="text-align:left">实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>节点网络</td>
+<td style="text-align:left">Master/Worker 节点之间网络互通</td>
+<td style="text-align:left">路由器,交换机,网卡</td>
+</tr>
+<tr>
+<td>Pod 网络</td>
+<td style="text-align:left">Pod 虚拟机容器之间互通</td>
+<td style="text-align:left">虚拟网卡,虚拟网桥,网卡,路由器or覆盖网络</td>
+</tr>
+<tr>
+<td>Service 网络</td>
+<td style="text-align:left">服务发现+负载均衡</td>
+<td style="text-align:left">Kube-Proxy,Kubelet,Master,Kube-DNS</td>
+</tr>
+<tr>
+<td>NodePort</td>
+<td style="text-align:left">将Service暴露在节点网络上</td>
+<td style="text-align:left">Kube-Proxy</td>
+</tr>
+<tr>
+<td>LoadBalancer</td>
+<td style="text-align:left">将服务暴露在公网上+负载均衡</td>
+<td style="text-align:left">公有云LB+NodePort</td>
+</tr>
+<tr>
+<td>Ingress</td>
+<td style="text-align:left">反向路由,安全,日志监控(类似反向代理或网关)</td>
+<td style="text-align:left">Nginx,Envoy,Traefik,Zuul,SpringCloudGateway…</td>
+</tr>
+</tbody>
+</table>
+<h3 id="第一层-K8s-Pod-Network"><a href="#第一层-K8s-Pod-Network" class="headerlink" title="第一层: K8s Pod Network"></a>第一层: K8s Pod Network</h3><h4 id="三种网络设备"><a href="#三种网络设备" class="headerlink" title="三种网络设备:"></a>三种网络设备:</h4><pre><code>1. veth0: 存在于 pod 容器内部, 支持pod单元内部多容器间网络互联互通, 每个 pod 单位中都存在一个 pause 容器, 起作用即为pod创建 veth0 设备;
+2. docker0: 存在于 node 节点内部, 作为虚拟网桥, 支持多个 pod 间网络互联互通
+3. eth0: 存在于 node节点上的真实设备, 提供节点互联互通访问
+</code></pre><h4 id="不同节点上的-Pod-如何实现互联互通"><a href="#不同节点上的-Pod-如何实现互联互通" class="headerlink" title="不同节点上的 Pod 如何实现互联互通?"></a>不同节点上的 Pod 如何实现互联互通?</h4><pre><code>1. 路由方案: 
+    依赖于底层网络设备, 设置各节点路由转发策略, 性能开销较小;
+
+2. 覆盖网络(overlay)方案: 
+    采用隧道封包技术, 将pod网络数据包在出节点之前封装成节点的网络数据包, 当数据包到达目标节点再解封数据包, 并转发到对应的Pod上;
+    对于底层网络设备无任何依赖, 但是封包解包过程会有性能消耗;
+</code></pre><p>由于不同节点Pod网络访问的技术方案众多, CNCF指定了统一的标准CNI, 简化及规范K8s不同节点Pod网络的技术实现;</p>
+<h3 id="第二层-K8s-Service-Network"><a href="#第二层-K8s-Service-Network" class="headerlink" title="第二层: K8s Service Network"></a>第二层: K8s Service Network</h3><p>Service 网络构建于 Pod 网络之上, 主要功能:</p>
+<ol>
+<li>服务发现 (Service Discovery)</li>
+<li>负载均衡 (Load Balancing)</li>
+</ol>
+<h4 id="K8s-服务发现原理"><a href="#K8s-服务发现原理" class="headerlink" title="K8s 服务发现原理"></a>K8s 服务发现原理</h4><p>原理基于: DNS + Service Registry</p>
+<p>概念:</p>
+<ol>
+<li>K8s Master</li>
+<li>Worker Kubelet</li>
+<li>Worker Kube-Proxy </li>
+<li>Worker Kube-DNS</li>
+</ol>
+<p>服务注册: </p>
+<ul>
+<li>首先 Kubelet 创建 Pod 实例, 并将 IP 等信息通过 Kubelet 注册到 K8s Master;</li>
+</ul>
+<p>服务发现的两层映射:</p>
+<ul>
+<li>Kube-DNS 实时监听 K8s Master 变化, 获取 ServiceName-&gt;ClusterIP 映射列表;</li>
+<li>Kube-Proxy 实时监听 K8s Master 变化, 获取 ClusterIP-&gt;PodIP 映射列表;</li>
+</ul>
+<p>客户端 Kube-Proxy + IPTables 转发机制, 无侵入不穿透;</p>
+<p>当有消费者客户端请求服务时, 若是域名会到 Kube-DNS 获取对应的 ClusterIP, 然后再通过 Kube-Proxy 的 IPtables 进行负载均衡, 将请求由 ClusterIP 均衡分配到对应的 Pod 实例;</p>
+<h3 id="第三层-NodePort-LoadBalancer-Ingress"><a href="#第三层-NodePort-LoadBalancer-Ingress" class="headerlink" title="第三层: NodePort / LoadBalancer / Ingress"></a>第三层: NodePort / LoadBalancer / Ingress</h3><p>K8s 对外暴露服务的方式:</p>
+<ul>
+<li>Service NodePort</li>
+<li>Service LoadBalancer</li>
+<li>Ingress</li>
+<li>Kubectl Proxy &amp; Port Forward</li>
+</ul>
+<p>如何将 K8s 集群内部服务暴露到外部网络环境, 以便访问?</p>
+<ol>
+<li><p>NodePort 方式:<br>将 Service 设置为 NodePort 模式, 将会在各个节点的 Kube-Proxy 组件上开启一个外部访问端口, 当有请求访问此端口时, Kube-Proxy 会将请求转发给 Service, Service 再将请求转发给 Pod 实例;</p>
+</li>
+<li><p>LoadBalancer 方式:<br>首先 LoadBalancer 方式是基于 NodePort 方式实现的, 若将 Service 设置为 LoadBalancer 模式, 第一步会为每个节点分配一个 NodePort(即 NodePort 方式), 然后云平台会在此基础上前置一个LB负载均衡器并映射到后端的各节点端口上; (仅公有云云厂商提供此类访问方式), 缺点是每新增一个Service, 就需要为其新增一个LoadBalancer;</p>
+</li>
+<li><p>Ingress 方式:<br>可以理解成就是 K8s 集群中的反向代理服务, 比起 LoadBalancer 可以扩展更多服务, Ingress对内转发使用ClusterIP, 对外使用 HostPort 80/443 访问, 并可以前置一台 LB 负载均衡器;<br>其转发方式, 可以基于域名domainName, 或者基于访问地址URLPath;</p>
+</li>
+<li><p>开发测试环境对外暴露: Kubectl Proxy &amp; Port Forward</p>
+</li>
+</ol>
+<ul>
+<li>Kubectl Proxy 代理方式直接访问集群的 API Server, 间接访问K8s各个服务, 限于七层的HTTP转发;</li>
+<li>Kubectl Port-Forwarding 在本地开启一个转发端口将请求间接转发到集群的某个Pod中去, 此方式为TCP转发;</li>
+</ul>
+<h3 id="Kube-Proxy"><a href="#Kube-Proxy" class="headerlink" title="Kube-Proxy"></a>Kube-Proxy</h3><p>kube-proxy 功能的实现主要依赖于 netfilter 与 iptables;</p>
+<p>处于用户空间的 iptables 可以操作处于内核空间的 netfilter, 以截获底层网卡的网络包并修改其路由;</p>
+<p>kube-proxy 三种工作模式:</p>
+<ol>
+<li><p>Userspace Proxy Mode (基本淘汰)<br>由于要在用户空间kube-proxy中进行负载均衡, 需要频繁从内核空间netfilter切换到用户空间, 故上下文切换频繁, 性能较差;</p>
+</li>
+<li><p>IPTables Mode (适用于中小型生产环境)<br>在内核netfilter中负载均衡, 不会频繁切换上下文, 性能较好, 但是支持的负载均衡方式较少, 且只能适用于中小规模集群;</p>
+</li>
+<li><p>IPVS Mode (适用于大规模生产环境)<br>在内核ipvs中负载均衡, 负载均衡策略较多, 性能较iptables优秀, 但是配置比较复杂;</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kube/" rel="tag"># kube</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/17/K8sExternalAccessMethod/" rel="next" title="Kubernetes 外部访问方式浅解">
+                <i class="fa fa-chevron-left"></i> Kubernetes 外部访问方式浅解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpeg"
+               alt="Erik Jiang" />
+          <p class="site-author-name" itemprop="name">Erik Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description">我寫的程序不夠動人 你別皺眉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ErikJiang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/jiangink" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+        
+        <div id="music163player">
+          <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52 src="//music.163.com/outchain/player?type=2&id=28387229&auto=1&height=32"></iframe>
+        </div>
+        
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#K8s-四层网络模型"><span class="nav-number">1.</span> <span class="nav-text">K8s 四层网络模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第一层-K8s-Pod-Network"><span class="nav-number">2.</span> <span class="nav-text">第一层: K8s Pod Network</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#三种网络设备"><span class="nav-number">2.1.</span> <span class="nav-text">三种网络设备:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不同节点上的-Pod-如何实现互联互通"><span class="nav-number">2.2.</span> <span class="nav-text">不同节点上的 Pod 如何实现互联互通?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二层-K8s-Service-Network"><span class="nav-number">3.</span> <span class="nav-text">第二层: K8s Service Network</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#K8s-服务发现原理"><span class="nav-number">3.1.</span> <span class="nav-text">K8s 服务发现原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三层-NodePort-LoadBalancer-Ingress"><span class="nav-number">4.</span> <span class="nav-text">第三层: NodePort / LoadBalancer / Ingress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kube-Proxy"><span class="nav-number">5.</span> <span class="nav-text">Kube-Proxy</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
