@@ -74,3 +74,4 @@
 </nav>
 
 {% include '../_custom/header.swig' %}
+<script data-ad-client="ca-pub-9081936791603186" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
